@@ -1,0 +1,31 @@
+[
+  {
+    "id": 1,
+    "product": "Transport GHP Insecticide",
+    "manufacturer": "FMC",
+    "active ingredients": {
+      "acetamenipride": 22.73,
+      "bifenthrin": 27.27
+    },
+    "sds": "123"
+  },
+  {
+    "id": 2,
+    "product": "Transport GHP Herbicide",
+    "manufacturer": "FMC",
+    "active ingredients": {
+      "acetamenipride": 32.7,
+      "bifenthrin": 7.2
+    },
+    "sds": "456"
+  },
+  {
+    "id": 3,
+    "product": "Roundup Weed-killer",
+    "manufacturer": "Monsanto",
+    "active ingredients": {
+      "something": 95
+    },
+    "sds": "789"
+  }
+]
