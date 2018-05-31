@@ -8,6 +8,7 @@ import MyCustomDataTable from "../components/DataTable"
 import CustomReactTable from "../components/CustomReactTable"
 import FixedColumnTable from "../components/FixedColumnTable"
 import MuiButton from "../components/MuiButton"
+import ToggleGroup from "../components/ToggleGroup"
 import BedBugProductData from "../data/BedBugProductData"
 
 const filterBarItems = {
@@ -42,11 +43,12 @@ const Index = () => (
           or advice.
         </p>
         <FilterBar data={filterBarItems} />
-        <MuiButton />
-        <p>FilterCard</p>
-        <FilterCard />
-        <p>CheckboxesGroup:</p>
-        <CheckboxesGroup dataItems={dataItems} title="Manufacturer" />
+        <FilterCard label="Manufacturers">
+          <CheckboxesGroup dataItems={dataItems} />
+        </FilterCard>
+        <FilterCard label="other">
+          <ToggleGroup dataItems={dataItems} />
+        </FilterCard>
         <p>...paragraph text...</p>
         <MyCustomDataTable data={BedBugProductData} />
         <p>...more text...</p>

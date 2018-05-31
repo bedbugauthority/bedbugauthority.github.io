@@ -12,7 +12,7 @@ const styles = (theme) => ({
     flexFlow: "row wrap",
     padding: theme.spacing.unit / 2,
     minHeight: 36,
-    border: "2px solid red",
+    //border: "2px solid red",
   },
   chip: {
     margin: theme.spacing.unit / 2,
