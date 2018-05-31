@@ -1,41 +1,60 @@
-import Head from "next/head"
+import AppHead from "../components/AppHead"
+import MuiAppContainer from "../components/MuiAppContainer"
 import Layout from "../components/Layout"
+import FilterBar from "../components/FilterBar"
+import CheckboxesGroup from "../components/CheckboxesGroup"
+import FilterCard from "../components/FilterCard"
 import MyCustomDataTable from "../components/DataTable"
 import CustomReactTable from "../components/CustomReactTable"
 import FixedColumnTable from "../components/FixedColumnTable"
 import MuiButton from "../components/MuiButton"
 import BedBugProductData from "../data/BedBugProductData"
 
+const filterBarItems = {
+  Manufacturers: ["FMC", "Bayer", "Amvac"],
+  Formulations: ["WP", "EC", "A", "D", "SC"],
+  "Mattress Application": ["Yes", "No"],
+  "Active Ingredient": [
+    "acetamiprid",
+    "bifenthrin",
+    "pyrethrins",
+    "deltamethrin",
+  ],
+}
+
+const dataItems = {
+  FMC: true,
+  Bayer: true,
+  Amvac: true,
+}
+
 console.log("Imported data for " + BedBugProductData.length + " products.")
 console.log(BedBugProductData)
 const Index = () => (
   <div>
-    <Head>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
-      />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta charSet="utf-8" />
-    </Head>
-    <style jsx global>
-      {`
-        body {
-          border: 0;
-          margin: 0;
-        }
-      `}
-    </style>
-    <Layout>
-      <h1>H1 Headline</h1>
-      <MuiButton />
-      <p>...paragraph text...</p>
-      <MyCustomDataTable data={BedBugProductData} />
-      <p>...more text...</p>
-      <CustomReactTable data={BedBugProductData} />
-      <p>...even more text...</p>
-      <FixedColumnTable data={BedBugProductData} />
-    </Layout>
+    <AppHead />
+    <MuiAppContainer>
+      <Layout>
+        <p>
+          The bed bug product matrix lets you search and filter all known bed
+          bug products. Every effort has been made to present factual
+          information only. No content should be construed as a recommendation
+          or advice.
+        </p>
+        <FilterBar data={filterBarItems} />
+        <MuiButton />
+        <p>FilterCard</p>
+        <FilterCard />
+        <p>CheckboxesGroup:</p>
+        <CheckboxesGroup dataItems={dataItems} title="Manufacturer" />
+        <p>...paragraph text...</p>
+        <MyCustomDataTable data={BedBugProductData} />
+        <p>...more text...</p>
+        <CustomReactTable data={BedBugProductData} />
+        <p>...even more text...</p>
+        <FixedColumnTable data={BedBugProductData} />
+      </Layout>
+    </MuiAppContainer>
   </div>
 )
 
