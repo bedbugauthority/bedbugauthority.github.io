@@ -4,9 +4,6 @@ import Layout from "../components/Layout"
 import FilterBar from "../components/FilterBar"
 import CheckboxesGroup from "../components/CheckboxesGroup"
 import FilterCard from "../components/FilterCard"
-import MyCustomDataTable from "../components/DataTable"
-import CustomReactTable from "../components/CustomReactTable"
-import FixedColumnTable from "../components/FixedColumnTable"
 import MuiButton from "../components/MuiButton"
 import ToggleGroup from "../components/ToggleGroup"
 import BedBugProductData from "../data/BedBugProductData"
@@ -49,15 +46,17 @@ const Index = () => (
         <FilterCard label="other">
           <ToggleGroup dataItems={dataItems} />
         </FilterCard>
-        <p>...paragraph text...</p>
-        <MyCustomDataTable data={BedBugProductData} />
-        <p>...more text...</p>
-        <CustomReactTable data={BedBugProductData} />
-        <p>...even more text...</p>
-        <FixedColumnTable data={BedBugProductData} />
       </Layout>
     </MuiAppContainer>
   </div>
 )
+/*
+<p>...paragraph text...</p>
+<MyCustomDataTable data={BedBugProductData} />
+<p>...more text...</p>
+<CustomReactTable data={BedBugProductData} />
+<p>...even more text...</p>
+<FixedColumnTable data={BedBugProductData} />
+*/
 
 export default Index

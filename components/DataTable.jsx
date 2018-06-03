@@ -1,4 +1,4 @@
-import SearchForm from "../components/SearchForm"
+import SearchBar from "../components/SearchBar"
 
 class DataTable extends React.Component {
   constructor(props) {
@@ -9,7 +9,7 @@ class DataTable extends React.Component {
   render() {
     return (
       <div>
-        <SearchForm />
+        <SearchBar />
         <ul>
           {this.state.data.map((item) => <li key={item.id}>{item.product}</li>)}
         </ul>

@@ -1,13 +1,16 @@
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import Chip from "@material-ui/core/Chip"
+import SearchBar from "../components/SearchBar"
 
 const styles = (theme) => ({
   filterBar: {
     display: "-webkit-flex",
     display: "flex",
-    WebkitJustifyContent: "flex-end",
+    WebkitJustifyContent: "flex-start",
     justifyContent: "flex-end",
+    WebkitAlignItems: "flex-end",
+    alignItems: "flex-end",
     WebkitFlexFlow: "row wrap",
     flexFlow: "row wrap",
     padding: theme.spacing.unit / 2,
@@ -65,6 +68,7 @@ class FilterBar extends React.Component {
 
     return (
       <div className={classes.filterBar}>
+        <SearchBar />
         {this.state.chipData.map((data) => {
           return (
             <Chip
