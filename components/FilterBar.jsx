@@ -68,7 +68,10 @@ class FilterBar extends React.Component {
 
     return (
       <div className={classes.filterBar}>
-        <SearchBar />
+        <SearchBar
+          filterText={this.props.filterText}
+          onFilterTextChange={this.props.onFilterTextChange}
+        />
         {this.state.chipData.map((data) => {
           return (
             <Chip

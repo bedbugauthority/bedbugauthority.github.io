@@ -19,19 +19,13 @@ const styles = (theme) => ({
 class SearchBar extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { value: "" }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSearchTextChange = this.handleSearchTextChange.bind(this)
   }
 
-  handleChange(event) {
-    this.setState({ value: event.target.value.toUpperCase() })
-  }
+  handleSearchTextChange = (event) =>
+    this.props.onSearchTextChange(event.target.value)
 
-  handleSubmit(event) {
-    event.preventDefault()
-    alert("A name was submitted: " + this.state.value)
-  }
+  handleSubmit = (event) => event.preventDefault()
 
   render() {
     const { classes } = this.props
@@ -48,8 +42,8 @@ class SearchBar extends React.Component {
           type="search"
           placeholder="Search..."
           className={classes.textField}
-          value={this.state.value}
-          onChange={this.handleChange}
+          value={this.props.searchText}
+          onChange={this.handleSearchTextChange}
           margin="normal"
         />
       </form>
