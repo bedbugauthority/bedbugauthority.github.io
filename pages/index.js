@@ -6,10 +6,12 @@ import withLayout from "../lib/withLayout"
 const Index = () => (
   <React.Fragment>
     <Head>
-      <title>Index page</title>
+      <title>Bed Bug Products - Bed Bug Authority</title>
       <meta name="description" content="This is description of Index page" />
     </Head>
     <DataTable />
+    <p>TODOS - index.js</p>
+    <p>- move static files to CDN</p>
   </React.Fragment>
 )
 

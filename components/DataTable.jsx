@@ -366,18 +366,6 @@ class DataTable extends React.Component {
     )
   }
 
-  /*
-    <React.Fragment>{blocks.join(<span>searchText</span>)}</React.Fragment>
-
-    {blocks.map((block) => {
-      if (block.match(regex)) {
-        return <span>{block}</span>
-      } else {
-        return <span>{block}</span>
-      }
-    })}
-  */
-
   isSelected = (id) => this.state.selected.indexOf(id) !== -1
 
   render() {
@@ -496,7 +484,13 @@ class DataTable extends React.Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         </Paper>
-        <p>{this.state.searchText}</p>
+        <p>TODOS:</p>
+        <p>
+          - fix display for active ingredients (searchBar highlight should still
+          work)
+        </p>
+        <p>DEBUG AREA:</p>
+        <p>Search text: {this.state.searchText}</p>
       </React.Fragment>
     )
   }
