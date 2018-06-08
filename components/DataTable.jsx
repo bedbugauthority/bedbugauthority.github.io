@@ -20,7 +20,12 @@ import FilterListIcon from "@material-ui/icons/FilterList"
 import { lighten } from "@material-ui/core/styles/colorManipulator"
 import SearchBar from "../components/SearchBar"
 import BedBugProductData from "../data/BedBugProductData"
-import ChevronRight from "@material-ui/icons/ChevronRight"
+
+import Drawer from "@material-ui/core/Drawer"
+import List from "@material-ui/core/List"
+import ChevronRightIcon from "@material-ui/icons/ChevronRight"
+import Divider from "@material-ui/core/Divider"
+import { mailFolderListItems, otherMailFolderListItems } from "./tileData"
 
 import Todos from "../components/Todos"
 
@@ -190,10 +195,20 @@ const toolbarStyles = (theme) => ({
   searchBar: {
     flex: "0 0 auto",
   },
+  hide: {
+    display: "none",
+  },
 })
 
 let DataTableToolbar = (props) => {
-  const { numSelected, searchText, onSearchTextChange, classes } = props
+  const {
+    numSelected,
+    searchText,
+    onSearchTextChange,
+    filterDrawerOpen,
+    handleFilterDrawerOpen,
+    classes,
+  } = props
   const isOpen = false
 
   return (
@@ -231,8 +246,12 @@ let DataTableToolbar = (props) => {
               </IconButton>
             </Tooltip>
           ) : (
-            <Tooltip title="Filter list">
-              <IconButton aria-label="Filter list">
+            <Tooltip title="open filter panel">
+              <IconButton
+                aria-label="Filter list"
+                onClick={handleFilterDrawerOpen}
+                className={filterDrawerOpen ? classes.hide : ""}
+              >
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
@@ -252,6 +271,8 @@ DataTableToolbar.propTypes = {
 
 DataTableToolbar = withStyles(toolbarStyles)(DataTableToolbar)
 
+const drawerWidth = 240
+
 const styles = (theme) => ({
   root: {
     width: "100%",
@@ -266,8 +287,20 @@ const styles = (theme) => ({
   highlight: {
     backgroundColor: "yellow",
   },
+  drawerPaper: {
+    position: "relative",
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
+    ...theme.mixins.toolbar,
+  },
 })
 
+/*
 const dataTableStyle = {
   display: "-webkit-flex",
   display: "flex",
@@ -276,6 +309,7 @@ const dataTableStyle = {
   minWidth: 1008,
   border: "1px solid black",
 }
+*/
 
 class DataTable extends React.Component {
   constructor(props) {
@@ -291,8 +325,17 @@ class DataTable extends React.Component {
       page: 0,
       rowsPerPage: 5,
       searchText: "",
+      filterDrawerOpen: false,
     }
     this.handleSearchTextChange = this.handleSearchTextChange.bind(this)
+  }
+
+  handleFilterDrawerOpen = () => {
+    this.setState({ filterDrawerOpen: true })
+  }
+
+  handleFilterDrawerClose = () => {
+    this.setState({ filterDrawerOpen: false })
   }
 
   handleRequestSort = (event, property) => {
@@ -380,17 +423,40 @@ class DataTable extends React.Component {
       rowsPerPage,
       page,
       searchText,
+      filterDrawerOpen,
     } = this.state
+
     const emptyRows =
       rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
+    const filterDrawer = (
+      <Drawer
+        variant="persistent"
+        anchor="right"
+        open={filterDrawerOpen}
+        classes={{ paper: classes.drawerPaper }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={this.handleFilterDrawerClose}>
+            <ChevronRightIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <List>{mailFolderListItems}</List>
+        <Divider />
+        <List>{otherMailFolderListItems}</List>
+      </Drawer>
+    )
+
     return (
-      <React.Fragment>
-        <Paper className={classes.root}>
+      <div className={classes.root}>
+        <Paper>
           <DataTableToolbar
             numSelected={selected.length}
-            searchText={this.state.searchText}
+            searchText={searchText}
             onSearchTextChange={this.handleSearchTextChange}
+            filterDrawerOpen={filterDrawerOpen}
+            handleFilterDrawerOpen={this.handleFilterDrawerOpen}
           />
           <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">
@@ -487,7 +553,7 @@ class DataTable extends React.Component {
           />
         </Paper>
         <Todos searchText={this.state.searchText} />
-      </React.Fragment>
+      </div>
     )
   }
 }

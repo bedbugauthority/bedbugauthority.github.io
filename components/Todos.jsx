@@ -18,9 +18,10 @@ const Todos = (props) => (
       <li>DataTable: add remaining columns</li>
       <li>DataTable: make product name sticky on horizontal scroll</li>
       <li>DataTable: clicking row should open product summary</li>
+      <li>DataTable: download all button / print preview all selected (?)</li>
       <li>DataTable: refactor</li>
       <li>.</li>
-      <li>move /static/... files to CDN (?)</li>
+      <li>TBD: move /static/... files to CDN (?)</li>
     </ul>
   </React.Fragment>
 )
