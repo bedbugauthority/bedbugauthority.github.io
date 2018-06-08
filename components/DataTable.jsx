@@ -22,6 +22,8 @@ import SearchBar from "../components/SearchBar"
 import BedBugProductData from "../data/BedBugProductData"
 import ChevronRight from "@material-ui/icons/ChevronRight"
 
+import Todos from "../components/Todos"
+
 console.log("Imported data for " + BedBugProductData.length + " products.")
 console.log(BedBugProductData)
 
@@ -484,13 +486,7 @@ class DataTable extends React.Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         </Paper>
-        <p>TODOS:</p>
-        <p>
-          - fix display for active ingredients (searchBar highlight should still
-          work)
-        </p>
-        <p>DEBUG AREA:</p>
-        <p>Search text: {this.state.searchText}</p>
+        <Todos searchText={this.state.searchText} />
       </React.Fragment>
     )
   }

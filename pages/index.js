@@ -10,8 +10,6 @@ const Index = () => (
       <meta name="description" content="This is description of Index page" />
     </Head>
     <DataTable />
-    <p>TODOS - index.js</p>
-    <p>- move static files to CDN</p>
   </React.Fragment>
 )
 
