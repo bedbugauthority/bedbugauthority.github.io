@@ -140,41 +140,39 @@ class PersistentDrawer extends React.Component {
     )
 
     return (
-      <div className={classes.root}>
-        <div className={classes.appFrame}>
-          <AppBar
-            className={classNames(classes.appBar, {
-              [classes.appBarShift]: open,
-              [classes[`appBarShift-right`]]: open,
-            })}
-          >
-            <Toolbar disableGutters={!open}>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, open && classes.hide)}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="title" color="inherit" noWrap>
-                Persistent drawer
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <main
-            className={classNames(classes.content, classes[`content-right`], {
-              [classes.contentShift]: open,
-              [classes[`contentShift-right`]]: open,
-            })}
-          >
-            <div className={classes.drawerHeader} />
-            <Typography>
-              {"You think water moves fast? You should see ice."}
+      <div className={classes.appFrame}>
+        <AppBar
+          className={classNames(classes.appBar, {
+            [classes.appBarShift]: open,
+            [classes[`appBarShift-right`]]: open,
+          })}
+        >
+          <Toolbar disableGutters={!open}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={this.handleDrawerOpen}
+              className={classNames(classes.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="title" color="inherit" noWrap>
+              Persistent drawer
             </Typography>
-          </main>
-          {drawer}
-        </div>
+          </Toolbar>
+        </AppBar>
+        <main
+          className={classNames(classes.content, classes[`content-right`], {
+            [classes.contentShift]: open,
+            [classes[`contentShift-right`]]: open,
+          })}
+        >
+          <div className={classes.drawerHeader} />
+          <Typography>
+            {"You think water moves fast? You should see ice."}
+          </Typography>
+        </main>
+        {drawer}
       </div>
     )
   }

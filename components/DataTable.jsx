@@ -19,6 +19,7 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import FilterListIcon from "@material-ui/icons/FilterList"
 import { lighten } from "@material-ui/core/styles/colorManipulator"
 import SearchBar from "../components/SearchBar"
+import CellContents from "../components/CellContents"
 import BedBugProductData from "../data/BedBugProductData"
 
 import Drawer from "@material-ui/core/Drawer"
@@ -35,44 +36,107 @@ console.log(BedBugProductData)
 const columnData = [
   {
     id: "productName",
-    numeric: false,
+    type: "string",
     disablePadding: true,
     label: "Product Name",
     sortable: true,
   },
   {
     id: "manufacturer",
-    numeric: false,
-    disablePadding: false,
+    type: "string",
+    disablePadding: true,
     label: "Manufacturer",
     sortable: true,
   },
   {
     id: "formulation",
-    numeric: false,
-    disablePadding: false,
+    type: "string",
+    disablePadding: true,
     label: "Formulation",
     sortable: true,
   },
   {
     id: "activeIngredients",
-    numeric: false,
-    disablePadding: false,
+    type: "dictionary",
+    disablePadding: true,
     label: "Active Ingredients",
     sortable: false,
   },
   {
     id: "mattressApplication",
-    numeric: false,
-    disablePadding: false,
+    type: "string",
+    disablePadding: true,
     label: "Mattress Application",
     sortable: true,
   },
   {
+    id: "labelApplications",
+    type: "list",
+    disablePadding: true,
+    label: "Label Applications",
+    sortable: false,
+  },
+  {
+    id: "labelRestrictions",
+    type: "list",
+    disablePadding: true,
+    label: "Label Restrictions",
+    sortable: false,
+  },
+  {
+    id: "epaRegisteredLabelClaims",
+    type: "list",
+    disablePadding: true,
+    label: "EPA Registered Label Claims",
+    sortable: false,
+  },
+  {
+    id: "otherReferencedProductAttributes",
+    type: "list",
+    disablePadding: true,
+    label: "Other Referenced Product Attributes",
+    sortable: false,
+  },
+  {
     id: "signalWord",
-    numeric: false,
-    disablePadding: false,
+    type: "string",
+    disablePadding: true,
     label: "Signal Word",
+    sortable: true,
+  },
+  {
+    id: "ppe",
+    type: "list",
+    disablePadding: true,
+    label: "PPE",
+    sortable: false,
+  },
+  {
+    id: "specimenLabel",
+    type: "string",
+    disablePadding: true,
+    label: "Specimen Label",
+    sortable: true,
+  },
+  {
+    id: "safetyDataSheet",
+    type: "string",
+    disablePadding: true,
+    label: "Safety Data Sheet",
+    sortable: true,
+  },
+  {
+    id: "labelDate",
+    type: "date",
+    disablePadding: true,
+    label: "Label Date",
+    sortable: true,
+  },
+  {
+    id: "reference",
+    type: "numeric",
+    disablePadding: true,
+    label: "Reference",
     sortable: true,
   },
 ]
@@ -84,7 +148,16 @@ function createData(
   formulation,
   activeIngredients,
   mattressApplication,
+  labelApplications,
+  labelRestrictions,
+  epaRegisteredLabelClaims,
+  otherReferencedProductAttributes,
   signalWord,
+  ppe,
+  specimenLabel,
+  safetyDataSheet,
+  labelDate,
+  reference,
 ) {
   counter += 1
   return {
@@ -94,7 +167,16 @@ function createData(
     formulation,
     activeIngredients,
     mattressApplication,
+    labelApplications,
+    labelRestrictions,
+    epaRegisteredLabelClaims,
+    otherReferencedProductAttributes,
     signalWord,
+    ppe,
+    specimenLabel,
+    safetyDataSheet,
+    labelDate,
+    reference,
   }
 }
 
@@ -130,14 +212,16 @@ class DataTableHead extends React.Component {
             return (
               <TableCell
                 key={column.id}
-                numeric={column.numeric}
+                numeric={column.type === "numeric"}
                 padding={column.disablePadding ? "none" : "default"}
                 sortDirection={orderBy === column.id ? order : false}
               >
                 {column.sortable ? (
                   <Tooltip
                     title="Sort"
-                    placement={column.numeric ? "bottom-end" : "bottom-start"}
+                    placement={
+                      column.type === "numeric" ? "bottom-end" : "bottom-start"
+                    }
                     enterDelay={300}
                   >
                     <TableSortLabel
@@ -246,7 +330,7 @@ let DataTableToolbar = (props) => {
               </IconButton>
             </Tooltip>
           ) : (
-            <Tooltip title="open filter panel">
+            <Tooltip title="filter">
               <IconButton
                 aria-label="Filter list"
                 onClick={handleFilterDrawerOpen}
@@ -274,22 +358,43 @@ DataTableToolbar = withStyles(toolbarStyles)(DataTableToolbar)
 const drawerWidth = 240
 
 const styles = (theme) => ({
-  root: {
+  dataTableFrame: {
+    zIndex: 1,
+    overflow: "auto",
+    position: "relative",
+    display: "flex",
     width: "100%",
     marginTop: theme.spacing.unit * 3,
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
-  table: {
-    minWidth: 1020,
+  dataTableContent: {
+    flexGrow: 1,
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  dataTableContentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginRight: 0,
   },
   tableWrapper: {
     overflowX: "auto",
   },
+  table: {},
   highlight: {
     backgroundColor: "yellow",
   },
   drawerPaper: {
     position: "relative",
     width: drawerWidth,
+    height: "auto",
   },
   drawerHeader: {
     display: "flex",
@@ -299,17 +404,6 @@ const styles = (theme) => ({
     ...theme.mixins.toolbar,
   },
 })
-
-/*
-const dataTableStyle = {
-  display: "-webkit-flex",
-  display: "flex",
-  WebkitFlexDirection: "column",
-  flexDirection: "column",
-  minWidth: 1008,
-  border: "1px solid black",
-}
-*/
 
 class DataTable extends React.Component {
   constructor(props) {
@@ -323,7 +417,7 @@ class DataTable extends React.Component {
         createData.apply(this, columnData.map((col) => productData[col.id])),
       ).sort((a, b) => (a.productName < b.productName ? -1 : 1)),
       page: 0,
-      rowsPerPage: 5,
+      rowsPerPage: 3,
       searchText: "",
       filterDrawerOpen: false,
     }
@@ -395,16 +489,22 @@ class DataTable extends React.Component {
   }
 
   searchHighlighter = (searchText, text) => {
-    const regex = new RegExp("(" + searchText + ")", "gim")
+    var escapeRegExp = (literal_string) => {
+      return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&")
+    }
+    const regex = new RegExp("(" + escapeRegExp(searchText) + ")", "gim")
     const blocks = text.split(regex)
-    console.log("blocks:", blocks)
     return (
       <React.Fragment>
-        {blocks.map((block) => {
+        {blocks.map((block, index) => {
           if (block.match(regex)) {
-            return <span className={this.props.classes.highlight}>{block}</span>
+            return (
+              <span key={index} className={this.props.classes.highlight}>
+                {block}
+              </span>
+            )
           } else {
-            return <span>{block}</span>
+            return <span key={index}>{block}</span>
           }
         })}
       </React.Fragment>
@@ -449,111 +549,94 @@ class DataTable extends React.Component {
     )
 
     return (
-      <div className={classes.root}>
-        <Paper>
-          <DataTableToolbar
-            numSelected={selected.length}
-            searchText={searchText}
-            onSearchTextChange={this.handleSearchTextChange}
-            filterDrawerOpen={filterDrawerOpen}
-            handleFilterDrawerOpen={this.handleFilterDrawerOpen}
-          />
-          <div className={classes.tableWrapper}>
-            <Table className={classes.table} aria-labelledby="tableTitle">
-              <DataTableHead
-                columnData={this.props.columnData}
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={this.handleSelectAllClick}
-                onRequestSort={this.handleRequestSort}
-                rowCount={data.length}
-              />
-              <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((n) => {
-                    const isSelected = this.isSelected(n.id)
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => this.handleClick(event, n.id)}
-                        role="checkbox"
-                        aria-checked={isSelected}
-                        tabIndex={-1}
-                        key={n.id}
-                        selected={isSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isSelected} />
-                        </TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          {searchText.length === 0
-                            ? n.productName
-                            : this.searchHighlighter(searchText, n.productName)}
-                        </TableCell>
-                        <TableCell>
-                          {searchText.length === 0
-                            ? n.manufacturer
-                            : this.searchHighlighter(
-                                searchText,
-                                n.manufacturer,
-                              )}
-                        </TableCell>
-                        <TableCell>
-                          {searchText.length === 0
-                            ? n.formulation
-                            : this.searchHighlighter(searchText, n.formulation)}
-                        </TableCell>
-                        <TableCell>
-                          {searchText.length === 0
-                            ? JSON.stringify(n.activeIngredients)
-                            : this.searchHighlighter(
-                                searchText,
-                                JSON.stringify(n.activeIngredients),
-                              )}
-                        </TableCell>
-                        <TableCell>
-                          {searchText.length === 0
-                            ? n.mattressApplication
-                            : this.searchHighlighter(
-                                searchText,
-                                n.mattressApplication,
-                              )}
-                        </TableCell>
-                        <TableCell>
-                          {searchText.length === 0
-                            ? n.signalWord
-                            : this.searchHighlighter(searchText, n.signalWord)}
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+      <React.Fragment>
+        <Paper className={classes.dataTableFrame}>
+          <div
+            className={classNames(classes.dataTableContent, {
+              [classes.dataTableContentShift]: filterDrawerOpen,
+            })}
+          >
+            <DataTableToolbar
+              numSelected={selected.length}
+              searchText={searchText}
+              onSearchTextChange={this.handleSearchTextChange}
+              filterDrawerOpen={filterDrawerOpen}
+              handleFilterDrawerOpen={this.handleFilterDrawerOpen}
+            />
+            <div className={classes.tableWrapper}>
+              <Table className={classes.table} aria-labelledby="tableTitle">
+                <DataTableHead
+                  columnData={this.props.columnData}
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={this.handleSelectAllClick}
+                  onRequestSort={this.handleRequestSort}
+                  rowCount={data.length}
+                />
+                <TableBody>
+                  {data
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((n) => {
+                      const isSelected = this.isSelected(n.id)
+                      return (
+                        <TableRow
+                          hover
+                          onClick={(event) => this.handleClick(event, n.id)}
+                          role="checkbox"
+                          aria-checked={isSelected}
+                          tabIndex={-1}
+                          key={n.id}
+                          selected={isSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox checked={isSelected} />
+                          </TableCell>
+                          {columnData.map((column) => {
+                            return (
+                              <TableCell
+                                key={column.id}
+                                scope="row"
+                                padding={
+                                  column.type === "numeric" ? "default" : "none"
+                                }
+                              >
+                                <CellContents
+                                  contents={n[column.id]}
+                                  searchText={searchText}
+                                />
+                              </TableCell>
+                            )
+                          })}
+                        </TableRow>
+                      )
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 49 * emptyRows }}>
+                      <TableCell colSpan={columnData.length + 1} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+            <TablePagination
+              component="div"
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              backIconButtonProps={{
+                "aria-label": "Previous Page",
+              }}
+              nextIconButtonProps={{
+                "aria-label": "Next Page",
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
           </div>
-          <TablePagination
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-              "aria-label": "Previous Page",
-            }}
-            nextIconButtonProps={{
-              "aria-label": "Next Page",
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
         </Paper>
-        <Todos searchText={this.state.searchText} />
-      </div>
+        <Todos searchText={searchText} />
+      </React.Fragment>
     )
   }
 }

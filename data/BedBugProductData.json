@@ -88,14 +88,12 @@
       "kills bed bugs up to 2 years",
       "use as a preventative tool within an IPM program"
     ],
-    "otherReferencedProductAttributes": [
-      {
-        "attributeDescription":
-          "10 min exposure results in sig reduction in bites and eggs in all strains (504)",
-        "reference": "",
-        "residualActivity": "kills up to 2 years (L) (491)"
-      }
-    ],
+    "otherReferencedProductAttributes": {
+      "attributeDescription":
+        "10 min exposure results in sig reduction in bites and eggs in all strains (504)",
+      "reference": "",
+      "residualActivity": "kills up to 2 years (L) (491)"
+    },
     "signalWord": "none",
     "ppe": ["wash hands after installation"],
     "specimenLabel": "yes",

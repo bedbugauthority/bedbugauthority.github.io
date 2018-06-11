@@ -6,7 +6,8 @@ const Todos = (props) => (
     <p>Search text: {props.searchText}</p>
     <h1>TODOS:</h1>
     <ul>
-      <li>Filter: implement FilterSideBar</li>
+      <li>Filter: design and add filter functionality to filter sidebar</li>
+      <li>Filter: animate display of filter sidebar</li>
       <li>SearchBar: filter down to only rows with relevant results</li>
       <li>.</li>
       <li>Visual: design product summary</li>
@@ -15,11 +16,16 @@ const Todos = (props) => (
         should still work)
       </li>
       <li>.</li>
-      <li>DataTable: add remaining columns</li>
       <li>DataTable: make product name sticky on horizontal scroll</li>
       <li>DataTable: clicking row should open product summary</li>
       <li>DataTable: download all button / print preview all selected (?)</li>
+      <li>DataTable: set rowsPerPage to reasonable default</li>
       <li>DataTable: refactor</li>
+      <li>
+        DataTable: fix: on hover + click filter icon, Tooltip jumps to top left
+        corner
+      </li>
+      <li>DataTable: fix: cell padding</li>
       <li>.</li>
       <li>TBD: move /static/... files to CDN (?)</li>
     </ul>
