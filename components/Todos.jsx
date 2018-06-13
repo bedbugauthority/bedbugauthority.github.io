@@ -25,7 +25,10 @@ const Todos = (props) => (
         DataTable: fix: on hover + click filter icon, Tooltip jumps to top left
         corner
       </li>
-      <li>DataTable: fix: cell padding</li>
+      <li>
+        DataTable: fix: cell height (embed in fixed height div/Paper which shows
+        all on hover?)
+      </li>
       <li>.</li>
       <li>TBD: move /static/... files to CDN (?)</li>
     </ul>

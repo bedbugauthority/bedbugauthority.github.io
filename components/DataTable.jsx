@@ -15,7 +15,8 @@ import Paper from "@material-ui/core/Paper"
 import Checkbox from "@material-ui/core/Checkbox"
 import IconButton from "@material-ui/core/IconButton"
 import Tooltip from "@material-ui/core/Tooltip"
-import DeleteIcon from "@material-ui/icons/Delete"
+import ClearIcon from "@material-ui/icons/Clear"
+import DownloadIcon from "@material-ui/icons/CloudDownload"
 import FilterListIcon from "@material-ui/icons/FilterList"
 import { lighten } from "@material-ui/core/styles/colorManipulator"
 import SearchBar from "../components/SearchBar"
@@ -275,6 +276,8 @@ const toolbarStyles = (theme) => ({
   },
   title: {
     flex: "0 0 auto",
+    display: "flex",
+    alignItems: "center",
   },
   searchBar: {
     flex: "0 0 auto",
@@ -291,6 +294,7 @@ let DataTableToolbar = (props) => {
     onSearchTextChange,
     filterDrawerOpen,
     handleFilterDrawerOpen,
+    handleClearSelection,
     classes,
   } = props
   const isOpen = false
@@ -311,9 +315,19 @@ let DataTableToolbar = (props) => {
         <div className={classes.spacer} />
         <div className={classes.title}>
           {numSelected > 0 ? (
-            <Typography color="inherit" variant="subheading">
-              {numSelected} selected
-            </Typography>
+            <React.Fragment>
+              <Typography color="inherit" variant="subheading">
+                {numSelected} selected
+              </Typography>
+              <Tooltip title="Clear Selection">
+                <IconButton
+                  aria-label="Clear Selection"
+                  onClick={handleClearSelection}
+                >
+                  <ClearIcon />
+                </IconButton>
+              </Tooltip>
+            </React.Fragment>
           ) : (
             <Typography variant="title" id="tableTitle">
               Bed Bug Products
@@ -324,13 +338,13 @@ let DataTableToolbar = (props) => {
         <div className={classes.spacer} />
         <div className={classes.actions}>
           {numSelected > 0 ? (
-            <Tooltip title="Delete">
-              <IconButton aria-label="Delete">
-                <DeleteIcon />
+            <Tooltip title="Download Rows">
+              <IconButton aria-label="Download">
+                <DownloadIcon />
               </IconButton>
             </Tooltip>
           ) : (
-            <Tooltip title="filter">
+            <Tooltip title="Show Filters">
               <IconButton
                 aria-label="Filter list"
                 onClick={handleFilterDrawerOpen}
@@ -357,7 +371,7 @@ DataTableToolbar = withStyles(toolbarStyles)(DataTableToolbar)
 
 const drawerWidth = 240
 
-const styles = (theme) => ({
+const tempStyles = (theme) => ({
   dataTableFrame: {
     zIndex: 1,
     overflow: "auto",
@@ -384,16 +398,57 @@ const styles = (theme) => ({
     }),
     marginRight: 0,
   },
+  slider: {
+    position: "absolute",
+    width: drawerWidth,
+    height: "auto",
+    transform: "translateX(-100%)",
+  },
+  slideIn: {
+    animation: "slide-in 0.5s forwards",
+  },
+  slideOut: {
+    animation: "slide-out 0.5s forwards",
+  },
+  "@keyframes slideIn": {
+    "100%": {
+      transform: "translateX(0%)",
+    },
+  },
+  "@keyframes slideOut": {
+    "0%": {
+      transform: "translateX(0%)",
+    },
+    "100%": {
+      transform: "translateX(-100%)",
+    },
+  },
+})
+
+const styles = (theme) => ({
+  dataTableContentWrapper: {
+    zIndex: 1,
+    overflow: "auto",
+    position: "relative",
+    display: "flex",
+    width: "100%",
+    marginTop: theme.spacing.unit * 3,
+    backgroundColor: "lightgreen",
+  },
+  dataTableContent: {
+    flexGrow: 1,
+  },
   tableWrapper: {
     overflowX: "auto",
   },
-  table: {},
-  highlight: {
+  table: {
+    backgroundColor: "lightblue",
+  },
+  drawerWrapper: {
     backgroundColor: "yellow",
   },
   drawerPaper: {
     position: "relative",
-    width: drawerWidth,
     height: "auto",
   },
   drawerHeader: {
@@ -421,7 +476,6 @@ class DataTable extends React.Component {
       searchText: "",
       filterDrawerOpen: false,
     }
-    this.handleSearchTextChange = this.handleSearchTextChange.bind(this)
   }
 
   handleFilterDrawerOpen = () => {
@@ -453,10 +507,14 @@ class DataTable extends React.Component {
       this.setState({ selected: this.state.data.map((n) => n.id) })
       return
     }
+    this.handleClearSelection(event)
+  }
+
+  handleClearSelection = (event) => {
     this.setState({ selected: [] })
   }
 
-  handleClick = (event, id) => {
+  handleRowClick = (event, id) => {
     const { selected } = this.state
     const selectedIndex = selected.indexOf(id)
     let newSelected = []
@@ -488,29 +546,6 @@ class DataTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value })
   }
 
-  searchHighlighter = (searchText, text) => {
-    var escapeRegExp = (literal_string) => {
-      return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&")
-    }
-    const regex = new RegExp("(" + escapeRegExp(searchText) + ")", "gim")
-    const blocks = text.split(regex)
-    return (
-      <React.Fragment>
-        {blocks.map((block, index) => {
-          if (block.match(regex)) {
-            return (
-              <span key={index} className={this.props.classes.highlight}>
-                {block}
-              </span>
-            )
-          } else {
-            return <span key={index}>{block}</span>
-          }
-        })}
-      </React.Fragment>
-    )
-  }
-
   isSelected = (id) => this.state.selected.indexOf(id) !== -1
 
   render() {
@@ -530,38 +565,54 @@ class DataTable extends React.Component {
       rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
     const filterDrawer = (
-      <Drawer
-        variant="persistent"
-        anchor="right"
-        open={filterDrawerOpen}
-        classes={{ paper: classes.drawerPaper }}
+      <div
+        className={classNames(
+          (classes.drawerWrapper,
+          classes.slider,
+          {
+            [classes.slideIn]: filterDrawerOpen,
+            [classes.slideOut]: !filterDrawerOpen,
+          }),
+        )}
       >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={this.handleFilterDrawerClose}>
-            <ChevronRightIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mailFolderListItems}</List>
-        <Divider />
-        <List>{otherMailFolderListItems}</List>
-      </Drawer>
+        <Drawer
+          variant="persistent"
+          anchor="right"
+          open={filterDrawerOpen}
+          classes={{ paper: classes.drawerPaper }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={this.handleFilterDrawerClose}>
+              <ChevronRightIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>{mailFolderListItems}</List>
+          <Divider />
+          <List>{otherMailFolderListItems}</List>
+        </Drawer>
+      </div>
     )
+
+    /* classNames example:
+      <div
+        className={classNames(classes.dataTableContent, {
+          [classes.dataTableContentShift]: filterDrawerOpen,
+        })}
+      >
+    */
 
     return (
       <React.Fragment>
-        <Paper className={classes.dataTableFrame}>
-          <div
-            className={classNames(classes.dataTableContent, {
-              [classes.dataTableContentShift]: filterDrawerOpen,
-            })}
-          >
+        <Paper className={classes.dataTableContentWrapper}>
+          <div className={classes.dataTableContent}>
             <DataTableToolbar
               numSelected={selected.length}
               searchText={searchText}
               onSearchTextChange={this.handleSearchTextChange}
               filterDrawerOpen={filterDrawerOpen}
               handleFilterDrawerOpen={this.handleFilterDrawerOpen}
+              handleClearSelection={this.handleClearSelection}
             />
             <div className={classes.tableWrapper}>
               <Table className={classes.table} aria-labelledby="tableTitle">
@@ -582,7 +633,7 @@ class DataTable extends React.Component {
                       return (
                         <TableRow
                           hover
-                          onClick={(event) => this.handleClick(event, n.id)}
+                          onClick={(event) => this.handleRowClick(event, n.id)}
                           role="checkbox"
                           aria-checked={isSelected}
                           tabIndex={-1}
