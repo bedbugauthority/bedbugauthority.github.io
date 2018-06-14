@@ -117,7 +117,7 @@ class PersistentDrawer extends React.Component {
     const drawer = (
       <Drawer
         variant="persistent"
-        anchor="right"
+        anchor="left"
         open={open}
         classes={{
           paper: classes.drawerPaper,
@@ -141,10 +141,11 @@ class PersistentDrawer extends React.Component {
 
     return (
       <div className={classes.appFrame}>
+        {drawer}
         <AppBar
           className={classNames(classes.appBar, {
             [classes.appBarShift]: open,
-            [classes[`appBarShift-right`]]: open,
+            [classes[`appBarShift-left`]]: open,
           })}
         >
           <Toolbar disableGutters={!open}>
@@ -162,9 +163,9 @@ class PersistentDrawer extends React.Component {
           </Toolbar>
         </AppBar>
         <main
-          className={classNames(classes.content, classes[`content-right`], {
+          className={classNames(classes.content, classes[`content-left`], {
             [classes.contentShift]: open,
-            [classes[`contentShift-right`]]: open,
+            [classes[`contentShift-left`]]: open,
           })}
         >
           <div className={classes.drawerHeader} />
@@ -172,7 +173,6 @@ class PersistentDrawer extends React.Component {
             {"You think water moves fast? You should see ice."}
           </Typography>
         </main>
-        {drawer}
       </div>
     )
   }

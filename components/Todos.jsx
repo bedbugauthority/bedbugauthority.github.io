@@ -19,8 +19,11 @@ const Todos = (props) => (
       <li>DataTable: make product name sticky on horizontal scroll</li>
       <li>DataTable: clicking row should open product summary</li>
       <li>DataTable: download all button / print preview all selected (?)</li>
-      <li>DataTable: set rowsPerPage to reasonable default</li>
-      <li>DataTable: refactor</li>
+      <li>
+        DataTable: adjust rowsPerPage to reasonable default and set rowsPerPage
+        menu options
+      </li>
+      <li>DataTable: refactor data preprocessing</li>
       <li>
         DataTable: fix: on hover + click filter icon, Tooltip jumps to top left
         corner

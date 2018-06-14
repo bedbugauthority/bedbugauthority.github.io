@@ -433,7 +433,7 @@ const styles = (theme) => ({
     display: "flex",
     width: "100%",
     marginTop: theme.spacing.unit * 3,
-    backgroundColor: "lightgreen",
+    //backgroundColor: "lightgreen",
   },
   dataTableContent: {
     flexGrow: 1,
@@ -442,10 +442,10 @@ const styles = (theme) => ({
     overflowX: "auto",
   },
   table: {
-    backgroundColor: "lightblue",
+    //backgroundColor: "lightblue",
   },
   drawerWrapper: {
-    backgroundColor: "yellow",
+    //backgroundColor: "yellow",
   },
   drawerPaper: {
     position: "relative",
