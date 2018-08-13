@@ -13,8 +13,8 @@ const styles = (theme) => ({
     margin: 0,
   },
   textLine: {
-    paddingRight: theme.spacing.unit / 2,
-    paddingLeft: theme.spacing.unit / 2,
+    paddingRight: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit,
   },
 })
 
@@ -31,26 +31,25 @@ class CellContents extends React.Component {
     if (this.props.searchText.length === 0) {
       return text
     }
+
     const regex = new RegExp(
       "(" + this.escapeRegExp(this.props.searchText) + ")",
       "gim",
     )
     const blocks = text.split(regex)
-    return (
-      <React.Fragment>
-        {blocks.map((block, index) => {
-          if (block.match(regex)) {
-            return (
-              <span key={index} className={this.props.classes.highlight}>
-                {block}
-              </span>
-            )
-          } else {
-            return <span key={index}>{block}</span>
-          }
-        })}
-      </React.Fragment>
-    )
+    const contents = blocks.map((block, index) => {
+      if (block.match(regex)) {
+        return (
+          <span key={index} className={this.props.classes.highlight}>
+            {block}
+          </span>
+        )
+      } else {
+        return <span key={index}>{block}</span>
+      }
+    })
+
+    return <React.Fragment>{contents}</React.Fragment>
   }
 
   parseArray = (array) => {
@@ -78,7 +77,14 @@ class CellContents extends React.Component {
   }
 
   render() {
-    const { searchText, contents, classes } = this.props
+    const {
+      className,
+      searchText,
+      onSearchTextMatch,
+      contents,
+      onClick,
+      classes,
+    } = this.props
     var parsedContents
 
     if (Array.isArray(contents)) {
@@ -93,7 +99,11 @@ class CellContents extends React.Component {
       )
     }
 
-    return <React.Fragment>{parsedContents}</React.Fragment>
+    return (
+      <div className={className} onClick={onClick}>
+        {parsedContents}
+      </div>
+    )
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "bedbugauthority.github.io",
   "version": "1.0.0",
-  "license": "",
+  "license": "ISC",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,25 +11,31 @@
   },
   "repository": {
     "type": "git",
-    "url":
-      "git+https://github.com/bedbugauthority/bedbugauthority.github.io.git"
+    "url": "git+https://github.com/bedbugauthority/bedbugauthority.github.io.git"
   },
   "keywords": [],
   "author": "David Cato",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/bedbugauthority/bedbugauthority.github.io/issues"
   },
-  "homepage":
-    "https://github.com/bedbugauthority/bedbugauthority.github.io#readme",
+  "homepage": "https://github.com/bedbugauthority/bedbugauthority.github.io#readme",
   "dependencies": {
-    "@material-ui/core": "^1.2.0",
+    "@material-ui/core": "^1.4.3",
     "@material-ui/icons": "^1.1.0",
+    "classnames": "^2.2.5",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.debounce": "^4.0.8",
+    "lodash.get": "^4.4.2",
+    "lodash.memoize": "^4.1.2",
+    "lodash.merge": "^4.6.0",
+    "mui-datatables": "^2.0.0-beta-17",
     "next": "^6.0.4-canary.3",
-    "prop-types": "^15.6.1",
+    "prop-types": "^15.6.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
-    "react-jss": "^8.4.0"
+    "react-jss": "^8.4.0",
+    "react-to-print": "^1.0.10",
+    "react-virtualized": "^9.20.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

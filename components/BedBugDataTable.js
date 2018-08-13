@@ -1,0 +1,571 @@
+import BedBugProductData from "../data/BedBugProductData"
+import textLabels from "./custom-mui-datatable/textLabels"
+
+import { MultiGrid, AutoSizer } from "react-virtualized"
+import Table from "@material-ui/core/Table"
+import TableCell from "@material-ui/core/TableCell"
+import MUIDataTableToolbar from "./custom-mui-datatable/MUIDataTableToolbar"
+import MUIDataTableToolbarSelect from "./custom-mui-datatable/MUIDataTableToolbarSelect"
+import MUIDataTableFilterList from "./custom-mui-datatable/MUIDataTableFilterList"
+
+import { withStyles } from "@material-ui/core/styles"
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
+import classNames from "classnames"
+
+import { columnData } from "../data/BedBugMetaData"
+/* Array of column meta data, example:
+  {
+    "id": "productName",
+    "type": "string",
+    "disablePadding": true,
+    "textLabel": "Product Name",
+    "sortable": true,
+    "filterable": true,
+    "visible": true,
+    "width": 80
+  },
+*/
+import productData from "../data/BedBugProductData"
+/* Array of products, example product:
+{
+  "id": 12,
+  "productName": "ActiveGuard Mattress Liner",
+  "formulation": "Active mattress liner",
+  "manufacturer": "Allergy Technologies",
+  "activeIngredients": {
+    "permethrin": "1.64"
+  },
+  "mattressApplication": "Y",
+  "labelApplications": ["application to bedding"],
+  "labelRestrictions": [
+    "place mattress pad or sheet on top of liner",
+    "do not wash liner"
+  ],
+  "epaRegisteredLabelClaims": [
+    "kills bed bugs up to 2 years",
+    "use as a preventative tool within an IPM program"
+  ],
+  "otherReferencedProductAttributes": {
+    "attributeDescription":
+      "10 min exposure results in sig reduction in bites and eggs in all strains (504)",
+    "reference": "",
+    "residualActivity": "kills up to 2 years (L) (491)"
+  },
+  "signalWord": "none",
+  "ppe": ["wash hands after installation"],
+  "specimenLabel": "yes",
+  "safetyDataSheet": "yes",
+  "labelDate": "2015",
+  "reference": 504
+}
+*/
+
+// might not need these imports (?):
+//import { data, columns, columnData } from "../data/TestData"
+import CellContents from "../components/CellContents"
+import PropTypes from "prop-types"
+
+import { cloneDeep } from "lodash"
+
+const tableStyles = (theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    flex: "1 1 auto",
+    height: "100vh",
+  },
+  toolbar: {
+    flex: "0 0 auto",
+  },
+  tableContainer: {
+    flex: "1 1 auto",
+  },
+  table: {
+    fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+  },
+  sortIcon: {
+    height: 16,
+    width: 16,
+    marginLeft: 8,
+  },
+  tableCellContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  cell: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: 0,
+  },
+  headCell: {
+    fontSize: "0.75rem",
+    fontWeight: "500",
+    borderBottom: "1px solid gray",
+    borderRight: "1px solid rgba(224, 224, 224, 1)",
+  },
+  fixedColumnCell: {
+    fontSize: "0.8125rem",
+    fontWeight: "500",
+    borderRight: "1px solid gray",
+    alignItems: "center",
+  },
+  bodyCell: {
+    borderRight: "1px solid rgba(224, 224, 224, 1)",
+  },
+  cellContents: {},
+  sortableHeadCellContents: {
+    cursor: "pointer",
+  },
+  bodyCellContents: {
+    fontSize: "0.8125rem",
+    fontWeight: "400",
+  },
+  cellSelected: {
+    backgroundColor: theme.palette.grey[100],
+  },
+  cellHovered: {
+    backgroundColor: theme.palette.grey[200],
+  },
+  footer: {
+    display: "flex",
+    justifyContent: "center",
+    flex: "0 0 auto",
+    backgroundColor: "gray",
+  },
+  footerContent: {},
+})
+
+const productDataRowCount = productData.length
+
+class BedBugDataTable extends React.Component {
+  constructor() {
+    super()
+
+    this.tableRef = false
+
+    /*
+    this.data = productData.map((row, index) => {
+      return { data: row, index: index }
+    })
+*/
+
+    const displayColumns = columnData.reduce((result, column, columnIndex) => {
+      if (column.visible) {
+        result.push({
+          id: column.id,
+          name: column.name,
+          type: column.type,
+          columnIndex: columnIndex,
+          displayIndex: result.length,
+        })
+      }
+      return result
+    }, [])
+
+    const displayData = productData.map((product) =>
+      displayColumns.map((column) => product[column.id]),
+    )
+
+    this.initialFilterData = columnData.map((column) =>
+      productData.reduce((columnResult, productRow) => {
+        const productValue = productRow[column.id]
+        switch (column.type) {
+          case "dictionary":
+            for (const key in productValue) {
+              if (columnResult.indexOf(key) === -1) {
+                columnResult.push(key)
+              }
+            }
+            break
+          case "list":
+            for (const index in productValue) {
+              if (columnResult.indexOf(productValue[index]) === -1) {
+                columnResult.push(productValue[index])
+              }
+            }
+            break
+          case "string":
+            if (columnResult.indexOf(productValue) === -1) {
+              columnResult.push(productValue)
+            }
+            break
+          default:
+            console.log(
+              "WARNING: column.type:",
+              column.type,
+              "Expected 'string', 'list', or 'dictionary'.",
+              "Fix this by editing the column definition in ./data/BedBugMetaData.json",
+            )
+            break
+        }
+
+        return columnResult.sort()
+      }, []),
+    )
+
+    this.state = {
+      // list of displayed columns - properties: {id, name, columnIndex, displayIndex}
+      displayColumns: displayColumns,
+      // 2D array containing data to display
+      displayData: displayData,
+      // table index of the hovered row
+      hoveredRow: null,
+      // table indices of the selected rows
+      selectedRows: {
+        data: [],
+        lookup: {},
+      },
+      // one array of unique column values per row in column data
+      filterData: cloneDeep(this.initialFilterData),
+      // one element per column in columnData
+      filterList: columnData.map(() => []),
+      // user input from search field
+      searchText: "",
+      // index of column sorted by, default: productData order
+      sortColumnIndex: null,
+      // sortDirection: "asc" or "desc"
+      sortDirection: "desc",
+    }
+
+    console.log("columnData: ", columnData)
+    console.log("productData: ", productData)
+  }
+
+  /* Call this when table data is updated, but number of rows stays the same. */
+  forceTableRefresh() {
+    this.multiGridRef.forceUpdateGrids()
+  }
+
+  /* Call this when number of rows might change (e.g. on sort/filter update). */
+  updateDisplayData = () => {
+    // recalculate displayData from scratch
+    this.setState((prevState) => {
+      var displayData = productData.reduce((result, product) => {
+        var filteredOut = false
+        const productRow = prevState.displayColumns.reduce(
+          (rowResult, column, columnIndex) => {
+            if (filteredOut) return []
+
+            const cellData = product[column.id]
+            const filters = prevState.filterList[columnIndex]
+
+            if (!this.meetsFilterCriteria(cellData, column.type, filters))
+              filteredOut = true
+
+            rowResult.push(product[column.id])
+            return rowResult
+          },
+          [],
+        )
+        if (!filteredOut) result.push(productRow)
+        return result
+      }, [])
+
+      const { sortColumnIndex, sortDirection } = prevState
+      if (sortColumnIndex !== null) {
+        displayData.sort(this.columnSorter(prevState.sortColumnIndex))
+        if (prevState.sortDirection === "desc") {
+          displayData.reverse()
+        }
+      }
+
+      return { displayData: displayData }
+    })
+
+    // refresh display with new state
+    this.forceTableRefresh()
+  }
+
+  columnSorter = (sortByIndex) => {
+    return function(rowA, rowB) {
+      if (rowA[sortByIndex] === rowB[sortByIndex]) {
+        return 0
+      } else {
+        return rowA[sortByIndex] < rowB[sortByIndex] ? -1 : 1
+      }
+    }
+  }
+
+  meetsFilterCriteria = (cellData, columnType, filters) => {
+    // if no filters are active:
+    if (filters.length === 0) return true
+
+    var meetsOneFilter = false
+    switch (columnType) {
+      case "dictionary":
+        for (const filterIndex in filters) {
+          if (Object.keys(cellData).indexOf(filters[filterIndex]) >= 0) {
+            meetsOneFilter = true
+          }
+        }
+        break
+      case "list":
+        for (const filterIndex in filters) {
+          if (cellData.indexOf(filters[filterIndex]) >= 0) {
+            meetsOneFilter = true
+          }
+        }
+        break
+      case "string":
+        for (const filterIndex in filters) {
+          if (cellData == filters[filterIndex]) {
+            meetsOneFilter = true
+          }
+        }
+        break
+    }
+    return meetsOneFilter
+  }
+
+  cellRenderer = ({ rowIndex, columnIndex, key, style }) => {
+    const { classes } = this.props
+    const {
+      hoveredRow,
+      selectedRows,
+      displayData,
+      sortColumnIndex,
+      sortDirection,
+    } = this.state
+
+    const column = columnData[columnIndex]
+
+    const isHeader = rowIndex === 0
+    const isSortableHeader = isHeader && column.sortable
+    const isStickyColumn = columnIndex === 0
+    const isBodyCell = !isHeader && !isStickyColumn
+    const isHovered = rowIndex > 0 && rowIndex === hoveredRow
+    const isSelected = rowIndex in selectedRows.lookup
+
+    const searchText = isHeader ? "" : this.state.searchText
+    var contents = isHeader
+      ? column.textLabel
+      : displayData[rowIndex - 1][columnIndex]
+
+    if (!contents) {
+      console.log(
+        "ERROR: no contents for ( rowIndex , columnIndex ) --> (",
+        rowIndex,
+        ",",
+        columnIndex,
+        ")",
+      )
+      contents = rowIndex - 1 + ", " + columnIndex
+    }
+
+    const handleCellClick = (rowIndex, columnIndex) => {
+      if (rowIndex === 0 && columnData[columnIndex].sortable) {
+        this.handleToggleSortColumn(columnIndex)
+      }
+      if (rowIndex > 0) {
+        false
+      }
+    }
+
+    const cellClassName = classNames(classes.cell, {
+      [classes.headCell]: isHeader,
+      [classes.sortableHeadCell]: isSortableHeader,
+      [classes.fixedColumnCell]: isStickyColumn,
+      [classes.bodyCell]: isBodyCell,
+      [classes.cellHovered]: isHovered,
+      [classes.cellSelected]: isSelected,
+    })
+
+    const cellContentsClassName = classNames(classes.cellContents, {
+      [classes.headCellContents]: isHeader,
+      [classes.bodyCellContents]: isBodyCell,
+      [classes.sortableHeadCellContents]: isSortableHeader,
+    })
+
+    return (
+      <TableCell
+        component="div"
+        className={cellClassName}
+        key={key}
+        style={style}
+        onMouseEnter={() => {
+          this.setState({ hoveredRow: rowIndex })
+          this.forceTableRefresh()
+        }}
+        onMouseLeave={() => {
+          this.setState({ hoveredRow: null })
+          this.forceTableRefresh()
+        }}
+      >
+        <span className={classes.tableCellContainer}>
+          {isHeader && columnIndex == sortColumnIndex ? (
+            <React.Fragment>
+              {sortDirection == "desc" ? (
+                <ArrowDownwardIcon className={classes.sortIcon} />
+              ) : (
+                <ArrowUpwardIcon className={classes.sortIcon} />
+              )}
+            </React.Fragment>
+          ) : (
+            false
+          )}
+          <CellContents
+            className={cellContentsClassName}
+            contents={contents}
+            searchText={searchText}
+            onClick={handleCellClick.bind(null, rowIndex, columnIndex)}
+          />
+        </span>
+      </TableCell>
+    )
+  }
+
+  handleFilterUpdate = (columnIndex, filterValue, filterType) => {
+    // update FilterList
+    this.setState((prevState) => {
+      var filterList = cloneDeep(prevState.filterList)
+      filterList[columnIndex] = filterValue === "" ? [] : filterValue.sort()
+      return { filterList: filterList }
+    })
+    this.updateDisplayData()
+  }
+
+  handleToggleSortColumn = (columnIndex) => {
+    this.setState((prevState) => {
+      var direction =
+        prevState.sortColumnIndex === columnIndex &&
+        prevState.sortDirection === "desc"
+          ? "asc"
+          : "desc"
+      return {
+        sortColumnIndex: columnIndex,
+        sortDirection: direction,
+      }
+    })
+    this.updateDisplayData()
+  }
+
+  handleResetFilters = () => {
+    this.setState((prevState) => ({
+      filterData: cloneDeep(this.initialFilterData),
+      filterList: columnData.map(() => []),
+    }))
+
+    this.updateDisplayData()
+  }
+
+  handleSearchTextChange = (searchText) => {
+    this.setState({
+      searchText: searchText,
+    })
+    this.forceTableRefresh()
+  }
+
+  /* NOTE: not implemented or tested */
+  handleToggleViewColumn = (index) => {
+    this.setState((prevState) => {
+      var columns = prevState.displayColumns
+      columns.splice(index, 1)
+      return { displayColumns: columns }
+    })
+    this.forceTableRefresh()
+  }
+
+  getColumnWidth = (index) => {
+    return columnData[index].width
+  }
+
+  getRowHeight = (index) => {
+    // 17=font height, 5 text rows, +10 for breathing room
+    return index === 0 ? 40 : 17 * 5 + 10
+  }
+
+  render() {
+    if (!productDataRowCount) return false
+
+    console.log("State on BedBugDataTable render: ", this.state)
+    const { classes } = this.props
+
+    const {
+      displayColumns,
+      displayData,
+      filterData,
+      filterList,
+      selectedRows,
+      searchText,
+      hoveredRow,
+    } = this.state
+
+    const displayRowCount = displayData.length
+
+    const width = 500
+    const containerHeight = 800
+    const multiGridHeight = 400
+
+    return (
+      <div className={classes.root} ref={(el) => (this.tableContent = el)}>
+        <div className={classes.toolbar}>
+          <MUIDataTableToolbar
+            columns={columnData}
+            data={productData}
+            searchText={searchText}
+            filterData={filterData}
+            filterList={filterList}
+            tableRef={() => this.tableContent}
+            onFilterUpdate={this.handleFilterUpdate}
+            onResetFilters={this.handleResetFilters}
+            onSearchTextChange={this.handleSearchTextChange}
+            onToggleViewColumn={this.handleToggleViewColumn}
+          />
+          <MUIDataTableFilterList
+            columns={columnData}
+            filterList={filterList}
+            onFilterUpdate={this.handleFilterUpdate}
+          />
+        </div>
+        <div className={classes.tableContainer}>
+          <AutoSizer>
+            {({ height, width }) => (
+              <Table className={classes.table} component="div">
+                <MultiGrid
+                  cellRenderer={this.cellRenderer}
+                  ref={(el) => (this.multiGridRef = el)}
+                  width={width}
+                  columnWidth={({ index }) => this.getColumnWidth(index)}
+                  columnCount={displayColumns.length}
+                  fixedColumnCount={1}
+                  height={height}
+                  rowHeight={({ index }) => this.getRowHeight(index)}
+                  rowCount={displayRowCount + 1}
+                  fixedRowCount={1}
+                  classNameTopLeftGrid={"topLeftGrid"}
+                  classNameTopRightGrid={"topRightGrid"}
+                  classNameBottomLeftGrid={"bottomLeftGrid"}
+                  classNameBottomRightGrid={"bottomRightGrid"}
+                />
+              </Table>
+            )}
+          </AutoSizer>
+        </div>
+        {false ? (
+          <div className={classes.footer}>
+            <div className={classes.footerContent}>
+              <p>Todos</p>
+              <ul>
+                <li>add column tooltips to explain terms (?)</li>
+                <li>fix cell overlap when too much data (add elipses...?)</li>
+              </ul>
+              <p>Made with: Next.js, Material-UI, react-virtualized</p>
+              <p>
+                Thanks to{" "}
+                <a href="https://github.com/techniq/mui-table">techniq</a> and{" "}
+                <a href="https://github.com/gregnb/mui-datatables">gregnb</a>{" "}
+                for your excellent work on mui-table and mui-datatables.
+              </p>
+            </div>
+          </div>
+        ) : (
+          false
+        )}
+      </div>
+    )
+  }
+}
+
+export default withStyles(tableStyles)(BedBugDataTable)

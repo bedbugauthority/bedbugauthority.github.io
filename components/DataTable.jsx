@@ -22,6 +22,8 @@ import { lighten } from "@material-ui/core/styles/colorManipulator"
 import SearchBar from "../components/SearchBar"
 import CellContents from "../components/CellContents"
 import BedBugProductData from "../data/BedBugProductData"
+import { columnData } from "../data/BedBugMetaData"
+import MUIDataTable from "mui-datatables"
 
 import Drawer from "@material-ui/core/Drawer"
 import List from "@material-ui/core/List"
@@ -33,114 +35,6 @@ import Todos from "../components/Todos"
 
 console.log("Imported data for " + BedBugProductData.length + " products.")
 console.log(BedBugProductData)
-
-const columnData = [
-  {
-    id: "productName",
-    type: "string",
-    disablePadding: true,
-    label: "Product Name",
-    sortable: true,
-  },
-  {
-    id: "manufacturer",
-    type: "string",
-    disablePadding: true,
-    label: "Manufacturer",
-    sortable: true,
-  },
-  {
-    id: "formulation",
-    type: "string",
-    disablePadding: true,
-    label: "Formulation",
-    sortable: true,
-  },
-  {
-    id: "activeIngredients",
-    type: "dictionary",
-    disablePadding: true,
-    label: "Active Ingredients",
-    sortable: false,
-  },
-  {
-    id: "mattressApplication",
-    type: "string",
-    disablePadding: true,
-    label: "Mattress Application",
-    sortable: true,
-  },
-  {
-    id: "labelApplications",
-    type: "list",
-    disablePadding: true,
-    label: "Label Applications",
-    sortable: false,
-  },
-  {
-    id: "labelRestrictions",
-    type: "list",
-    disablePadding: true,
-    label: "Label Restrictions",
-    sortable: false,
-  },
-  {
-    id: "epaRegisteredLabelClaims",
-    type: "list",
-    disablePadding: true,
-    label: "EPA Registered Label Claims",
-    sortable: false,
-  },
-  {
-    id: "otherReferencedProductAttributes",
-    type: "list",
-    disablePadding: true,
-    label: "Other Referenced Product Attributes",
-    sortable: false,
-  },
-  {
-    id: "signalWord",
-    type: "string",
-    disablePadding: true,
-    label: "Signal Word",
-    sortable: true,
-  },
-  {
-    id: "ppe",
-    type: "list",
-    disablePadding: true,
-    label: "PPE",
-    sortable: false,
-  },
-  {
-    id: "specimenLabel",
-    type: "string",
-    disablePadding: true,
-    label: "Specimen Label",
-    sortable: true,
-  },
-  {
-    id: "safetyDataSheet",
-    type: "string",
-    disablePadding: true,
-    label: "Safety Data Sheet",
-    sortable: true,
-  },
-  {
-    id: "labelDate",
-    type: "date",
-    disablePadding: true,
-    label: "Label Date",
-    sortable: true,
-  },
-  {
-    id: "reference",
-    type: "numeric",
-    disablePadding: true,
-    label: "Reference",
-    sortable: true,
-  },
-]
 
 let counter = 0
 function createData(
@@ -687,6 +581,97 @@ class DataTable extends React.Component {
           </div>
         </Paper>
         <Todos searchText={searchText} />
+        <MUIDataTable
+          title={"ACME Employee list"}
+          data={[
+            ["Gabby George", "Business Analyst", "Minneapolis", 30, "$100,000"],
+            ["Aiden Lloyd", "Business Consultant", "Dallas", 55, "$200,000"],
+            ["Jaden Collins", "Attorney", "Santa Ana", 27, "$500,000"],
+            [
+              "Franky Rees",
+              "Business Analyst",
+              "St. Petersburg",
+              22,
+              "$50,000",
+            ],
+            ["Aaren Rose", "Business Consultant", "Toledo", 28, "$75,000"],
+            [
+              "Blake Duncan",
+              "Business Management Analyst",
+              "San Diego",
+              65,
+              "$94,000",
+            ],
+            [
+              "Frankie Parry",
+              "Agency Legal Counsel",
+              "Jacksonville",
+              71,
+              "$210,000",
+            ],
+            ["Lane Wilson", "Commercial Specialist", "Omaha", 19, "$65,000"],
+            ["Robin Duncan", "Business Analyst", "Los Angeles", 20, "$77,000"],
+            [
+              "Mel Brooks",
+              "Business Consultant",
+              "Oklahoma City",
+              37,
+              "$135,000",
+            ],
+            ["Harper White", "Attorney", "Pittsburgh", 52, "$420,000"],
+            ["Kris Humphrey", "Agency Legal Counsel", "Laredo", 30, "$150,000"],
+            ["Frankie Long", "Industrial Analyst", "Austin", 31, "$170,000"],
+            ["Brynn Robbins", "Business Analyst", "Norfolk", 22, "$90,000"],
+            ["Justice Mann", "Business Consultant", "Chicago", 24, "$133,000"],
+            [
+              "Addison Navarro",
+              "Business Management Analyst",
+              "New York",
+              50,
+              "$295,000",
+            ],
+            ["Jesse Welch", "Agency Legal Counsel", "Seattle", 28, "$200,000"],
+            [
+              "Eli Mejia",
+              "Commercial Specialist",
+              "Long Beach",
+              65,
+              "$400,000",
+            ],
+            ["Gene Leblanc", "Industrial Analyst", "Hartford", 34, "$110,000"],
+            ["Danny Leon", "Computer Scientist", "Newark", 60, "$220,000"],
+            ["Lane Lee", "Corporate Counselor", "Cincinnati", 52, "$180,000"],
+            ["Jesse Hall", "Business Analyst", "Baltimore", 44, "$99,000"],
+            ["Danni Hudson", "Agency Legal Counsel", "Tampa", 37, "$90,000"],
+            [
+              "Terry Macdonald",
+              "Commercial Specialist",
+              "Miami",
+              39,
+              "$140,000",
+            ],
+            ["Justice Mccarthy", "Attorney", "Tucson", 26, "$330,000"],
+            ["Silver Carey", "Computer Scientist", "Memphis", 47, "$250,000"],
+            ["Franky Miles", "Industrial Analyst", "Buffalo", 49, "$190,000"],
+            ["Glen Nixon", "Corporate Counselor", "Arlington", 44, "$80,000"],
+            [
+              "Gabby Strickland",
+              "Business Process Consultant",
+              "Scottsdale",
+              26,
+              "$45,000",
+            ],
+            [
+              "Mason Ray",
+              "Computer Scientist",
+              "San Francisco",
+              39,
+              "$142,000",
+            ],
+          ]}
+          columns={["Name", "Title", "Location", "Age", "Salary"]}
+          options={{ filterType: "dropdown", responsive: "scroll" }}
+        />
       </React.Fragment>
     )
   }

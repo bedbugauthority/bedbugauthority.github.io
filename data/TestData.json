@@ -1,0 +1,54 @@
+{
+  "columns": ["id", "name", "calories", "fat", "carbs", "protein"],
+  "columnData": [
+    {
+      "display": true,
+      "filterable": false,
+      "name": "id",
+      "sort": true,
+      "sortDirection": null
+    },
+    {
+      "display": true,
+      "filterable": true,
+      "name": "name",
+      "sort": true,
+      "sortDirection": null
+    },
+    {
+      "display": true,
+      "filterable": true,
+      "name": "calories",
+      "sort": true,
+      "sortDirection": null
+    },
+    {
+      "display": true,
+      "filterable": true,
+      "name": "fat",
+      "sort": true,
+      "sortDirection": null
+    },
+    {
+      "display": true,
+      "filterable": true,
+      "name": "carbs",
+      "sort": true,
+      "sortDirection": null
+    },
+    {
+      "display": true,
+      "filterable": true,
+      "name": "protein",
+      "sort": true,
+      "sortDirection": null
+    }
+  ],
+  "data": [
+    [1, "Cupcake", 305, 3.7, 67, 4.3],
+    [2, "Donut", 452, 25.0, 51, 4.9],
+    [3, "Eclair", 262, 16.0, 24, 6.0],
+    [4, "Frozen yogurt", 159, 6.0, 24, 4.0],
+    [5, "Gingerbread", 356, 16.0, 49, 3.9]
+  ]
+}
