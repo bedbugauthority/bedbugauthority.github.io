@@ -15,9 +15,11 @@ import MUIDataTableToolbarSelect from "./MUIDataTableToolbarSelect"
 import MUIDataTableFilterList from "./MUIDataTableFilterList"
 import CellContents from "../components/CellContents"
 
-import { columnData } from "../data/BedBugMetaData"
+import columnData from "../data/BedBugColumnData"
 import productData from "../data/BedBugProductData"
 import textLabels from "../data/textLabels"
+
+const DEBUG = false
 
 const tableStyles = (theme) => ({
   root: {
@@ -138,12 +140,14 @@ class BedBugDataTable extends React.Component {
             }
             break
           default:
-            console.log(
-              "WARNING: column.type:",
-              column.type,
-              "Expected 'string', 'list', or 'dictionary'.",
-              "Fix this by editing the column definition in ./data/BedBugMetaData.json",
-            )
+            if (DEBUG) {
+              console.log(
+                "WARNING: column.type:",
+                column.type,
+                "Expected 'string', 'list', or 'dictionary'.",
+                "Fix this by editing the column definition in ./data/BedBugMetaData.json",
+              )
+            }
             break
         }
 
@@ -176,9 +180,10 @@ class BedBugDataTable extends React.Component {
       // true on first render, false otherwise
       initialUpdate: true,
     }
-
-    console.log("columnData: ", columnData)
-    console.log("productData: ", productData)
+    if (DEBUG) {
+      console.log("columnData: ", columnData)
+      console.log("productData: ", productData)
+    }
   }
 
   /* Call this when table data is updated, but number of rows stays the same. */
@@ -292,13 +297,15 @@ class BedBugDataTable extends React.Component {
       : displayData[rowIndex - 1][columnIndex]
 
     if (!contents && contents !== "") {
-      console.log(
-        "ERROR: no contents for ( rowIndex , columnIndex ) --> (",
-        rowIndex,
-        ",",
-        columnIndex,
-        ")",
-      )
+      if (DEBUG) {
+        console.log(
+          "ERROR: no contents for ( rowIndex , columnIndex ) --> (",
+          rowIndex,
+          ",",
+          columnIndex,
+          ")",
+        )
+      }
       contents = rowIndex - 1 + ", " + columnIndex
     }
 
@@ -427,7 +434,9 @@ class BedBugDataTable extends React.Component {
   render() {
     if (!productData.length) return false
 
-    console.log("State on BedBugDataTable render: ", this.state)
+    if (DEBUG) {
+      console.log("State on BedBugDataTable render: ", this.state)
+    }
     const { classes } = this.props
 
     const {
