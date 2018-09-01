@@ -11,7 +11,7 @@ import Select from "@material-ui/core/Select"
 import Checkbox from "@material-ui/core/Checkbox"
 import ListItemText from "@material-ui/core/ListItemText"
 import { withStyles } from "@material-ui/core/styles"
-import textLabels from "./textLabels"
+import textLabels from "../data/textLabels"
 
 const filterStyles = {
   root: {

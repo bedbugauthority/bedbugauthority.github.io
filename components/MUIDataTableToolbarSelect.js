@@ -5,7 +5,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 import Typography from "@material-ui/core/Typography"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { withStyles } from "@material-ui/core/styles"
-import textLabels from "./textLabels"
+import textLabels from "../data/textLabels"
 
 const toolbarSelectStyles = {
   root: {

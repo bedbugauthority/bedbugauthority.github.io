@@ -14,7 +14,7 @@ import FilterIcon from "@material-ui/icons/FilterList"
 import merge from "lodash.merge"
 import ReactToPrint from "react-to-print"
 import { withStyles } from "@material-ui/core/styles"
-import textLabels from "./textLabels"
+import textLabels from "../data/textLabels"
 
 const toolbarStyles = {
   root: {

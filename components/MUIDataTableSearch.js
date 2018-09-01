@@ -4,7 +4,7 @@ import SearchIcon from "@material-ui/icons/Search"
 import IconButton from "@material-ui/core/IconButton"
 import ClearIcon from "@material-ui/icons/Clear"
 import { withStyles } from "@material-ui/core/styles"
-import textLabels from "./textLabels"
+import textLabels from "../data/textLabels"
 
 const searchStyles = {
   main: {

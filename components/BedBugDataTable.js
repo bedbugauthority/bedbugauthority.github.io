@@ -1,72 +1,23 @@
-import BedBugProductData from "../data/BedBugProductData"
-import textLabels from "./custom-mui-datatable/textLabels"
+import { withStyles } from "@material-ui/core/styles"
+import classNames from "classnames"
+import PropTypes from "prop-types"
+import { cloneDeep } from "lodash"
 
 import { MultiGrid, AutoSizer } from "react-virtualized"
+
 import Table from "@material-ui/core/Table"
 import TableCell from "@material-ui/core/TableCell"
-import MUIDataTableToolbar from "./custom-mui-datatable/MUIDataTableToolbar"
-import MUIDataTableToolbarSelect from "./custom-mui-datatable/MUIDataTableToolbarSelect"
-import MUIDataTableFilterList from "./custom-mui-datatable/MUIDataTableFilterList"
-
-import { withStyles } from "@material-ui/core/styles"
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
-import classNames from "classnames"
+
+import MUIDataTableToolbar from "./MUIDataTableToolbar"
+import MUIDataTableToolbarSelect from "./MUIDataTableToolbarSelect"
+import MUIDataTableFilterList from "./MUIDataTableFilterList"
+import CellContents from "../components/CellContents"
 
 import { columnData } from "../data/BedBugMetaData"
-/* Array of column meta data, example:
-  {
-    "id": "productName",
-    "type": "string",
-    "disablePadding": true,
-    "textLabel": "Product Name",
-    "sortable": true,
-    "filterable": true,
-    "visible": true,
-    "width": 80
-  },
-*/
 import productData from "../data/BedBugProductData"
-/* Array of products, example product:
-{
-  "id": 12,
-  "productName": "ActiveGuard Mattress Liner",
-  "formulation": "Active mattress liner",
-  "manufacturer": "Allergy Technologies",
-  "activeIngredients": {
-    "permethrin": "1.64"
-  },
-  "mattressApplication": "Y",
-  "labelApplications": ["application to bedding"],
-  "labelRestrictions": [
-    "place mattress pad or sheet on top of liner",
-    "do not wash liner"
-  ],
-  "epaRegisteredLabelClaims": [
-    "kills bed bugs up to 2 years",
-    "use as a preventative tool within an IPM program"
-  ],
-  "otherReferencedProductAttributes": {
-    "attributeDescription":
-      "10 min exposure results in sig reduction in bites and eggs in all strains (504)",
-    "reference": "",
-    "residualActivity": "kills up to 2 years (L) (491)"
-  },
-  "signalWord": "none",
-  "ppe": ["wash hands after installation"],
-  "specimenLabel": "yes",
-  "safetyDataSheet": "yes",
-  "labelDate": "2015",
-  "reference": 504
-}
-*/
-
-// might not need these imports (?):
-//import { data, columns, columnData } from "../data/TestData"
-import CellContents from "../components/CellContents"
-import PropTypes from "prop-types"
-
-import { cloneDeep } from "lodash"
+import textLabels from "../data/textLabels"
 
 const tableStyles = (theme) => ({
   root: {
@@ -137,35 +88,30 @@ const tableStyles = (theme) => ({
   footerContent: {},
 })
 
-const productDataRowCount = productData.length
-
 class BedBugDataTable extends React.Component {
   constructor() {
     super()
 
     this.tableRef = false
 
-    /*
-    this.data = productData.map((row, index) => {
-      return { data: row, index: index }
-    })
-*/
+    const initialDisplayColumns = columnData.reduce(
+      (result, column, columnIndex) => {
+        if (column.visible) {
+          result.push({
+            id: column.id,
+            name: column.name,
+            type: column.type,
+            columnIndex: columnIndex,
+            displayIndex: result.length,
+          })
+        }
+        return result
+      },
+      [],
+    )
 
-    const displayColumns = columnData.reduce((result, column, columnIndex) => {
-      if (column.visible) {
-        result.push({
-          id: column.id,
-          name: column.name,
-          type: column.type,
-          columnIndex: columnIndex,
-          displayIndex: result.length,
-        })
-      }
-      return result
-    }, [])
-
-    const displayData = productData.map((product) =>
-      displayColumns.map((column) => product[column.id]),
+    const initialDisplayData = productData.map((product) =>
+      initialDisplayColumns.map((column) => product[column.id]),
     )
 
     this.initialFilterData = columnData.map((column) =>
@@ -207,9 +153,9 @@ class BedBugDataTable extends React.Component {
 
     this.state = {
       // list of displayed columns - properties: {id, name, columnIndex, displayIndex}
-      displayColumns: displayColumns,
+      displayColumns: initialDisplayColumns,
       // 2D array containing data to display
-      displayData: displayData,
+      displayData: initialDisplayData,
       // table index of the hovered row
       hoveredRow: null,
       // table indices of the selected rows
@@ -226,7 +172,9 @@ class BedBugDataTable extends React.Component {
       // index of column sorted by, default: productData order
       sortColumnIndex: null,
       // sortDirection: "asc" or "desc"
-      sortDirection: "desc",
+      sortDirection: "asc",
+      // true on first render, false otherwise
+      initialUpdate: true,
     }
 
     console.log("columnData: ", columnData)
@@ -266,12 +214,12 @@ class BedBugDataTable extends React.Component {
       const { sortColumnIndex, sortDirection } = prevState
       if (sortColumnIndex !== null) {
         displayData.sort(this.columnSorter(prevState.sortColumnIndex))
-        if (prevState.sortDirection === "desc") {
+        if (prevState.sortDirection === "asc") {
           displayData.reverse()
         }
       }
 
-      return { displayData: displayData }
+      return { displayData: displayData, initialUpdate: false }
     })
 
     // refresh display with new state
@@ -343,7 +291,7 @@ class BedBugDataTable extends React.Component {
       ? column.textLabel
       : displayData[rowIndex - 1][columnIndex]
 
-    if (!contents) {
+    if (!contents && contents !== "") {
       console.log(
         "ERROR: no contents for ( rowIndex , columnIndex ) --> (",
         rowIndex,
@@ -477,7 +425,7 @@ class BedBugDataTable extends React.Component {
   }
 
   render() {
-    if (!productDataRowCount) return false
+    if (!productData.length) return false
 
     console.log("State on BedBugDataTable render: ", this.state)
     const { classes } = this.props

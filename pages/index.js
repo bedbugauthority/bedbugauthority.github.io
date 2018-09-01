@@ -1,18 +1,17 @@
 import Head from "next/head"
-import Button from "@material-ui/core/Button"
-import DataTable from "../components/DataTable"
+import BedBugDataTable from "../components/BedBugDataTable"
 import withLayout from "../lib/withLayout"
-
-import PersistentDrawer from "../components/PersistentDrawer"
 
 const Index = () => (
   <React.Fragment>
     <Head>
-      <title>Bed Bug Products - Bed Bug Authority</title>
-      <meta name="description" content="This is description of Index page" />
+      <title>Bed Bug Products Table - The Bed Bug Authority</title>
+      <meta
+        name="description"
+        content="This is the description of the Index page"
+      />
     </Head>
-    <DataTable />
-    <PersistentDrawer />
+    <BedBugDataTable />
   </React.Fragment>
 )
 

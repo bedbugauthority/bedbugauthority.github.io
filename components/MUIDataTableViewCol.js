@@ -5,7 +5,7 @@ import FormControl from "@material-ui/core/FormControl"
 import FormGroup from "@material-ui/core/FormGroup"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import { withStyles } from "@material-ui/core/styles"
-import textLabels from "./textLabels"
+import textLabels from "../data/textLabels"
 
 export const viewColStyles = {
   root: {

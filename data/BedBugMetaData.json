@@ -56,7 +56,7 @@
       "sortable": false,
       "filterable": true,
       "visible": true,
-      "width": 150
+      "width": 300
     },
     {
       "id": "mattressApplication",
