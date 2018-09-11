@@ -1,58 +1,64 @@
-import React from "react"
-import classNames from "classnames"
-import PropTypes from "prop-types"
-import { withStyles } from "@material-ui/core/styles"
+import React from "react";
+import Text from "react";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 
-const styles = (theme) => ({
+const styles = theme => ({
   highlight: {
-    backgroundColor: "yellow",
+    backgroundColor: "yellow"
   },
   ul: {
     listStyleType: "none",
     padding: 0,
-    margin: 0,
+    margin: 0
   },
   textLine: {
     paddingRight: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit,
-  },
-})
+    paddingLeft: theme.spacing.unit
+  }
+});
 
 class CellContents extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
-  escapeRegExp = (literal_string) => {
-    return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&")
-  }
+  escapeRegExp = literal_string => {
+    return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
+  };
 
-  highlighter = (text) => {
+  highlighter = text => {
     if (this.props.searchText.length === 0) {
-      return text
+      return text;
     }
 
     const regex = new RegExp(
       "(" + this.escapeRegExp(this.props.searchText) + ")",
-      "gim",
-    )
-    const blocks = text.split(regex)
+      "gim"
+    );
+    const blocks = text.split(regex);
     const contents = blocks.map((block, index) => {
       if (block.match(regex)) {
         return (
           <span key={index} className={this.props.classes.highlight}>
             {block}
           </span>
-        )
+        );
       } else {
-        return <span key={index}>{block}</span>
+        return <span key={index}>{block}</span>;
       }
-    })
+    });
 
-    return <React.Fragment>{contents}</React.Fragment>
-  }
+    return <React.Fragment>{contents}</React.Fragment>;
+  };
 
-  parseArray = (array) => {
+  parseArray = array => {
+    if (array.length > 5) {
+      array = array.slice(0, 4);
+      array.push("...");
+    }
+
     return (
       <ul className={this.props.classes.ul}>
         {array.map((item, index) => {
@@ -62,19 +68,19 @@ class CellContents extends React.Component {
                 {this.highlighter(item)}
               </div>
             </li>
-          )
+          );
         })}
       </ul>
-    )
-  }
+    );
+  };
 
-  parseDict = (dict) => {
-    var array = []
+  parseDict = dict => {
+    var array = [];
     for (const [key, value] of Object.entries(dict)) {
-      array.push(key.toString() + ": " + value.toString())
+      array.push(key.toString() + ": " + value.toString());
     }
-    return this.parseArray(array)
-  }
+    return this.parseArray(array);
+  };
 
   render() {
     const {
@@ -83,33 +89,33 @@ class CellContents extends React.Component {
       onSearchTextMatch,
       contents,
       onClick,
-      classes,
-    } = this.props
-    var parsedContents
+      classes
+    } = this.props;
+    var parsedContents;
 
     if (Array.isArray(contents)) {
-      parsedContents = this.parseArray(contents)
+      parsedContents = this.parseArray(contents);
     } else if (typeof contents === "object" && contents !== null) {
-      parsedContents = this.parseDict(contents)
+      parsedContents = this.parseDict(contents);
     } else {
       parsedContents = (
         <div className={classes.textLine}>
           {this.highlighter(contents.toString())}
         </div>
-      )
+      );
     }
 
     return (
       <div className={className} onClick={onClick}>
         {parsedContents}
       </div>
-    )
+    );
   }
 }
 
 CellContents.propTypes = {
   searchText: PropTypes.string.isRequired,
-  classes: PropTypes.object.isRequired,
-}
+  classes: PropTypes.object.isRequired
+};
 
-export default withStyles(styles)(CellContents)
+export default withStyles(styles)(CellContents);

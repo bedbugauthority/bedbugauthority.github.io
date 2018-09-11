@@ -67,7 +67,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "width": 300
+    "width": 500
   },
   {
     "id": "epaRegisteredLabelClaims",
@@ -77,7 +77,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "width": 300
+    "width": 400
   },
   {
     "id": "otherReferencedProductAttributes",
