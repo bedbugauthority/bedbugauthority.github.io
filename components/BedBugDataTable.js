@@ -1,159 +1,162 @@
-import { withStyles } from "@material-ui/core/styles"
-import classNames from "classnames"
-import PropTypes from "prop-types"
-import { cloneDeep } from "lodash"
+import { withStyles } from "@material-ui/core/styles";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import { cloneDeep } from "lodash";
 
-import { MultiGrid, AutoSizer } from "react-virtualized"
+import { MultiGrid, AutoSizer } from "react-virtualized";
 
-import Table from "@material-ui/core/Table"
-import TableCell from "@material-ui/core/TableCell"
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
+import Table from "@material-ui/core/Table";
+import TableCell from "@material-ui/core/TableCell";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 
-import MUIDataTableToolbar from "./MUIDataTableToolbar"
-import MUIDataTableToolbarSelect from "./MUIDataTableToolbarSelect"
-import MUIDataTableFilterList from "./MUIDataTableFilterList"
-import CellContents from "../components/CellContents"
+import MUIDataTableToolbar from "./MUIDataTableToolbar";
+import MUIDataTableToolbarSelect from "./MUIDataTableToolbarSelect";
+import MUIDataTableFilterList from "./MUIDataTableFilterList";
+import CellContents from "../components/CellContents";
 
-import columnData from "../data/BedBugColumnData"
-import productData from "../data/BedBugProductData"
-import textLabels from "../data/textLabels"
+import columnData from "../data/BedBugColumnData";
+import productData from "../data/BedBugProductData";
+import textLabels from "../data/textLabels";
 
-const DEBUG = false
+const DEBUG = true;
 
-const tableStyles = (theme) => ({
+const tableStyles = theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
     flex: "1 1 auto",
-    height: "100vh",
+    height: "100vh"
   },
   toolbar: {
-    flex: "0 0 auto",
+    flex: "0 0 auto"
   },
   tableContainer: {
-    flex: "1 1 auto",
+    flex: "1 1 auto"
   },
   table: {
-    fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+    fontFamily: "Roboto, Helvetica, Arial, sans-serif"
   },
   sortIcon: {
     height: 16,
     width: 16,
-    marginLeft: 8,
+    marginLeft: 8
   },
   tableCellContainer: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row"
   },
   cell: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    padding: 0,
+    padding: 0
   },
   headCell: {
     fontSize: "0.75rem",
     fontWeight: "500",
     borderBottom: "1px solid gray",
-    borderRight: "1px solid rgba(224, 224, 224, 1)",
+    borderRight: "1px solid rgba(224, 224, 224, 1)"
   },
   fixedColumnCell: {
     fontSize: "0.8125rem",
     fontWeight: "500",
     borderRight: "1px solid gray",
-    alignItems: "center",
+    alignItems: "center"
   },
   bodyCell: {
-    borderRight: "1px solid rgba(224, 224, 224, 1)",
+    borderRight: "1px solid rgba(224, 224, 224, 1)"
   },
   cellContents: {},
   sortableHeadCellContents: {
-    cursor: "pointer",
+    cursor: "pointer"
   },
   bodyCellContents: {
     fontSize: "0.8125rem",
-    fontWeight: "400",
+    fontWeight: "400"
   },
   cellSelected: {
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.grey[100]
   },
   cellHovered: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[200]
   },
   footer: {
     display: "flex",
     justifyContent: "center",
     flex: "0 0 auto",
-    backgroundColor: "gray",
+    backgroundColor: "gray"
   },
-  footerContent: {},
-})
+  footerContent: {}
+});
 
 class BedBugDataTable extends React.Component {
   constructor() {
-    super()
+    super();
 
-    this.tableRef = false
+    this.tableRef = false;
 
     const initialDisplayColumns = columnData.reduce(
       (result, column, columnIndex) => {
         if (column.visible) {
           result.push({
             id: column.id,
-            name: column.name,
+            name: column.textLabel,
             type: column.type,
             columnIndex: columnIndex,
-            displayIndex: result.length,
-          })
+            displayIndex: result.length
+          });
         }
-        return result
+        return result;
       },
-      [],
-    )
+      []
+    );
 
-    const initialDisplayData = productData.map((product) =>
-      initialDisplayColumns.map((column) => product[column.id]),
-    )
+    const initialDisplayData = productData.map(product =>
+      initialDisplayColumns.map(column => product[column.id])
+    );
 
-    this.initialFilterData = columnData.map((column) =>
+    this.initialFilterData = columnData.map(column =>
       productData.reduce((columnResult, productRow) => {
-        const productValue = productRow[column.id]
+        const productValue = productRow[column.id];
         switch (column.type) {
           case "dictionary":
             for (const key in productValue) {
               if (columnResult.indexOf(key) === -1) {
-                columnResult.push(key)
+                columnResult.push(key);
               }
             }
-            break
+            break;
           case "list":
             for (const index in productValue) {
               if (columnResult.indexOf(productValue[index]) === -1) {
-                columnResult.push(productValue[index])
+                columnResult.push(productValue[index]);
               }
             }
-            break
+            break;
+          case "list_custom1":
+            // The column otherReferencedProductAttributes is not filterable
+            break;
           case "string":
             if (columnResult.indexOf(productValue) === -1) {
-              columnResult.push(productValue)
+              columnResult.push(productValue);
             }
-            break
+            break;
           default:
             if (DEBUG) {
               console.log(
                 "WARNING: column.type:",
                 column.type,
                 "Expected 'string', 'list', or 'dictionary'.",
-                "Fix this by editing the column definition in ./data/BedBugMetaData.json",
-              )
+                "Fix this by editing the column definition in ./data/BedBugMetaData.json"
+              );
             }
-            break
+            break;
         }
 
-        return columnResult.sort()
-      }, []),
-    )
+        return columnResult.sort();
+      }, [])
+    );
 
     this.state = {
       // list of displayed columns - properties: {id, name, columnIndex, displayIndex}
@@ -165,7 +168,7 @@ class BedBugDataTable extends React.Component {
       // table indices of the selected rows
       selectedRows: {
         data: [],
-        lookup: {},
+        lookup: {}
       },
       // one array of unique column values per row in column data
       filterData: cloneDeep(this.initialFilterData),
@@ -178,123 +181,130 @@ class BedBugDataTable extends React.Component {
       // sortDirection: "asc" or "desc"
       sortDirection: "asc",
       // true on first render, false otherwise
-      initialUpdate: true,
-    }
+      initialUpdate: true
+    };
     if (DEBUG) {
-      console.log("columnData: ", columnData)
-      console.log("productData: ", productData)
+      console.log("columnData: ", columnData);
+      console.log("productData: ", productData);
     }
   }
 
   /* Call this when table data is updated, but number of rows stays the same. */
   forceTableRefresh() {
-    this.multiGridRef.forceUpdateGrids()
+    this.multiGridRef.forceUpdateGrids();
   }
 
   /* Call this when number of rows might change (e.g. on sort/filter update). */
   updateDisplayData = () => {
     // recalculate displayData from scratch
-    this.setState((prevState) => {
+    this.setState(prevState => {
       var displayData = productData.reduce((result, product) => {
-        var filteredOut = false
+        var filteredOut = false;
         const productRow = prevState.displayColumns.reduce(
           (rowResult, column, columnIndex) => {
-            if (filteredOut) return []
+            if (filteredOut) return [];
 
-            const cellData = product[column.id]
-            const filters = prevState.filterList[columnIndex]
+            const cellData = product[column.id];
+            const filters = prevState.filterList[columnIndex];
 
             if (!this.meetsFilterCriteria(cellData, column.type, filters))
-              filteredOut = true
+              filteredOut = true;
 
-            rowResult.push(product[column.id])
-            return rowResult
+            rowResult.push(product[column.id]);
+            return rowResult;
           },
-          [],
-        )
-        if (!filteredOut) result.push(productRow)
-        return result
-      }, [])
+          []
+        );
+        if (!filteredOut) result.push(productRow);
+        return result;
+      }, []);
 
-      const { sortColumnIndex, sortDirection } = prevState
+      const { sortColumnIndex, sortDirection } = prevState;
       if (sortColumnIndex !== null) {
-        displayData.sort(this.columnSorter(prevState.sortColumnIndex))
+        displayData.sort(this.columnSorter(prevState.sortColumnIndex));
         if (prevState.sortDirection === "asc") {
-          displayData.reverse()
+          displayData.reverse();
         }
       }
 
-      return { displayData: displayData, initialUpdate: false }
-    })
+      return { displayData: displayData, initialUpdate: false };
+    });
 
     // refresh display with new state
-    this.forceTableRefresh()
-  }
+    this.forceTableRefresh();
+  };
 
-  columnSorter = (sortByIndex) => {
+  columnSorter = sortByIndex => {
     return function(rowA, rowB) {
       if (rowA[sortByIndex] === rowB[sortByIndex]) {
-        return 0
+        return 0;
       } else {
-        return rowA[sortByIndex] < rowB[sortByIndex] ? -1 : 1
+        return rowA[sortByIndex] < rowB[sortByIndex] ? -1 : 1;
       }
-    }
-  }
+    };
+  };
 
   meetsFilterCriteria = (cellData, columnType, filters) => {
     // if no filters are active:
-    if (filters.length === 0) return true
+    if (filters.length === 0) return true;
 
-    var meetsOneFilter = false
+    var meetsOneFilter = false;
     switch (columnType) {
       case "dictionary":
         for (const filterIndex in filters) {
           if (Object.keys(cellData).indexOf(filters[filterIndex]) >= 0) {
-            meetsOneFilter = true
+            meetsOneFilter = true;
           }
         }
-        break
+        break;
       case "list":
         for (const filterIndex in filters) {
           if (cellData.indexOf(filters[filterIndex]) >= 0) {
-            meetsOneFilter = true
+            meetsOneFilter = true;
           }
         }
-        break
+        break;
+      case "list_custom1":
+        for (const filterIndex in filters) {
+          if (cellData.indexOf(filters[filterIndex]) >= 0) {
+            meetsOneFilter = true;
+          }
+        }
+        break;
       case "string":
         for (const filterIndex in filters) {
           if (cellData == filters[filterIndex]) {
-            meetsOneFilter = true
+            meetsOneFilter = true;
           }
         }
-        break
+        break;
     }
-    return meetsOneFilter
-  }
+    return meetsOneFilter;
+  };
 
   cellRenderer = ({ rowIndex, columnIndex, key, style }) => {
-    const { classes } = this.props
+    const { classes } = this.props;
     const {
       hoveredRow,
       selectedRows,
       displayData,
       sortColumnIndex,
-      sortDirection,
-    } = this.state
+      sortDirection
+    } = this.state;
 
-    const column = columnData[columnIndex]
+    const column = columnData[columnIndex];
 
-    const isHeader = rowIndex === 0
-    const isSortableHeader = isHeader && column.sortable
-    const isStickyColumn = columnIndex === 0
-    const isBodyCell = !isHeader && !isStickyColumn
-    const isHovered = rowIndex > 0 && rowIndex === hoveredRow
-    const isSelected = rowIndex in selectedRows.lookup
+    const isHeader = rowIndex === 0;
+    const isSortableHeader = isHeader && column.sortable;
+    const isStickyColumn = columnIndex === 0;
+    const isBodyCell = !isHeader && !isStickyColumn;
+    const isHovered = rowIndex > 0 && rowIndex === hoveredRow;
+    const isSelected = rowIndex in selectedRows.lookup;
 
-    const searchText = isHeader ? "" : this.state.searchText
+    const searchText = isHeader ? "" : this.state.searchText;
     var contents = isHeader
       ? column.textLabel
-      : displayData[rowIndex - 1][columnIndex]
+      : displayData[rowIndex - 1][columnIndex];
 
     if (!contents && contents !== "") {
       if (DEBUG) {
@@ -303,20 +313,20 @@ class BedBugDataTable extends React.Component {
           rowIndex,
           ",",
           columnIndex,
-          ")",
-        )
+          ")"
+        );
       }
-      contents = rowIndex - 1 + ", " + columnIndex
+      contents = rowIndex - 1 + ", " + columnIndex;
     }
 
     const handleCellClick = (rowIndex, columnIndex) => {
       if (rowIndex === 0 && columnData[columnIndex].sortable) {
-        this.handleToggleSortColumn(columnIndex)
+        this.handleToggleSortColumn(columnIndex);
       }
       if (rowIndex > 0) {
-        false
+        false;
       }
-    }
+    };
 
     const cellClassName = classNames(classes.cell, {
       [classes.headCell]: isHeader,
@@ -324,14 +334,14 @@ class BedBugDataTable extends React.Component {
       [classes.fixedColumnCell]: isStickyColumn,
       [classes.bodyCell]: isBodyCell,
       [classes.cellHovered]: isHovered,
-      [classes.cellSelected]: isSelected,
-    })
+      [classes.cellSelected]: isSelected
+    });
 
     const cellContentsClassName = classNames(classes.cellContents, {
       [classes.headCellContents]: isHeader,
       [classes.bodyCellContents]: isBodyCell,
-      [classes.sortableHeadCellContents]: isSortableHeader,
-    })
+      [classes.sortableHeadCellContents]: isSortableHeader
+    });
 
     return (
       <TableCell
@@ -340,12 +350,12 @@ class BedBugDataTable extends React.Component {
         key={key}
         style={style}
         onMouseEnter={() => {
-          this.setState({ hoveredRow: rowIndex })
-          this.forceTableRefresh()
+          this.setState({ hoveredRow: rowIndex });
+          this.forceTableRefresh();
         }}
         onMouseLeave={() => {
-          this.setState({ hoveredRow: null })
-          this.forceTableRefresh()
+          this.setState({ hoveredRow: null });
+          this.forceTableRefresh();
         }}
       >
         <span className={classes.tableCellContainer}>
@@ -363,81 +373,85 @@ class BedBugDataTable extends React.Component {
           <CellContents
             className={cellContentsClassName}
             contents={contents}
+            contentsType={isHeader ? "string" : column.type}
             searchText={searchText}
+            nowrap={isHeader || isStickyColumn}
             onClick={handleCellClick.bind(null, rowIndex, columnIndex)}
           />
         </span>
       </TableCell>
-    )
-  }
+    );
+  };
 
   handleFilterUpdate = (columnIndex, filterValue, filterType) => {
     // update FilterList
-    this.setState((prevState) => {
-      var filterList = cloneDeep(prevState.filterList)
-      filterList[columnIndex] = filterValue === "" ? [] : filterValue.sort()
-      return { filterList: filterList }
-    })
-    this.updateDisplayData()
-  }
+    this.setState(prevState => {
+      var filterList = cloneDeep(prevState.filterList);
+      filterList[columnIndex] = filterValue === "" ? [] : filterValue.sort();
+      return { filterList: filterList };
+    });
+    this.updateDisplayData();
+  };
 
-  handleToggleSortColumn = (columnIndex) => {
-    this.setState((prevState) => {
+  handleToggleSortColumn = columnIndex => {
+    this.setState(prevState => {
       var direction =
         prevState.sortColumnIndex === columnIndex &&
         prevState.sortDirection === "desc"
           ? "asc"
-          : "desc"
+          : "desc";
       return {
         sortColumnIndex: columnIndex,
-        sortDirection: direction,
-      }
-    })
-    this.updateDisplayData()
-  }
+        sortDirection: direction
+      };
+    });
+    this.updateDisplayData();
+  };
 
   handleResetFilters = () => {
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       filterData: cloneDeep(this.initialFilterData),
-      filterList: columnData.map(() => []),
-    }))
+      filterList: columnData.map(() => [])
+    }));
 
-    this.updateDisplayData()
-  }
+    this.updateDisplayData();
+  };
 
-  handleSearchTextChange = (searchText) => {
+  handleSearchTextChange = searchText => {
     this.setState({
-      searchText: searchText,
-    })
-    this.forceTableRefresh()
-  }
+      searchText: searchText
+    });
+    this.forceTableRefresh();
+  };
 
-  /* NOTE: not implemented or tested */
-  handleToggleViewColumn = (index) => {
-    this.setState((prevState) => {
-      var columns = prevState.displayColumns
-      columns.splice(index, 1)
-      return { displayColumns: columns }
-    })
-    this.forceTableRefresh()
-  }
+  /* NOTE: not tested */
+  /*
+  handleToggleViewColumn = index => {
+    this.setState(prevState => {
+      var columns = prevState.displayColumns;
+      columns.splice(index, 1);
+      return { displayColumns: columns };
+    });
+    this.forceTableRefresh();
+  };
+  */
 
-  getColumnWidth = (index) => {
-    return columnData[index].width
-  }
+  getColumnWidth = index => {
+    return columnData[index].width;
+  };
 
-  getRowHeight = (index) => {
+  getRowHeight = index => {
     // 17=font height, 5 text rows, +10 for breathing room
-    return index === 0 ? 40 : 17 * 5 + 10
-  }
+    return index === 0 ? 40 : 17 * 5 + 10;
+  };
 
   render() {
-    if (!productData.length) return false
+    if (!productData.length) return false;
 
     if (DEBUG) {
-      console.log("State on BedBugDataTable render: ", this.state)
+      console.log("State on BedBugDataTable render: ", this.state);
     }
-    const { classes } = this.props
+    const { classes } = this.props;
 
     const {
       displayColumns,
@@ -446,17 +460,17 @@ class BedBugDataTable extends React.Component {
       filterList,
       selectedRows,
       searchText,
-      hoveredRow,
-    } = this.state
+      hoveredRow
+    } = this.state;
 
-    const displayRowCount = displayData.length
+    const displayRowCount = displayData.length;
 
-    const width = 500
-    const containerHeight = 800
-    const multiGridHeight = 400
+    const width = 500;
+    const containerHeight = 800;
+    const multiGridHeight = 400;
 
     return (
-      <div className={classes.root} ref={(el) => (this.tableContent = el)}>
+      <div className={classes.root} ref={el => (this.tableContent = el)}>
         <div className={classes.toolbar}>
           <MUIDataTableToolbar
             columns={columnData}
@@ -482,7 +496,7 @@ class BedBugDataTable extends React.Component {
               <Table className={classes.table} component="div">
                 <MultiGrid
                   cellRenderer={this.cellRenderer}
-                  ref={(el) => (this.multiGridRef = el)}
+                  ref={el => (this.multiGridRef = el)}
                   width={width}
                   columnWidth={({ index }) => this.getColumnWidth(index)}
                   columnCount={displayColumns.length}
@@ -521,8 +535,8 @@ class BedBugDataTable extends React.Component {
           false
         )}
       </div>
-    )
+    );
   }
 }
 
-export default withStyles(tableStyles)(BedBugDataTable)
+export default withStyles(tableStyles)(BedBugDataTable);

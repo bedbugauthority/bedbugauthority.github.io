@@ -16,6 +16,11 @@ const styles = theme => ({
   textLine: {
     paddingRight: theme.spacing.unit,
     paddingLeft: theme.spacing.unit
+  },
+  textLineWrap: {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
   }
 });
 
@@ -64,7 +69,11 @@ class CellContents extends React.Component {
         {array.map((item, index) => {
           return (
             <li key={index}>
-              <div className={this.props.classes.textLine}>
+              <div
+                className={classNames(this.props.classes.textLine, {
+                  [this.props.classes.textLineWrap]: !this.props.nowrap
+                })}
+              >
                 {this.highlighter(item)}
               </div>
             </li>
@@ -79,7 +88,40 @@ class CellContents extends React.Component {
     for (const [key, value] of Object.entries(dict)) {
       array.push(key.toString() + ": " + value.toString());
     }
+    /*
+    if (array.length > 0) {
+      return this.parseArray(array);
+    } else {
+      return "";
+    }*/
     return this.parseArray(array);
+  };
+
+  /* Special handling for custom column: otherReferencedProductAttributes */
+  list_custom1_ToList = obj => {
+    var list = [];
+
+    for (var i = 0; i < obj.length; i++) {
+      const dict = obj[i];
+      const description = dict["Attribute Description"];
+      const notes = dict["Notes"];
+      const type = dict["Type"];
+      const peer = dict["Peer Reviewed"];
+      const ref = dict["Reference"];
+      const str =
+        description +
+        ": " +
+        notes +
+        " (type: " +
+        type +
+        ", peer-reviewed?: " +
+        peer +
+        ", reference: " +
+        ref +
+        ")";
+      list.push(str);
+    }
+    return list;
   };
 
   render() {
@@ -88,21 +130,31 @@ class CellContents extends React.Component {
       searchText,
       onSearchTextMatch,
       contents,
+      contentsType,
       onClick,
       classes
     } = this.props;
     var parsedContents;
 
-    if (Array.isArray(contents)) {
-      parsedContents = this.parseArray(contents);
-    } else if (typeof contents === "object" && contents !== null) {
-      parsedContents = this.parseDict(contents);
-    } else {
-      parsedContents = (
-        <div className={classes.textLine}>
-          {this.highlighter(contents.toString())}
-        </div>
-      );
+    switch (contentsType) {
+      case "list":
+        parsedContents = this.parseArray(contents);
+        break;
+      case "list_custom1":
+        const contentsToList = this.list_custom1_ToList(contents);
+        parsedContents = this.parseArray(contentsToList);
+        break;
+      case "dictionary":
+        parsedContents = this.parseDict(contents);
+        break;
+      default:
+        // i.e. case: string, date, numeric
+        parsedContents = (
+          <div className={classes.textLine}>
+            {this.highlighter(contents.toString())}
+          </div>
+        );
+        break;
     }
 
     return (

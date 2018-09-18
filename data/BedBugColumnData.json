@@ -81,13 +81,13 @@
   },
   {
     "id": "otherReferencedProductAttributes",
-    "type": "list",
+    "type": "list_custom1",
     "disablePadding": true,
     "textLabel": "Other Referenced Product Attributes",
     "sortable": false,
-    "filterable": true,
+    "filterable": false,
     "visible": true,
-    "width": 300
+    "width": 800
   },
   {
     "id": "signalWord",
