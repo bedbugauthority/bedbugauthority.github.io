@@ -19,7 +19,7 @@ import columnData from "../data/BedBugColumnData";
 import productData from "../data/BedBugProductData";
 import textLabels from "../data/textLabels";
 
-const DEBUG = true;
+const DEBUG = false;
 
 const tableStyles = theme => ({
   root: {
