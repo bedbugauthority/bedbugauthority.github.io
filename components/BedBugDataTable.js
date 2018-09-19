@@ -374,6 +374,7 @@ class BedBugDataTable extends React.Component {
             className={cellContentsClassName}
             contents={contents}
             contentsType={isHeader ? "string" : column.type}
+            width={column.width}
             searchText={searchText}
             nowrap={isHeader || isStickyColumn}
             onClick={handleCellClick.bind(null, rowIndex, columnIndex)}

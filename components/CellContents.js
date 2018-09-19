@@ -1,5 +1,4 @@
 import React from "react";
-import Text from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -79,6 +78,11 @@ class CellContents extends React.Component {
             </li>
           );
         })}
+        <style jsx>{`
+          ul {
+            width: ${this.props.width}px;
+          }
+        `}</style>
       </ul>
     );
   };
@@ -152,6 +156,12 @@ class CellContents extends React.Component {
         parsedContents = (
           <div className={classes.textLine}>
             {this.highlighter(contents.toString())}
+
+            <style jsx>{`
+              div {
+                width: ${this.props.width}px;
+              }
+            `}</style>
           </div>
         );
         break;
