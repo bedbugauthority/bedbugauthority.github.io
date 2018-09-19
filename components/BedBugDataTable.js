@@ -62,7 +62,8 @@ const tableStyles = theme => ({
     fontSize: "0.8125rem",
     fontWeight: "500",
     borderRight: "1px solid gray",
-    alignItems: "center"
+    alignItems: "center",
+    textAlign: "center"
   },
   bodyCell: {
     borderRight: "1px solid rgba(224, 224, 224, 1)"
@@ -521,7 +522,8 @@ class BedBugDataTable extends React.Component {
               <p>Todos</p>
               <ul>
                 <li>add column tooltips to explain terms (?)</li>
-                <li>fix cell overlap when too much data (add elipses...?)</li>
+                <li>add filters for otherReferencedProductAttributes column</li>
+                <li>add reference links/downloads</li>
               </ul>
               <p>Made with: Next.js, Material-UI, react-virtualized</p>
               <p>
