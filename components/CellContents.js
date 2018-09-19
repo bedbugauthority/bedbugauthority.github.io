@@ -156,12 +156,6 @@ class CellContents extends React.Component {
         parsedContents = (
           <div className={classes.textLine}>
             {this.highlighter(contents.toString())}
-
-            <style jsx>{`
-              div {
-                width: ${this.props.width}px;
-              }
-            `}</style>
           </div>
         );
         break;
