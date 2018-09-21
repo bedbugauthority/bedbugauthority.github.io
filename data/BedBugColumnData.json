@@ -4,6 +4,7 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Product Name",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
@@ -14,6 +15,7 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Manufacturer",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
@@ -24,6 +26,7 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Formulation",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
@@ -34,26 +37,29 @@
     "type": "dictionary",
     "disablePadding": true,
     "textLabel": "Active Ingredients",
+    "dataAppend": " %",
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "width": 300
+    "width": 200
   },
   {
     "id": "mattressApplication",
     "type": "string",
     "disablePadding": true,
     "textLabel": "Mattress Application",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 150
+    "width": 80
   },
   {
     "id": "labelApplications",
     "type": "list",
     "disablePadding": true,
     "textLabel": "Label Applications",
+    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
@@ -64,16 +70,18 @@
     "type": "list",
     "disablePadding": true,
     "textLabel": "Label Restrictions",
+    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "width": 500
+    "width": 400
   },
   {
     "id": "epaRegisteredLabelClaims",
     "type": "list",
     "disablePadding": true,
     "textLabel": "EPA Registered Label Claims",
+    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
@@ -84,26 +92,29 @@
     "type": "list_custom1",
     "disablePadding": true,
     "textLabel": "Other Referenced Product Attributes",
+    "dataAppend": "",
     "sortable": false,
     "filterable": false,
     "visible": true,
-    "width": 800
+    "width": 400
   },
   {
     "id": "signalWord",
     "type": "string",
     "disablePadding": true,
     "textLabel": "Signal Word",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 100
+    "width": 80
   },
   {
     "id": "ppe",
     "type": "list",
     "disablePadding": true,
     "textLabel": "PPE",
+    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
@@ -114,39 +125,43 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Specimen Label",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 150
+    "width": 80
   },
   {
     "id": "safetyDataSheet",
     "type": "string",
     "disablePadding": true,
     "textLabel": "Safety Data Sheet",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 150
+    "width": 80
   },
   {
     "id": "labelDate",
     "type": "date",
     "disablePadding": true,
     "textLabel": "Label Date",
+    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 100
+    "width": 80
   },
   {
     "id": "reference",
     "type": "numeric",
     "disablePadding": true,
     "textLabel": "Reference",
+    "dataAppend": "",
     "sortable": true,
     "filterable": false,
     "visible": true,
-    "width": 100
+    "width": 80
   }
 ]

@@ -63,6 +63,8 @@ class CellContents extends React.Component {
       array.push("...");
     }
 
+    const append = this.props.dataAppend ? this.props.dataAppend : "";
+
     return (
       <ul className={this.props.classes.ul}>
         {array.map((item, index) => {
@@ -73,7 +75,7 @@ class CellContents extends React.Component {
                   [this.props.classes.textLineWrap]: !this.props.nowrap
                 })}
               >
-                {this.highlighter(item)}
+                {this.highlighter(item + append)}
               </div>
             </li>
           );
@@ -134,6 +136,7 @@ class CellContents extends React.Component {
       searchText,
       onSearchTextMatch,
       contents,
+      dataAppend,
       contentsType,
       onClick,
       classes
@@ -153,9 +156,10 @@ class CellContents extends React.Component {
         break;
       default:
         // i.e. case: string, date, numeric
+        const append = dataAppend ? dataAppend : "";
         parsedContents = (
           <div className={classes.textLine}>
-            {this.highlighter(contents.toString())}
+            {this.highlighter(contents.toString() + append)}
           </div>
         );
         break;
