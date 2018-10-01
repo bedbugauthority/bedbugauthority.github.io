@@ -19,7 +19,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 150
+    "width": 130
   },
   {
     "id": "formulation",
@@ -30,7 +30,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 150
+    "width": 130
   },
   {
     "id": "activeIngredients",
@@ -52,7 +52,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 80
+    "width": 100
   },
   {
     "id": "labelApplications",
@@ -63,7 +63,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "width": 300
+    "width": 200
   },
   {
     "id": "labelRestrictions",
@@ -74,7 +74,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "width": 400
+    "width": 200
   },
   {
     "id": "epaRegisteredLabelClaims",
@@ -85,7 +85,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "width": 400
+    "width": 200
   },
   {
     "id": "otherReferencedProductAttributes",
@@ -96,7 +96,7 @@
     "sortable": false,
     "filterable": false,
     "visible": true,
-    "width": 400
+    "width": 200
   },
   {
     "id": "signalWord",
@@ -107,7 +107,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 80
+    "width": 100
   },
   {
     "id": "ppe",
@@ -129,7 +129,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 80
+    "width": 100
   },
   {
     "id": "safetyDataSheet",
@@ -140,7 +140,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 80
+    "width": 100
   },
   {
     "id": "labelDate",
@@ -151,7 +151,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "width": 80
+    "width": 100
   },
   {
     "id": "reference",
@@ -162,6 +162,6 @@
     "sortable": true,
     "filterable": false,
     "visible": true,
-    "width": 80
+    "width": 100
   }
 ]

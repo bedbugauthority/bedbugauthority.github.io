@@ -14,6 +14,7 @@ import MUIDataTableToolbar from "./MUIDataTableToolbar";
 import MUIDataTableToolbarSelect from "./MUIDataTableToolbarSelect";
 import MUIDataTableFilterList from "./MUIDataTableFilterList";
 import CellContents from "../components/CellContents";
+import PaperScrollDialog from "../components/PaperScrollDialog";
 
 import columnData from "../data/BedBugColumnData";
 import productData from "../data/BedBugProductData";
@@ -81,6 +82,9 @@ const tableStyles = theme => ({
   },
   cellHovered: {
     backgroundColor: theme.palette.grey[200]
+  },
+  dialogCell: {
+    border: "0px solid black"
   },
   footer: {
     display: "flex",
@@ -181,6 +185,12 @@ class BedBugDataTable extends React.Component {
       sortColumnIndex: null,
       // sortDirection: "asc" or "desc"
       sortDirection: "asc",
+      // used by popover dialog component
+      cellDialog: {
+        open: false,
+        row: null,
+        column: null
+      },
       // true on first render, false otherwise
       initialUpdate: true
     };
@@ -188,6 +198,10 @@ class BedBugDataTable extends React.Component {
       console.log("columnData: ", columnData);
       console.log("productData: ", productData);
     }
+
+    /* save the style set by react-virtualized's table CellRenderer so we can
+         reuse the style in our dialog */
+    this.cellStyle = null;
   }
 
   /* Call this when table data is updated, but number of rows stays the same. */
@@ -283,7 +297,7 @@ class BedBugDataTable extends React.Component {
     return meetsOneFilter;
   };
 
-  cellRenderer = ({ rowIndex, columnIndex, key, style }) => {
+  cellRenderer = ({ rowIndex, columnIndex, key, style, isInDialog }) => {
     const { classes } = this.props;
     const {
       hoveredRow,
@@ -293,13 +307,19 @@ class BedBugDataTable extends React.Component {
       sortDirection
     } = this.state;
 
+    if (isInDialog) {
+      if (!rowIndex || !columnIndex) {
+        return false;
+      }
+    }
+
     const column = columnData[columnIndex];
 
     const isHeader = rowIndex === 0;
     const isSortableHeader = isHeader && column.sortable;
     const isStickyColumn = columnIndex === 0;
     const isBodyCell = !isHeader && !isStickyColumn;
-    const isHovered = rowIndex > 0 && rowIndex === hoveredRow;
+    const isHovered = rowIndex > 0 && rowIndex && !isInDialog === hoveredRow;
     const isSelected = rowIndex in selectedRows.lookup;
 
     const searchText = isHeader ? "" : this.state.searchText;
@@ -324,9 +344,11 @@ class BedBugDataTable extends React.Component {
       if (rowIndex === 0 && columnData[columnIndex].sortable) {
         this.handleToggleSortColumn(columnIndex);
       }
-      if (rowIndex > 0) {
-        false;
+      // TODO: change if to check cell state and only expand cell when it has been truncated
+      if (rowIndex > 0 && columnIndex > 0) {
+        this.handleClickOpenDialog(rowIndex, columnIndex);
       }
+      return false;
     };
 
     const cellClassName = classNames(classes.cell, {
@@ -335,7 +357,8 @@ class BedBugDataTable extends React.Component {
       [classes.fixedColumnCell]: isStickyColumn,
       [classes.bodyCell]: isBodyCell,
       [classes.cellHovered]: isHovered,
-      [classes.cellSelected]: isSelected
+      [classes.cellSelected]: isSelected,
+      [classes.dialogCell]: isInDialog // last in list to override border assignment
     });
 
     const cellContentsClassName = classNames(classes.cellContents, {
@@ -344,6 +367,7 @@ class BedBugDataTable extends React.Component {
       [classes.sortableHeadCellContents]: isSortableHeader
     });
 
+    //TODO: add mark to truncated cells (problem: how to detect elipsized cells?)
     return (
       <TableCell
         component="div"
@@ -358,6 +382,7 @@ class BedBugDataTable extends React.Component {
           this.setState({ hoveredRow: null });
           this.forceTableRefresh();
         }}
+        onClick={handleCellClick.bind(null, rowIndex, columnIndex)}
       >
         <span className={classes.tableCellContainer}>
           {isHeader && columnIndex == sortColumnIndex ? (
@@ -378,8 +403,7 @@ class BedBugDataTable extends React.Component {
             contentsType={isHeader ? "string" : column.type}
             width={column.width}
             searchText={searchText}
-            nowrap={isHeader || isStickyColumn}
-            onClick={handleCellClick.bind(null, rowIndex, columnIndex)}
+            wrap={isInDialog || isHeader || isStickyColumn}
           />
         </span>
       </TableCell>
@@ -427,6 +451,26 @@ class BedBugDataTable extends React.Component {
     this.forceTableRefresh();
   };
 
+  handleClickOpenDialog = (rowIndex, columnIndex) => {
+    this.setState({
+      cellDialog: {
+        open: true,
+        row: rowIndex,
+        column: columnIndex
+      }
+    });
+  };
+
+  handleCloseDialog = () => {
+    this.setState({
+      cellDialog: {
+        open: false,
+        row: null,
+        column: null
+      }
+    });
+  };
+
   /* NOTE: not tested */
   /*
   handleToggleViewColumn = index => {
@@ -449,7 +493,10 @@ class BedBugDataTable extends React.Component {
   };
 
   render() {
-    if (!productData.length) return false;
+    if (!productData || !productData.length) {
+      console.log("Warning: product data not found.");
+      return false;
+    }
 
     if (DEBUG) {
       console.log("State on BedBugDataTable render: ", this.state);
@@ -463,81 +510,107 @@ class BedBugDataTable extends React.Component {
       filterList,
       selectedRows,
       searchText,
-      hoveredRow
+      hoveredRow,
+      cellDialog
     } = this.state;
 
-    const displayRowCount = displayData.length;
+    const dataTableToolbar = (
+      <div className={classes.toolbar}>
+        <MUIDataTableToolbar
+          columns={columnData}
+          data={productData}
+          searchText={searchText}
+          filterData={filterData}
+          filterList={filterList}
+          tableRef={() => this.tableContent}
+          onFilterUpdate={this.handleFilterUpdate}
+          onResetFilters={this.handleResetFilters}
+          onSearchTextChange={this.handleSearchTextChange}
+          onToggleViewColumn={this.handleToggleViewColumn}
+        />
+        <MUIDataTableFilterList
+          columns={columnData}
+          filterList={filterList}
+          onFilterUpdate={this.handleFilterUpdate}
+        />
+      </div>
+    );
 
+    const displayRowCount = displayData.length;
     const width = 500;
     const containerHeight = 800;
     const multiGridHeight = 400;
+    const dataTable = (
+      <div className={classes.tableContainer}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <Table className={classes.table} component="div">
+              <MultiGrid
+                cellRenderer={this.cellRenderer}
+                ref={el => (this.multiGridRef = el)}
+                width={width}
+                columnWidth={({ index }) => this.getColumnWidth(index)}
+                columnCount={displayColumns.length}
+                fixedColumnCount={1}
+                height={height}
+                rowHeight={({ index }) => this.getRowHeight(index)}
+                rowCount={displayRowCount + 1}
+                fixedRowCount={1}
+                classNameTopLeftGrid={"topLeftGrid"}
+                classNameTopRightGrid={"topRightGrid"}
+                classNameBottomLeftGrid={"bottomLeftGrid"}
+                classNameBottomRightGrid={"bottomRightGrid"}
+              />
+            </Table>
+          )}
+        </AutoSizer>
+      </div>
+    );
+
+    const cellDialogColumn = columnData[cellDialog.columnIndex];
+    const paperScrollDialog = (
+      <PaperScrollDialog
+        open={cellDialog.open}
+        handleClickOpen={this.handleClickOpenDialog}
+        handleClose={this.handleCloseDialog}
+      >
+        <Table className={classes.table} component="div">
+          {this.cellRenderer({
+            rowIndex: cellDialog.row,
+            columnIndex: cellDialog.column,
+            key: 0,
+            style: this.cellStyle,
+            isInDialog: true
+          })}
+        </Table>
+      </PaperScrollDialog>
+    );
+
+    const footer = (
+      <div className={classes.footer}>
+        <div className={classes.footerContent}>
+          <p>Todos</p>
+          <ul>
+            <li>add column tooltips to explain terms (?)</li>
+            <li>add filters for otherReferencedProductAttributes column</li>
+            <li>add reference links/downloads</li>
+          </ul>
+          <p>Made with: Next.js, Material-UI, react-virtualized</p>
+          <p>
+            Thanks to <a href="https://github.com/techniq/mui-table">techniq</a>{" "}
+            and <a href="https://github.com/gregnb/mui-datatables">gregnb</a>{" "}
+            for your excellent work on mui-table and mui-datatables.
+          </p>
+        </div>
+      </div>
+    );
 
     return (
       <div className={classes.root} ref={el => (this.tableContent = el)}>
-        <div className={classes.toolbar}>
-          <MUIDataTableToolbar
-            columns={columnData}
-            data={productData}
-            searchText={searchText}
-            filterData={filterData}
-            filterList={filterList}
-            tableRef={() => this.tableContent}
-            onFilterUpdate={this.handleFilterUpdate}
-            onResetFilters={this.handleResetFilters}
-            onSearchTextChange={this.handleSearchTextChange}
-            onToggleViewColumn={this.handleToggleViewColumn}
-          />
-          <MUIDataTableFilterList
-            columns={columnData}
-            filterList={filterList}
-            onFilterUpdate={this.handleFilterUpdate}
-          />
-        </div>
-        <div className={classes.tableContainer}>
-          <AutoSizer>
-            {({ height, width }) => (
-              <Table className={classes.table} component="div">
-                <MultiGrid
-                  cellRenderer={this.cellRenderer}
-                  ref={el => (this.multiGridRef = el)}
-                  width={width}
-                  columnWidth={({ index }) => this.getColumnWidth(index)}
-                  columnCount={displayColumns.length}
-                  fixedColumnCount={1}
-                  height={height}
-                  rowHeight={({ index }) => this.getRowHeight(index)}
-                  rowCount={displayRowCount + 1}
-                  fixedRowCount={1}
-                  classNameTopLeftGrid={"topLeftGrid"}
-                  classNameTopRightGrid={"topRightGrid"}
-                  classNameBottomLeftGrid={"bottomLeftGrid"}
-                  classNameBottomRightGrid={"bottomRightGrid"}
-                />
-              </Table>
-            )}
-          </AutoSizer>
-        </div>
-        {false ? (
-          <div className={classes.footer}>
-            <div className={classes.footerContent}>
-              <p>Todos</p>
-              <ul>
-                <li>add column tooltips to explain terms (?)</li>
-                <li>add filters for otherReferencedProductAttributes column</li>
-                <li>add reference links/downloads</li>
-              </ul>
-              <p>Made with: Next.js, Material-UI, react-virtualized</p>
-              <p>
-                Thanks to{" "}
-                <a href="https://github.com/techniq/mui-table">techniq</a> and{" "}
-                <a href="https://github.com/gregnb/mui-datatables">gregnb</a>{" "}
-                for your excellent work on mui-table and mui-datatables.
-              </p>
-            </div>
-          </div>
-        ) : (
-          false
-        )}
+        {dataTableToolbar}
+        {dataTable}
+        {paperScrollDialog}
+        {false ? footer : false}
       </div>
     );
   }

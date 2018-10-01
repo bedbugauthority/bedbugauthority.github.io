@@ -1,4 +1,3 @@
-import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -58,7 +57,7 @@ class CellContents extends React.Component {
   };
 
   parseArray = array => {
-    if (array.length > 5) {
+    if (!this.props.wrap && array.length > 5) {
       array = array.slice(0, 4);
       array.push("...");
     }
@@ -72,7 +71,7 @@ class CellContents extends React.Component {
             <li key={index}>
               <div
                 className={classNames(this.props.classes.textLine, {
-                  [this.props.classes.textLineWrap]: !this.props.nowrap
+                  [this.props.classes.textLineWrap]: !this.props.wrap
                 })}
               >
                 {this.highlighter(item + append)}
@@ -138,7 +137,6 @@ class CellContents extends React.Component {
       contents,
       dataAppend,
       contentsType,
-      onClick,
       classes
     } = this.props;
     var parsedContents;
@@ -165,11 +163,7 @@ class CellContents extends React.Component {
         break;
     }
 
-    return (
-      <div className={className} onClick={onClick}>
-        {parsedContents}
-      </div>
-    );
+    return <div className={className}>{parsedContents}</div>;
   }
 }
 
