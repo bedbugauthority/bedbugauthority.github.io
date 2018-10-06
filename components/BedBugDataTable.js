@@ -401,7 +401,7 @@ class BedBugDataTable extends React.Component {
             contents={contents}
             dataAppend={isHeader ? "" : column.dataAppend}
             contentsType={isHeader ? "string" : column.type}
-            width={column.width}
+            width={isInDialog ? 400 : column.width}
             searchText={searchText}
             wrap={isInDialog || isHeader || isStickyColumn}
           />

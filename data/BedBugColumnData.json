@@ -155,7 +155,7 @@
   },
   {
     "id": "reference",
-    "type": "numeric",
+    "type": "link",
     "disablePadding": true,
     "textLabel": "Reference",
     "dataAppend": "",

@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import Link from "next/link";
 
 const styles = theme => ({
   highlight: {
@@ -29,6 +30,16 @@ class CellContents extends React.Component {
 
   escapeRegExp = literal_string => {
     return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
+  };
+
+  linkify = ref_id => {
+    //TODO: modify url to link to correct resource here
+    const href = "/" + ref_id;
+    return (
+      <Link href={href}>
+        <a>{ref_id}</a>
+      </Link>
+    );
   };
 
   highlighter = text => {
@@ -141,6 +152,8 @@ class CellContents extends React.Component {
     } = this.props;
     var parsedContents;
 
+    const append = dataAppend ? dataAppend : "";
+
     switch (contentsType) {
       case "list":
         parsedContents = this.parseArray(contents);
@@ -152,9 +165,16 @@ class CellContents extends React.Component {
       case "dictionary":
         parsedContents = this.parseDict(contents);
         break;
+      case "link":
+        // i.e. case: string, date, numeric
+        parsedContents = (
+          <div className={classes.textLine}>
+            {this.linkify(this.highlighter(contents.toString() + append))}
+          </div>
+        );
+        break;
       default:
         // i.e. case: string, date, numeric
-        const append = dataAppend ? dataAppend : "";
         parsedContents = (
           <div className={classes.textLine}>
             {this.highlighter(contents.toString() + append)}
