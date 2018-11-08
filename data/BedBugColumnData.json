@@ -148,8 +148,8 @@
     "disablePadding": true,
     "textLabel": "Label Date",
     "dataAppend": "",
-    "sortable": true,
-    "filterable": true,
+    "sortable": false,
+    "filterable": false,
     "visible": true,
     "width": 100
   },
@@ -159,7 +159,7 @@
     "disablePadding": true,
     "textLabel": "Reference",
     "dataAppend": "",
-    "sortable": true,
+    "sortable": false,
     "filterable": false,
     "visible": true,
     "width": 100

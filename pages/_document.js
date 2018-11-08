@@ -1,7 +1,6 @@
-import React from "react"
-import Document, { Head, Main, NextScript } from "next/document"
-import JssProvider from "react-jss/lib/JssProvider"
-import getContext from "../lib/context"
+import Document, { Head, Main, NextScript } from "next/document";
+import JssProvider from "react-jss/lib/JssProvider";
+import getContext from "../lib/context";
 
 class MyDocument extends Document {
   render() {
@@ -85,20 +84,20 @@ class MyDocument extends Document {
           <NextScript />
         </body>
       </html>
-    )
+    );
   }
 }
 
 MyDocument.getInitialProps = ({ renderPage }) => {
-  const pageContext = getContext()
-  const page = renderPage((Component) => (props) => (
+  const pageContext = getContext();
+  const page = renderPage(Component => props => (
     <JssProvider
       registry={pageContext.sheetsRegistry}
       generateClassName={pageContext.generateClassName}
     >
       <Component pageContext={pageContext} {...props} />
     </JssProvider>
-  ))
+  ));
 
   return {
     ...page,
@@ -108,11 +107,11 @@ MyDocument.getInitialProps = ({ renderPage }) => {
         id="jss-server-side"
         // eslint-disable-next-line
         dangerouslySetInnerHTML={{
-          __html: pageContext.sheetsRegistry.toString(),
+          __html: pageContext.sheetsRegistry.toString()
         }}
       />
-    ),
-  }
-}
+    )
+  };
+};
 
-export default MyDocument
+export default MyDocument;

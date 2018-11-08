@@ -32,11 +32,11 @@ class CellContents extends React.Component {
     return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
   };
 
-  linkify = ref_id => {
+  linkify = (ref_id, filetype = "pdf") => {
     //TODO: modify url to link to correct resource here
-    const href = "/" + ref_id;
+    const href = "/static/" + ref_id + "." + filetype;
     return (
-      <Link href={href}>
+      <Link href={href} target="_blank">
         <a>{ref_id}</a>
       </Link>
     );
