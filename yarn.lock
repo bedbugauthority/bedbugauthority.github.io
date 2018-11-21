@@ -3390,14 +3390,6 @@ lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
 
-lodash.get@^4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
-
-lodash.memoize@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
-
 lodash.merge@^4.6.0:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
@@ -3615,19 +3607,6 @@ move-concurrently@^1.0.1:
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
-
-mui-datatables@^2.0.0-beta-17:
-  version "2.0.0-beta-20"
-  resolved "https://registry.yarnpkg.com/mui-datatables/-/mui-datatables-2.0.0-beta-20.tgz#55210b9b6cf80a3d188dba713f814191fdf8d0d5"
-  dependencies:
-    classnames "^2.2.5"
-    lodash.clonedeep "^4.5.0"
-    lodash.debounce "^4.0.8"
-    lodash.get "^4.4.2"
-    lodash.memoize "^4.1.2"
-    lodash.merge "^4.6.0"
-    prop-types "^15.6.0"
-    react-to-print "^1.0.10"
 
 mute-stream@0.0.7:
   version "0.0.7"
