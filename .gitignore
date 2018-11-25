@@ -11,4 +11,3 @@ node_modules/
 .coverage
 .env
 .next
-.ipynb_checkpoints/
