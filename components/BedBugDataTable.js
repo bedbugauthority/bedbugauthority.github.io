@@ -19,6 +19,7 @@ import PaperScrollDialog from "../components/PaperScrollDialog";
 import columnData from "../data/BedBugColumnData";
 import productData from "../data/BedBugProductData";
 import textLabels from "../data/textLabels";
+import reference_list from "../data/reference_list.json";
 
 const DEBUG = false;
 
@@ -100,6 +101,7 @@ class BedBugDataTable extends React.Component {
     super();
 
     this.tableRef = false;
+    this.refList = reference_list;
 
     const initialDisplayColumns = columnData.reduce(
       (result, column, columnIndex) => {
@@ -404,10 +406,15 @@ class BedBugDataTable extends React.Component {
             width={isInDialog ? 400 : column.width}
             searchText={searchText}
             wrap={isInDialog || isHeader || isStickyColumn}
+            refLookupById={this.refLookupById}
           />
         </span>
       </TableCell>
     );
+  };
+
+  refLookupById = id => {
+    return this.refList[id];
   };
 
   handleFilterUpdate = (columnIndex, filterValue, filterType) => {

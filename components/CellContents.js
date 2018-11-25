@@ -32,16 +32,6 @@ class CellContents extends React.Component {
     return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
   };
 
-  linkify = (ref_id, filetype = "pdf") => {
-    //TODO: modify url to link to correct resource here
-    const href = "/static/" + ref_id + "." + filetype;
-    return (
-      <Link href={href} target="_blank">
-        <a>{ref_id}</a>
-      </Link>
-    );
-  };
-
   highlighter = text => {
     if (this.props.searchText.length === 0) {
       return text;
@@ -65,6 +55,21 @@ class CellContents extends React.Component {
     });
 
     return <React.Fragment>{contents}</React.Fragment>;
+  };
+
+  linkify = (ref_id, lookupFunc = "") => {
+    //TODO: modify url to link to correct resource here
+    var href = "/static/";
+    if (lookupFunc) {
+      href += lookupFunc(ref_id);
+    } else {
+      href += ref_id;
+    }
+    return (
+      <Link href={href}>
+        <a>{ref_id}</a>
+      </Link>
+    );
   };
 
   parseArray = array => {
@@ -148,6 +153,7 @@ class CellContents extends React.Component {
       contents,
       dataAppend,
       contentsType,
+      refLookupById,
       classes
     } = this.props;
     var parsedContents;
@@ -169,7 +175,10 @@ class CellContents extends React.Component {
         // i.e. case: string, date, numeric
         parsedContents = (
           <div className={classes.textLine}>
-            {this.linkify(this.highlighter(contents.toString() + append))}
+            {this.linkify(
+              this.highlighter(contents.toString() + append),
+              refLookupById
+            )}
           </div>
         );
         break;
