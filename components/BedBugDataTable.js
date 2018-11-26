@@ -105,6 +105,9 @@ class BedBugDataTable extends React.Component {
 
     this.tableRef = false;
     this.refList = reference_list;
+    /* save the style set by react-virtualized's table CellRenderer so we can
+         reuse the style in our dialog */
+    this.cellStyle = null;
 
     const initialDisplayColumns = columnData.reduce(
       (result, column, columnIndex) => {
@@ -203,10 +206,6 @@ class BedBugDataTable extends React.Component {
       console.log("columnData: ", columnData);
       console.log("productData: ", productData);
     }
-
-    /* save the style set by react-virtualized's table CellRenderer so we can
-         reuse the style in our dialog */
-    this.cellStyle = null;
   }
 
   /* Call this when table data is updated, but number of rows stays the same. */
@@ -361,7 +360,6 @@ class BedBugDataTable extends React.Component {
     if (rowIndex > 0 && column.backgroundStyleTextMatcher) {
       backgroundClass =
         classes["background_" + column.backgroundStyleTextMatcher[contents]];
-      console.log(backgroundClass);
     }
 
     const cellClassName = classNames(classes.cell, {
