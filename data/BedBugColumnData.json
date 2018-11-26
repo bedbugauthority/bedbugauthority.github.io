@@ -115,6 +115,11 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "backgroundStyleTextMatcher": {
+      "None": "green",
+      "Caution": "yellow",
+      "Warning": "red"
+    },
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
     "width": 100

@@ -70,6 +70,9 @@ const tableStyles = theme => ({
   bodyCell: {
     borderRight: "1px solid rgba(224, 224, 224, 1)"
   },
+  background_red: { backgroundColor: "LightPink" },
+  background_yellow: { backgroundColor: "LightYellow" },
+  background_green: { backgroundColor: "LightGreen" },
   cellContents: {},
   sortableHeadCellContents: {
     cursor: "pointer"
@@ -354,6 +357,13 @@ class BedBugDataTable extends React.Component {
       return false;
     };
 
+    var backgroundClass = null;
+    if (rowIndex > 0 && column.backgroundStyleTextMatcher) {
+      backgroundClass =
+        classes["background_" + column.backgroundStyleTextMatcher[contents]];
+      console.log(backgroundClass);
+    }
+
     const cellClassName = classNames(classes.cell, {
       [classes.headCell]: isHeader,
       [classes.sortableHeadCell]: isSortableHeader,
@@ -361,6 +371,7 @@ class BedBugDataTable extends React.Component {
       [classes.bodyCell]: isBodyCell,
       [classes.cellHovered]: isHovered,
       [classes.cellSelected]: isSelected,
+      [backgroundClass]: column.backgroundStyleTextMatcher,
       [classes.dialogCell]: isInDialog // last in list to override border assignment
     });
 
@@ -402,6 +413,7 @@ class BedBugDataTable extends React.Component {
           <CellContents
             className={cellContentsClassName}
             contents={contents}
+            backgroundToolStyles={column.backgroundToolStyles}
             contentsType={isHeader ? "string" : column.type}
             width={isInDialog ? 500 : column.width}
             biggerListSpacing={
