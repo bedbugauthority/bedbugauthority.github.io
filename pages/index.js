@@ -1,18 +1,21 @@
-import Head from "next/head"
-import BedBugDataTable from "../components/BedBugDataTable"
-import withLayout from "../lib/withLayout"
+import Head from "next/head";
+import BedBugDataTable from "../components/BedBugDataTable";
+import textLabels from "../data/textLabels";
+import withLayout from "../lib/withLayout";
 
 const Index = () => (
   <React.Fragment>
     <Head>
-      <title>Bed Bug Products Table - The Bed Bug Authority</title>
+      <title>
+        {textLabels.title} - {textLabels.siteName}
+      </title>
       <meta
         name="description"
-        content="This is the description of the Index page"
+        content={textLabels.title + " - " + textLabels.siteName}
       />
     </Head>
     <BedBugDataTable />
   </React.Fragment>
-)
+);
 
-export default withLayout(Index)
+export default withLayout(Index);
