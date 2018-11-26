@@ -459,13 +459,15 @@ class BedBugDataTable extends React.Component {
   };
 
   handleClickOpenDialog = (rowIndex, columnIndex) => {
-    this.setState({
-      cellDialog: {
-        open: true,
-        row: rowIndex,
-        column: columnIndex
-      }
-    });
+    if (columnData[columnIndex].canOpenDialog) {
+      this.setState({
+        cellDialog: {
+          open: true,
+          row: rowIndex,
+          column: columnIndex
+        }
+      });
+    }
   };
 
   handleCloseDialog = () => {
