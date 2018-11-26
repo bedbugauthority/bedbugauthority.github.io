@@ -133,7 +133,7 @@
   },
   {
     "id": "specimenLabel",
-    "type": "link",
+    "type": "string",
     "disablePadding": true,
     "textLabel": "Specimen Label",
     "dataAppend": "",
@@ -145,7 +145,7 @@
   },
   {
     "id": "safetyDataSheet",
-    "type": "link",
+    "type": "string",
     "disablePadding": true,
     "textLabel": "Safety Data Sheet",
     "dataAppend": "",
