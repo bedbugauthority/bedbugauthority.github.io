@@ -77,14 +77,12 @@ class CellContents extends React.Component {
   };
 
   parseArray = array => {
-    const { dataAppend, width, wrap, biggerListSpacing, classes } = this.props;
+    const { width, wrap, biggerListSpacing, classes } = this.props;
 
     if (!wrap && array.length > 5) {
       array = array.slice(0, 4);
       array.push("...");
     }
-
-    const append = dataAppend ? dataAppend : "";
 
     return (
       <ul className={classes.ul}>
@@ -99,7 +97,7 @@ class CellContents extends React.Component {
                   [classes.textLineWrap]: !wrap
                 })}
               >
-                {this.highlighter(item + append)}
+                {this.highlighter(item)}
               </div>
             </li>
           );
@@ -163,14 +161,11 @@ class CellContents extends React.Component {
       searchText,
       onSearchTextMatch,
       contents,
-      dataAppend,
       contentsType,
       refLookupById,
       classes
     } = this.props;
     var parsedContents;
-
-    const append = dataAppend ? dataAppend : "";
 
     switch (contentsType) {
       case "list":
@@ -187,10 +182,7 @@ class CellContents extends React.Component {
         // i.e. case: string, date, numeric
         parsedContents = (
           <div className={classes.textLine}>
-            {this.linkify(
-              this.highlighter(contents.toString() + append),
-              refLookupById
-            )}
+            {this.linkify(this.highlighter(contents.toString()), refLookupById)}
           </div>
         );
         break;
@@ -198,7 +190,7 @@ class CellContents extends React.Component {
         // i.e. case: string, date, numeric
         parsedContents = (
           <div className={classes.textLine}>
-            {this.highlighter(contents.toString() + append)}
+            {this.highlighter(contents.toString())}
           </div>
         );
         break;

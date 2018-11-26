@@ -402,7 +402,6 @@ class BedBugDataTable extends React.Component {
           <CellContents
             className={cellContentsClassName}
             contents={contents}
-            dataAppend={isHeader ? "" : column.dataAppend}
             contentsType={isHeader ? "string" : column.type}
             width={isInDialog ? 500 : column.width}
             biggerListSpacing={
