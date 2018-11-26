@@ -323,6 +323,7 @@ class BedBugDataTable extends React.Component {
     const isBodyCell = !isHeader && !isStickyColumn;
     const isHovered = rowIndex > 0 && rowIndex && !isInDialog === hoveredRow;
     const isSelected = rowIndex in selectedRows.lookup;
+    const hasBiggerDialogMargins = column.biggerDialogMargins;
 
     const searchText = isHeader ? "" : this.state.searchText;
     var contents = isHeader
@@ -403,7 +404,10 @@ class BedBugDataTable extends React.Component {
             contents={contents}
             dataAppend={isHeader ? "" : column.dataAppend}
             contentsType={isHeader ? "string" : column.type}
-            width={isInDialog ? 400 : column.width}
+            width={isInDialog ? 500 : column.width}
+            biggerListSpacing={
+              isInDialog ? column.biggerDialogListSpacing : false
+            }
             searchText={searchText}
             wrap={isInDialog || isHeader || isStickyColumn}
             refLookupById={this.refLookupById}

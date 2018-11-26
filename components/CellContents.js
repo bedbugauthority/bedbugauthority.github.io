@@ -16,6 +16,10 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit,
     paddingLeft: theme.spacing.unit
   },
+  li: {},
+  liWithMargin: {
+    margin: "1em 0"
+  },
   textLineWrap: {
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -73,21 +77,26 @@ class CellContents extends React.Component {
   };
 
   parseArray = array => {
-    if (!this.props.wrap && array.length > 5) {
+    const { dataAppend, width, wrap, biggerListSpacing, classes } = this.props;
+
+    if (!wrap && array.length > 5) {
       array = array.slice(0, 4);
       array.push("...");
     }
 
-    const append = this.props.dataAppend ? this.props.dataAppend : "";
+    const append = dataAppend ? dataAppend : "";
 
     return (
-      <ul className={this.props.classes.ul}>
+      <ul className={classes.ul}>
         {array.map((item, index) => {
           return (
-            <li key={index}>
+            <li
+              className={biggerListSpacing ? classes.liWithMargin : classes.li}
+              key={index}
+            >
               <div
-                className={classNames(this.props.classes.textLine, {
-                  [this.props.classes.textLineWrap]: !this.props.wrap
+                className={classNames(classes.textLine, {
+                  [classes.textLineWrap]: !wrap
                 })}
               >
                 {this.highlighter(item + append)}
@@ -97,7 +106,7 @@ class CellContents extends React.Component {
         })}
         <style jsx>{`
           ul {
-            width: ${this.props.width}px;
+            width: ${width}px;
           }
         `}</style>
       </ul>
@@ -129,17 +138,20 @@ class CellContents extends React.Component {
       const type = dict["Type"];
       const peer = dict["Peer Reviewed"];
       const ref = dict["Reference"];
+      const ref_summary = ref + "-summary";
       const str =
         description +
         ": " +
         notes +
-        " (type: " +
+        " " +
         type +
-        ", peer-reviewed?: " +
-        peer +
-        ", reference: " +
+        " study, " +
+        (peer === "Yes" ? " " : "not ") +
+        "peer-reviewed (" +
         ref +
-        ")";
+        ", " +
+        ref_summary +
+        ").";
       list.push(str);
     }
     return list;
