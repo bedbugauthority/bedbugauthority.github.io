@@ -4,10 +4,11 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Product Name",
-    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 250
   },
   {
@@ -15,10 +16,11 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Manufacturer",
-    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 130
   },
   {
@@ -26,10 +28,11 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Formulation",
-    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 130
   },
   {
@@ -37,10 +40,11 @@
     "type": "dictionary",
     "disablePadding": true,
     "textLabel": "Active Ingredients",
-    "dataAppend": " %",
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": true,
+    "biggerDialogListSpacing": false,
     "width": 200
   },
   {
@@ -48,10 +52,11 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Mattress Application",
-    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 100
   },
   {
@@ -59,10 +64,11 @@
     "type": "list",
     "disablePadding": true,
     "textLabel": "Label Applications",
-    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": true,
+    "biggerDialogListSpacing": false,
     "width": 200
   },
   {
@@ -70,10 +76,11 @@
     "type": "list",
     "disablePadding": true,
     "textLabel": "Label Restrictions",
-    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": true,
+    "biggerDialogListSpacing": false,
     "width": 200
   },
   {
@@ -81,10 +88,11 @@
     "type": "list",
     "disablePadding": true,
     "textLabel": "EPA Registered Label Claims",
-    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": true,
+    "biggerDialogListSpacing": false,
     "width": 200
   },
   {
@@ -92,10 +100,11 @@
     "type": "list_custom1",
     "disablePadding": true,
     "textLabel": "Other Referenced Product Attributes",
-    "dataAppend": "",
     "sortable": false,
     "filterable": false,
     "visible": true,
+    "canOpenDialog": true,
+    "biggerDialogListSpacing": true,
     "width": 200
   },
   {
@@ -103,10 +112,16 @@
     "type": "string",
     "disablePadding": true,
     "textLabel": "Signal Word",
-    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "backgroundStyleTextMatcher": {
+      "None": "green",
+      "Caution": "yellow",
+      "Warning": "red"
+    },
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 100
   },
   {
@@ -114,32 +129,35 @@
     "type": "list",
     "disablePadding": true,
     "textLabel": "PPE",
-    "dataAppend": "",
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 150
   },
   {
     "id": "specimenLabel",
-    "type": "string",
+    "type": "link",
     "disablePadding": true,
     "textLabel": "Specimen Label",
-    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 100
   },
   {
     "id": "safetyDataSheet",
-    "type": "string",
+    "type": "link",
     "disablePadding": true,
     "textLabel": "Safety Data Sheet",
-    "dataAppend": "",
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 100
   },
   {
@@ -147,10 +165,11 @@
     "type": "date",
     "disablePadding": true,
     "textLabel": "Label Date",
-    "dataAppend": "",
     "sortable": false,
     "filterable": false,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 100
   },
   {
@@ -158,10 +177,11 @@
     "type": "link",
     "disablePadding": true,
     "textLabel": "Reference",
-    "dataAppend": "",
     "sortable": false,
     "filterable": false,
     "visible": true,
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
     "width": 100
   }
 ]

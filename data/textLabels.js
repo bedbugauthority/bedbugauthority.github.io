@@ -1,6 +1,7 @@
 const textLabels = {
-  title: "The Bed Bug Authority's Bed Bug Products Table",
-  subheadingText: "Last updated xx/xx/2018",
+  title: "Bed Bug Product Matrix",
+  siteName: "The Bed Bug Authority",
+  subheadingText: "Last updated 11/12/2018",
   toolbar: {
     search: "Search",
     filterTable: "Filter"

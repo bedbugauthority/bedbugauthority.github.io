@@ -19,10 +19,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#1976D2" />
 
           {/* 2. static resources (from CDN) */}
-          <link
-            rel="shortcut icon"
-            href="https://storage.googleapis.com/builderbook/favicon32.png"
-          />
+          <link rel="shortcut icon" href="../static/free_bed_bug_icon.jpg" />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"

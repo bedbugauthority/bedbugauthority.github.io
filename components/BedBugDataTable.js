@@ -19,6 +19,7 @@ import PaperScrollDialog from "../components/PaperScrollDialog";
 import columnData from "../data/BedBugColumnData";
 import productData from "../data/BedBugProductData";
 import textLabels from "../data/textLabels";
+import resource_list from "../data/resource_list.json";
 
 const DEBUG = false;
 
@@ -69,6 +70,9 @@ const tableStyles = theme => ({
   bodyCell: {
     borderRight: "1px solid rgba(224, 224, 224, 1)"
   },
+  background_red: { backgroundColor: "LightPink" },
+  background_yellow: { backgroundColor: "LightYellow" },
+  background_green: { backgroundColor: "LightGreen" },
   cellContents: {},
   sortableHeadCellContents: {
     cursor: "pointer"
@@ -99,7 +103,13 @@ class BedBugDataTable extends React.Component {
   constructor() {
     super();
 
+    // set this to the index of the reference column
+    this.referenceColumnIx = 14;
     this.tableRef = false;
+    this.resourceList = resource_list;
+    /* save the style set by react-virtualized's table CellRenderer so we can
+         reuse the style in our dialog */
+    this.cellStyle = null;
 
     const initialDisplayColumns = columnData.reduce(
       (result, column, columnIndex) => {
@@ -198,10 +208,6 @@ class BedBugDataTable extends React.Component {
       console.log("columnData: ", columnData);
       console.log("productData: ", productData);
     }
-
-    /* save the style set by react-virtualized's table CellRenderer so we can
-         reuse the style in our dialog */
-    this.cellStyle = null;
   }
 
   /* Call this when table data is updated, but number of rows stays the same. */
@@ -242,7 +248,10 @@ class BedBugDataTable extends React.Component {
         }
       }
 
-      return { displayData: displayData, initialUpdate: false };
+      return {
+        displayData: displayData,
+        initialUpdate: false
+      };
     });
 
     // refresh display with new state
@@ -321,6 +330,7 @@ class BedBugDataTable extends React.Component {
     const isBodyCell = !isHeader && !isStickyColumn;
     const isHovered = rowIndex > 0 && rowIndex && !isInDialog === hoveredRow;
     const isSelected = rowIndex in selectedRows.lookup;
+    const hasBiggerDialogMargins = column.biggerDialogMargins;
 
     const searchText = isHeader ? "" : this.state.searchText;
     var contents = isHeader
@@ -351,6 +361,12 @@ class BedBugDataTable extends React.Component {
       return false;
     };
 
+    var backgroundClass = null;
+    if (rowIndex > 0 && column.backgroundStyleTextMatcher) {
+      backgroundClass =
+        classes["background_" + column.backgroundStyleTextMatcher[contents]];
+    }
+
     const cellClassName = classNames(classes.cell, {
       [classes.headCell]: isHeader,
       [classes.sortableHeadCell]: isSortableHeader,
@@ -358,6 +374,7 @@ class BedBugDataTable extends React.Component {
       [classes.bodyCell]: isBodyCell,
       [classes.cellHovered]: isHovered,
       [classes.cellSelected]: isSelected,
+      [backgroundClass]: column.backgroundStyleTextMatcher,
       [classes.dialogCell]: isInDialog // last in list to override border assignment
     });
 
@@ -399,15 +416,33 @@ class BedBugDataTable extends React.Component {
           <CellContents
             className={cellContentsClassName}
             contents={contents}
-            dataAppend={isHeader ? "" : column.dataAppend}
+            backgroundToolStyles={column.backgroundToolStyles}
             contentsType={isHeader ? "string" : column.type}
-            width={isInDialog ? 400 : column.width}
+            width={isInDialog ? 500 : column.width}
+            biggerListSpacing={
+              isInDialog ? column.biggerDialogListSpacing : false
+            }
             searchText={searchText}
             wrap={isInDialog || isHeader || isStickyColumn}
+            linkResourceName={
+              rowIndex > 0 && column.type === "link"
+                ? this.refLookupByRowIx(rowIndex, column.id)
+                : null
+            }
           />
         </span>
       </TableCell>
     );
+  };
+
+  productIdLookup = rowIndex => {
+    return this.state.displayData[rowIndex - 1][this.referenceColumnIx];
+  };
+
+  refLookupByRowIx = (rowIndex, refType) => {
+    const productId = this.productIdLookup(rowIndex);
+    const ref = this.resourceList[refType][productId];
+    return ref;
   };
 
   handleFilterUpdate = (columnIndex, filterValue, filterType) => {
@@ -452,13 +487,15 @@ class BedBugDataTable extends React.Component {
   };
 
   handleClickOpenDialog = (rowIndex, columnIndex) => {
-    this.setState({
-      cellDialog: {
-        open: true,
-        row: rowIndex,
-        column: columnIndex
-      }
-    });
+    if (columnData[columnIndex].canOpenDialog) {
+      this.setState({
+        cellDialog: {
+          open: true,
+          row: rowIndex,
+          column: columnIndex
+        }
+      });
+    }
   };
 
   handleCloseDialog = () => {
@@ -500,6 +537,7 @@ class BedBugDataTable extends React.Component {
 
     if (DEBUG) {
       console.log("State on BedBugDataTable render: ", this.state);
+      console.log("resource_list:", this.resourceList);
     }
     const { classes } = this.props;
 
