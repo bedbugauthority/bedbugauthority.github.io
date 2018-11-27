@@ -61,17 +61,15 @@ class CellContents extends React.Component {
     return <React.Fragment>{contents}</React.Fragment>;
   };
 
-  linkify = (ref_id, lookupFunc = "") => {
-    //TODO: modify url to link to correct resource here
-    var href = "/static/";
-    if (lookupFunc) {
-      href += lookupFunc(ref_id);
-    } else {
-      href += ref_id;
+  linkify = (contents, filename) => {
+    if (filename == null) {
+      return contents;
     }
+    //TODO: modify url to link to correct resource here
+    const href = "/static/" + filename;
     return (
       <Link href={href}>
-        <a>{ref_id}</a>
+        <a>{contents}</a>
       </Link>
     );
   };
@@ -162,7 +160,7 @@ class CellContents extends React.Component {
       onSearchTextMatch,
       contents,
       contentsType,
-      refLookupById,
+      linkResourceName,
       classes
     } = this.props;
     var parsedContents;
@@ -182,7 +180,10 @@ class CellContents extends React.Component {
         // i.e. case: string, date, numeric
         parsedContents = (
           <div className={classes.textLine}>
-            {this.linkify(this.highlighter(contents.toString()), refLookupById)}
+            {this.linkify(
+              this.highlighter(contents.toString()),
+              linkResourceName
+            )}
           </div>
         );
         break;

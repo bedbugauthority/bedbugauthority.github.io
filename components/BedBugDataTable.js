@@ -19,7 +19,7 @@ import PaperScrollDialog from "../components/PaperScrollDialog";
 import columnData from "../data/BedBugColumnData";
 import productData from "../data/BedBugProductData";
 import textLabels from "../data/textLabels";
-import reference_list from "../data/reference_list.json";
+import resource_list from "../data/resource_list.json";
 
 const DEBUG = false;
 
@@ -103,8 +103,10 @@ class BedBugDataTable extends React.Component {
   constructor() {
     super();
 
+    // set this to the index of the reference column
+    this.referenceColumnIx = 14;
     this.tableRef = false;
-    this.refList = reference_list;
+    this.resourceList = resource_list;
     /* save the style set by react-virtualized's table CellRenderer so we can
          reuse the style in our dialog */
     this.cellStyle = null;
@@ -246,7 +248,10 @@ class BedBugDataTable extends React.Component {
         }
       }
 
-      return { displayData: displayData, initialUpdate: false };
+      return {
+        displayData: displayData,
+        initialUpdate: false
+      };
     });
 
     // refresh display with new state
@@ -419,15 +424,25 @@ class BedBugDataTable extends React.Component {
             }
             searchText={searchText}
             wrap={isInDialog || isHeader || isStickyColumn}
-            refLookupById={this.refLookupById}
+            linkResourceName={
+              rowIndex > 0 && column.type === "link"
+                ? this.refLookupByRowIx(rowIndex, column.id)
+                : null
+            }
           />
         </span>
       </TableCell>
     );
   };
 
-  refLookupById = id => {
-    return this.refList[id];
+  productIdLookup = rowIndex => {
+    return this.state.displayData[rowIndex - 1][this.referenceColumnIx];
+  };
+
+  refLookupByRowIx = (rowIndex, refType) => {
+    const productId = this.productIdLookup(rowIndex);
+    const ref = this.resourceList[refType][productId];
+    return ref;
   };
 
   handleFilterUpdate = (columnIndex, filterValue, filterType) => {
@@ -522,6 +537,7 @@ class BedBugDataTable extends React.Component {
 
     if (DEBUG) {
       console.log("State on BedBugDataTable render: ", this.state);
+      console.log("resource_list:", this.resourceList);
     }
     const { classes } = this.props;
 
