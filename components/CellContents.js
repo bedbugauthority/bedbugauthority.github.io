@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Link from "next/link";
+import NewTabLink from "../components/NewTabLink";
 
 const styles = theme => ({
   highlight: {
@@ -82,13 +82,9 @@ class CellContents extends React.Component {
     if (filename == null) {
       return contents;
     }
-    //TODO: modify url to link to correct resource here
     const href = "/static/" + filename;
-    return (
-      <Link href={href}>
-        <a>{contents}</a>
-      </Link>
-    );
+
+    return <NewTabLink href={href}>{contents}</NewTabLink>;
   };
 
   parseArray = (array, linkifyRows) => {
