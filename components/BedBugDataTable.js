@@ -424,24 +424,48 @@ class BedBugDataTable extends React.Component {
             }
             searchText={searchText}
             wrap={isInDialog || isHeader || isStickyColumn}
+            refType={column.id}
             linkResourceName={
-              rowIndex > 0 && column.type === "link"
+              column.type === "link"
                 ? this.refLookupByRowIx(rowIndex, column.id)
                 : null
             }
+            productId={
+              column.type === "link" ? this.productIdLookup(rowIndex) : null
+            }
+            resourceLookup={rowIndex > 0 ? this.resourceLookup : null}
           />
         </span>
       </TableCell>
     );
   };
 
+  resourceLookup = (id, type) => {
+    if (DEBUG) {
+      console.log("resourceLookup - type:", type, "id:", id);
+    }
+    const resourceDict = this.resourceList[type];
+    const resource = resourceDict ? resourceDict[id] : null;
+    if (DEBUG && resource) {
+      console.log("found resource:", resource);
+    }
+    return resource;
+  };
+
   productIdLookup = rowIndex => {
+    if (rowIndex <= 0) {
+      return "";
+    }
     return this.state.displayData[rowIndex - 1][this.referenceColumnIx];
   };
 
   refLookupByRowIx = (rowIndex, refType) => {
+    if (rowIndex <= 0) {
+      return null;
+    }
     const productId = this.productIdLookup(rowIndex);
-    const ref = this.resourceList[refType][productId];
+    const refLookup = this.resourceList[refType];
+    const ref = refLookup ? refLookup[productId] : "";
     return ref;
   };
 
