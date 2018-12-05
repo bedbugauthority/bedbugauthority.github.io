@@ -30,15 +30,23 @@ const styles = theme => ({
 class CellContents extends React.Component {
   constructor(props) {
     super(props);
+
+    this.appendNoHighlight = [];
+    this.doneAppending = false;
   }
 
   escapeRegExp = literal_string => {
     return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
   };
 
-  highlighter = text => {
+  highlighter = (text, textAppendNoHighlight) => {
     if (this.props.searchText.length === 0) {
-      return text;
+      return (
+        <React.Fragment>
+          <span>{text}</span>
+          {textAppendNoHighlight ? <span>{textAppendNoHighlight}</span> : null}
+        </React.Fragment>
+      );
     }
 
     const regex = new RegExp(
@@ -58,7 +66,16 @@ class CellContents extends React.Component {
       }
     });
 
-    return <React.Fragment>{contents}</React.Fragment>;
+    const append = textAppendNoHighlight ? (
+      <span>{textAppendNoHighlight}</span>
+    ) : null;
+
+    return (
+      <React.Fragment>
+        {contents}
+        {append ? append : null}
+      </React.Fragment>
+    );
   };
 
   linkify = (contents, filename) => {
@@ -74,17 +91,24 @@ class CellContents extends React.Component {
     );
   };
 
-  parseArray = array => {
+  parseArray = (array, linkifyRows) => {
     const { width, wrap, biggerListSpacing, classes } = this.props;
 
+    var lineEllipsized = false;
     if (!wrap && array.length > 5) {
       array = array.slice(0, 4);
       array.push("...");
+      lineEllipsized = true;
     }
+
+    var filename = null;
 
     return (
       <ul className={classes.ul}>
         {array.map((item, index) => {
+          if (linkifyRows) {
+            filename = linkifyRows[index];
+          }
           return (
             <li
               className={biggerListSpacing ? classes.liWithMargin : classes.li}
@@ -95,7 +119,12 @@ class CellContents extends React.Component {
                   [classes.textLineWrap]: !wrap
                 })}
               >
-                {this.highlighter(item)}
+                {lineEllipsized && index >= 4
+                  ? this.highlighter(item)
+                  : this.linkify(
+                      this.highlighter(item, this.appendNoHighlight[index]),
+                      filename
+                    )}
               </div>
             </li>
           );
@@ -123,8 +152,15 @@ class CellContents extends React.Component {
     return this.parseArray(array);
   };
 
-  /* Special handling for custom column: otherReferencedProductAttributes */
+  /* Special handling for custom column: Other References */
+  ref_lookup_ToList = prodId => {
+    return prodId;
+  };
+
+  /* Special handling for custom column: Other Referenced Product Attributes */
   list_custom1_ToList = obj => {
+    const { resourceLookup } = this.props;
+
     var list = [];
 
     for (var i = 0; i < obj.length; i++) {
@@ -134,7 +170,11 @@ class CellContents extends React.Component {
       const type = dict["Type"];
       const peer = dict["Peer Reviewed"];
       const ref = dict["Reference"];
-      const ref_summary = ref + "-summary";
+      const refHref = ref ? resourceLookup(ref, "labAndField") : "N/A";
+      const refSummary = ref + "-summary";
+      const refSummaryHref = ref
+        ? resourceLookup(ref, "labAndFieldSummary")
+        : "N/A";
       const str =
         description +
         ": " +
@@ -143,13 +183,22 @@ class CellContents extends React.Component {
         type +
         " study, " +
         (peer === "Yes" ? " " : "not ") +
-        "peer-reviewed (" +
-        ref +
-        ", " +
-        ref_summary +
-        ").";
+        "peer-reviewed ";
+      if (!this.doneAppending) {
+        this.appendNoHighlight.push(
+          <React.Fragment>
+            <span>(</span>
+            {this.linkify(ref, refHref)}
+            <span>, </span>
+            {this.linkify(refSummary, refSummaryHref)}
+            <span>).</span>
+          </React.Fragment>
+        );
+      }
+
       list.push(str);
     }
+    this.doneAppending = true;
     return list;
   };
 
@@ -160,6 +209,8 @@ class CellContents extends React.Component {
       onSearchTextMatch,
       contents,
       contentsType,
+      resourceLookup,
+      refType,
       linkResourceName,
       classes
     } = this.props;
@@ -177,15 +228,37 @@ class CellContents extends React.Component {
         parsedContents = this.parseDict(contents);
         break;
       case "link":
-        // i.e. case: string, date, numeric
-        parsedContents = (
-          <div className={classes.textLine}>
-            {this.linkify(
-              this.highlighter(contents.toString()),
-              linkResourceName
-            )}
-          </div>
-        );
+        if (refType === "reference") {
+          // i.e. Other References column
+          const resources = resourceLookup(contents, "allOtherLinks");
+          var array = [contents];
+          var links = [null];
+          if (resources) {
+            for (var i = 0; i < resources.length; i++) {
+              array.push(resources[i][0]);
+              links.push(resources[i][1]);
+            }
+          }
+          parsedContents = (
+            <div className={classes.textLine}>
+              {this.linkify(
+                this.highlighter(contents.toString()),
+                linkResourceName
+              )}
+            </div>
+          );
+          parsedContents = this.parseArray(array, links);
+          break;
+        } else {
+          parsedContents = (
+            <div className={classes.textLine}>
+              {this.linkify(
+                this.highlighter(contents.toString()),
+                linkResourceName
+              )}
+            </div>
+          );
+        }
         break;
       default:
         // i.e. case: string, date, numeric

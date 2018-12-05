@@ -132,7 +132,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "canOpenDialog": false,
+    "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 150
   },
@@ -176,12 +176,12 @@
     "id": "reference",
     "type": "link",
     "disablePadding": true,
-    "textLabel": "Reference",
+    "textLabel": "Other References",
     "sortable": false,
     "filterable": false,
     "visible": true,
-    "canOpenDialog": false,
+    "canOpenDialog": true,
     "biggerDialogListSpacing": false,
-    "width": 100
+    "width": 200
   }
 ]
