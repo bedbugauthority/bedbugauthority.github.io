@@ -92,8 +92,9 @@ class CellContents extends React.Component {
 
     var lineEllipsized = false;
     if (!wrap && array.length > 5) {
+      const num_hidden = array.length - 4;
       array = array.slice(0, 4);
-      array.push("...");
+      array.push("... (" + num_hidden + " more)");
       lineEllipsized = true;
     }
 
