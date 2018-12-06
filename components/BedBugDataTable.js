@@ -10,6 +10,8 @@ import TableCell from "@material-ui/core/TableCell";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 
+import MoreInfoIcon from "../components/MoreInfoIcon";
+
 import MUIDataTableToolbar from "./MUIDataTableToolbar";
 import MUIDataTableToolbarSelect from "./MUIDataTableToolbarSelect";
 import MUIDataTableFilterList from "./MUIDataTableFilterList";
@@ -38,6 +40,11 @@ const tableStyles = theme => ({
   },
   table: {
     fontFamily: "Roboto, Helvetica, Arial, sans-serif"
+  },
+  headerIconContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
   },
   sortIcon: {
     height: 16,
@@ -74,6 +81,7 @@ const tableStyles = theme => ({
   background_yellow: { backgroundColor: "LightYellow" },
   background_green: { backgroundColor: "LightGreen" },
   cellContents: {},
+  headCellContents: {},
   sortableHeadCellContents: {
     cursor: "pointer"
   },
@@ -405,9 +413,13 @@ class BedBugDataTable extends React.Component {
           {isHeader && columnIndex == sortColumnIndex ? (
             <React.Fragment>
               {sortDirection == "desc" ? (
-                <ArrowDownwardIcon className={classes.sortIcon} />
+                <span className={classes.headerIconContainer}>
+                  <ArrowDownwardIcon className={classes.sortIcon} />
+                </span>
               ) : (
-                <ArrowUpwardIcon className={classes.sortIcon} />
+                <span className={classes.headerIconContainer}>
+                  <ArrowUpwardIcon className={classes.sortIcon} />
+                </span>
               )}
             </React.Fragment>
           ) : (
@@ -435,6 +447,9 @@ class BedBugDataTable extends React.Component {
             }
             resourceLookup={rowIndex > 0 ? this.resourceLookup : null}
           />
+          {isHeader && column.helpText ? (
+            <MoreInfoIcon hoverText={column.helpText} />
+          ) : null}
         </span>
       </TableCell>
     );

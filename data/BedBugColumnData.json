@@ -7,6 +7,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "helpText": "",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
     "width": 250
@@ -19,9 +20,10 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "helpText": "",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
-    "width": 130
+    "width": 140
   },
   {
     "id": "formulation",
@@ -31,9 +33,10 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "helpText": "",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
-    "width": 130
+    "width": 140
   },
   {
     "id": "activeIngredients",
@@ -43,6 +46,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "helpText": "List of all active ingredients listed on the product label.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -55,9 +59,10 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "helpText": "Whether the product is intended to be used on mattresses.",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
-    "width": 100
+    "width": 120
   },
   {
     "id": "labelApplications",
@@ -67,6 +72,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "helpText": "What does this mean?",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -79,6 +85,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "helpText": "List of all restrictions listed on the product label.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -91,6 +98,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "helpText": "List of all label claims made by the product that are registered with the Environmental Protection Agency (EPA).",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -103,6 +111,7 @@
     "sortable": false,
     "filterable": false,
     "visible": true,
+    "helpText": "List of claims and other notable attributes made by the product that are not registered with the Environmental Protection Agency (EPA), but are backed up by research studies.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": true,
     "width": 200
@@ -115,6 +124,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "helpText": "Environmental Protection Agency (EPA) signal word, which describes the human short-term toxicity of pesticides in this product. In order of severity (low to high) the recognized signal words are: None, Caution, Warning, and Danger.",
     "backgroundStyleTextMatcher": {
       "None": "green",
       "Caution": "yellow",
@@ -132,6 +142,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
+    "helpText": "The personal protective equipment (PPE) as listed on the product label. PPE refers to the protective clothing, helmets, goggles, or other garments or equipment designed to protect the wearer's body from injury or infection.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 150
@@ -144,6 +155,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "helpText": "Click to open the specimen label in PDF format. According to the Environmental Protection Agency (EPA), \"pesticide product labels provide critical information about how to safely and legally handle and use pesticide products.\" It is a violation of Federal law to use a product in a manner inconsistent with its labeling. Always read the label before using a product containing pesticides.",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
     "width": 100
@@ -156,6 +168,7 @@
     "sortable": true,
     "filterable": true,
     "visible": true,
+    "helpText": "Click to open the safety data sheet (SDS) in PDF format. According to the Environmental Protection Agency (EPA), \"An SDS is an important document that explains the hazards, precautions, and response actions for a particular chemical-containing product. An SDS also explains proper medical or first aid treatment, should overexposure occur.\"",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
     "width": 100
@@ -168,6 +181,7 @@
     "sortable": false,
     "filterable": false,
     "visible": true,
+    "helpText": "Date listed on the product label.",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
     "width": 100
@@ -180,6 +194,7 @@
     "sortable": false,
     "filterable": false,
     "visible": true,
+    "helpText": "List of additional product references, if any.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
