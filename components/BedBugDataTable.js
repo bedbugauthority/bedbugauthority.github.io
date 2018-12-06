@@ -77,9 +77,10 @@ const tableStyles = theme => ({
   bodyCell: {
     borderRight: "1px solid rgba(224, 224, 224, 1)"
   },
-  background_red: { backgroundColor: "LightPink" },
-  background_yellow: { backgroundColor: "LightYellow" },
-  background_green: { backgroundColor: "LightGreen" },
+  background_red: { backgroundColor: "Red" },
+  background_orange: { backgroundColor: "OrangeRed" },
+  background_yellow: { backgroundColor: "Gold" },
+  background_green: { backgroundColor: "SpringGreen" },
   cellContents: {},
   headCellContents: {},
   sortableHeadCellContents: {

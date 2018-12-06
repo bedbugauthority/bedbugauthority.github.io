@@ -128,7 +128,7 @@
     "backgroundStyleTextMatcher": {
       "None": "green",
       "Caution": "yellow",
-      "Warning": "red"
+      "Warning": "orange"
     },
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
