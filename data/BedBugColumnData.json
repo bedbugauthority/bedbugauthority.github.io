@@ -94,7 +94,7 @@
     "id": "epaRegisteredLabelClaims",
     "type": "list",
     "disablePadding": true,
-    "textLabel": "EPA Registered Select Label Claims",
+    "textLabel": "Select EPA Registered Label Claims",
     "sortable": false,
     "filterable": true,
     "visible": true,
