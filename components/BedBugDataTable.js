@@ -72,7 +72,8 @@ const tableStyles = theme => ({
     fontWeight: "500",
     borderRight: "1px solid gray",
     alignItems: "center",
-    textAlign: "center"
+    textAlign: "center",
+    flexDirection: "row"
   },
   bodyCell: {
     borderRight: "1px solid rgba(224, 224, 224, 1)"
@@ -448,7 +449,7 @@ class BedBugDataTable extends React.Component {
             }
             resourceLookup={rowIndex > 0 ? this.resourceLookup : null}
           />
-          {isHeader && column.helpText ? (
+          {false && isHeader && column.helpText ? (
             <MoreInfoIcon hoverText={column.helpText} />
           ) : null}
         </span>
@@ -645,7 +646,6 @@ class BedBugDataTable extends React.Component {
       </div>
     );
 
-    const cellDialogColumn = columnData[cellDialog.columnIndex];
     const paperScrollDialog = (
       <PaperScrollDialog
         open={cellDialog.open}
