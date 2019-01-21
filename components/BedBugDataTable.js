@@ -22,6 +22,7 @@ import columnData from "../data/BedBugColumnData";
 import productData from "../data/BedBugProductData";
 import textLabels from "../data/textLabels";
 import resource_list from "../data/resource_list.json";
+import { resourceLookup, parseORPAColumn } from "../lib/helperFunctions";
 
 const DEBUG = false;
 
@@ -113,32 +114,86 @@ class BedBugDataTable extends React.Component {
   constructor() {
     super();
 
-    // set this to the index of the reference column
-    this.referenceColumnIx = 14;
     this.tableRef = false;
     this.resourceList = resource_list;
+
     /* save the style set by react-virtualized's table CellRenderer so we can
          reuse the style in our dialog */
     this.cellStyle = null;
 
-    const initialDisplayColumns = columnData.reduce(
-      (result, column, columnIndex) => {
-        if (column.visible) {
-          result.push({
-            id: column.id,
-            name: column.textLabel,
-            type: column.type,
-            columnIndex: columnIndex,
-            displayIndex: result.length
-          });
-        }
-        return result;
-      },
-      []
-    );
+    // list of displayed columns - properties: {id, name, columnIndex, displayIndex}
+    this.displayColumns = columnData.reduce((result, column, columnIndex) => {
+      if (column.visible) {
+        result.push({
+          id: column.id,
+          name: column.textLabel,
+          type: column.type,
+          columnIndex: columnIndex,
+          displayIndex: result.length
+        });
+      }
+      return result;
+    }, []);
 
     const initialDisplayData = productData.map(product =>
-      initialDisplayColumns.map(column => product[column.id])
+      [product["id"]].concat(
+        this.displayColumns.map(column => product[column.id])
+      )
+    );
+
+    // build index of text (organized by column) for removing columns that don't match the search text
+    this.textIndex = columnData.map(column =>
+      productData.reduce((columnResult, productRow) => {
+        const productId = productRow["id"];
+        const productValue = productRow[column.id];
+        switch (column.type) {
+          case "dictionary":
+            for (const key in productValue) {
+              const text = key + ": " + productValue[key];
+              if (!columnResult[text]) {
+                columnResult[text] = [productId];
+              } else {
+                columnResult[text].push(productId);
+              }
+            }
+            break;
+          case "list":
+            for (const index in productValue) {
+              if (!columnResult[productValue[index]]) {
+                columnResult[productValue[index]] = [productId];
+              } else {
+                columnResult[productValue[index]].push(productId);
+              }
+            }
+            break;
+          case "list_custom1":
+            const list = parseORPAColumn(productValue);
+            for (const index in list) {
+              if (!columnResult[list[index]]) {
+                columnResult[list[index]] = [productId];
+              } else {
+                columnResult[list[index]].push(productId);
+              }
+            }
+            break;
+          case "string":
+          case "link":
+          case "date":
+            if (!columnResult[productValue]) {
+              columnResult[productValue] = [productId];
+            } else {
+              columnResult[productValue].push(productId);
+            }
+            break;
+          default:
+            if (DEBUG) {
+              console.log("WARNING: Unexpected column.type:", column.type);
+            }
+            break;
+        }
+
+        return columnResult;
+      }, {})
     );
 
     this.initialFilterData = columnData.map(column =>
@@ -163,18 +218,15 @@ class BedBugDataTable extends React.Component {
             // The column otherReferencedProductAttributes is not filterable
             break;
           case "string":
+          case "link":
+          case "date":
             if (columnResult.indexOf(productValue) === -1) {
               columnResult.push(productValue);
             }
             break;
           default:
             if (DEBUG) {
-              console.log(
-                "WARNING: column.type:",
-                column.type,
-                "Expected 'string', 'list', or 'dictionary'.",
-                "Fix this by editing the column definition in ./data/BedBugMetaData.json"
-              );
+              console.log("WARNING: Unexpected column.type:", column.type);
             }
             break;
         }
@@ -184,8 +236,6 @@ class BedBugDataTable extends React.Component {
     );
 
     this.state = {
-      // list of displayed columns - properties: {id, name, columnIndex, displayIndex}
-      displayColumns: initialDisplayColumns,
       // 2D array containing data to display
       displayData: initialDisplayData,
       // table index of the hovered row
@@ -201,6 +251,8 @@ class BedBugDataTable extends React.Component {
       filterList: columnData.map(() => []),
       // user input from search field
       searchText: "",
+      // list of product ids that have content matching the search text
+      searchMatchProductIds: [],
       // index of column sorted by, default: productData order
       sortColumnIndex: null,
       // sortDirection: "asc" or "desc"
@@ -230,8 +282,19 @@ class BedBugDataTable extends React.Component {
     // recalculate displayData from scratch
     this.setState(prevState => {
       var displayData = productData.reduce((result, product) => {
+        const productId = product["id"];
         var filteredOut = false;
-        const productRow = prevState.displayColumns.reduce(
+
+        // check that product meets search criteria
+        if (
+          prevState.searchText.length > 0 &&
+          !prevState.searchMatchProductIds[productId]
+        ) {
+          filteredOut = true;
+        }
+
+        // check that product meets filter criteria
+        const productRow = this.displayColumns.reduce(
           (rowResult, column, columnIndex) => {
             if (filteredOut) return [];
 
@@ -244,7 +307,7 @@ class BedBugDataTable extends React.Component {
             rowResult.push(product[column.id]);
             return rowResult;
           },
-          []
+          [productId]
         );
         if (!filteredOut) result.push(productRow);
         return result;
@@ -345,7 +408,7 @@ class BedBugDataTable extends React.Component {
     const searchText = isHeader ? "" : this.state.searchText;
     var contents = isHeader
       ? column.textLabel
-      : displayData[rowIndex - 1][columnIndex];
+      : displayData[rowIndex - 1][columnIndex + 1]; // first row is header, first column is product id (not actually displayed)
 
     if (!contents && contents !== "") {
       if (DEBUG) {
@@ -447,7 +510,7 @@ class BedBugDataTable extends React.Component {
             productId={
               column.type === "link" ? this.productIdLookup(rowIndex) : null
             }
-            resourceLookup={rowIndex > 0 ? this.resourceLookup : null}
+            resourceLookup={rowIndex > 0 ? resourceLookup : null}
           />
           {false && isHeader && column.helpText ? (
             <MoreInfoIcon hoverText={column.helpText} />
@@ -457,23 +520,11 @@ class BedBugDataTable extends React.Component {
     );
   };
 
-  resourceLookup = (id, type) => {
-    if (DEBUG) {
-      console.log("resourceLookup - type:", type, "id:", id);
-    }
-    const resourceDict = this.resourceList[type];
-    const resource = resourceDict ? resourceDict[id] : null;
-    if (DEBUG && resource) {
-      console.log("found resource:", resource);
-    }
-    return resource;
-  };
-
   productIdLookup = rowIndex => {
     if (rowIndex <= 0) {
       return "";
     }
-    return this.state.displayData[rowIndex - 1][this.referenceColumnIx];
+    return this.state.displayData[rowIndex - 1][0]; // first column (not displayed) is product id
   };
 
   refLookupByRowIx = (rowIndex, refType) => {
@@ -481,9 +532,7 @@ class BedBugDataTable extends React.Component {
       return null;
     }
     const productId = this.productIdLookup(rowIndex);
-    const refLookup = this.resourceList[refType];
-    const ref = refLookup ? refLookup[productId] : "";
-    return ref;
+    return resourceLookup(productId, refType);
   };
 
   handleFilterUpdate = (columnIndex, filterValue, filterType) => {
@@ -521,10 +570,32 @@ class BedBugDataTable extends React.Component {
   };
 
   handleSearchTextChange = searchText => {
-    this.setState({
-      searchText: searchText
-    });
-    this.forceTableRefresh();
+    var newState = { searchText: searchText };
+    if (searchText.length > 0) {
+      newState["searchMatchProductIds"] = this.findSearchMatchProducts(
+        searchText
+      );
+    } else {
+      newState["searchMatchProductIds"] = [];
+    }
+    this.setState(newState);
+    this.updateDisplayData();
+  };
+
+  findSearchMatchProducts = searchText => {
+    var resultIds = {};
+    for (const columnKey in this.textIndex) {
+      const columnTextDict = this.textIndex[columnKey];
+      for (const key in columnTextDict) {
+        if (key.toLowerCase().indexOf(searchText) > -1) {
+          var matchingIds = columnTextDict[key];
+          for (const idKey in matchingIds) {
+            resultIds[matchingIds[idKey]] = true;
+          }
+        }
+      }
+    }
+    return resultIds;
   };
 
   handleClickOpenDialog = (rowIndex, columnIndex) => {
@@ -549,18 +620,6 @@ class BedBugDataTable extends React.Component {
     });
   };
 
-  /* NOTE: not tested */
-  /*
-  handleToggleViewColumn = index => {
-    this.setState(prevState => {
-      var columns = prevState.displayColumns;
-      columns.splice(index, 1);
-      return { displayColumns: columns };
-    });
-    this.forceTableRefresh();
-  };
-  */
-
   getColumnWidth = index => {
     return columnData[index].width;
   };
@@ -578,12 +637,10 @@ class BedBugDataTable extends React.Component {
 
     if (DEBUG) {
       console.log("State on BedBugDataTable render: ", this.state);
-      console.log("resource_list:", this.resourceList);
     }
     const { classes } = this.props;
 
     const {
-      displayColumns,
       displayData,
       filterData,
       filterList,
@@ -629,7 +686,7 @@ class BedBugDataTable extends React.Component {
                 ref={el => (this.multiGridRef = el)}
                 width={width}
                 columnWidth={({ index }) => this.getColumnWidth(index)}
-                columnCount={displayColumns.length}
+                columnCount={this.displayColumns.length}
                 fixedColumnCount={1}
                 height={height}
                 rowHeight={({ index }) => this.getRowHeight(index)}

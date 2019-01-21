@@ -2,6 +2,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import NewTabLink from "../components/NewTabLink";
+import { getORPARefs, parseORPAColumn } from "../lib/helperFunctions";
 
 const styles = theme => ({
   highlight: {
@@ -79,7 +80,7 @@ class CellContents extends React.Component {
   };
 
   linkify = (contents, filename) => {
-    if (filename == null) {
+    if (filename === null) {
       return contents;
     }
     const href = "/static/" + filename;
@@ -140,12 +141,6 @@ class CellContents extends React.Component {
     for (const [key, value] of Object.entries(dict)) {
       array.push(key.toString() + ": " + value.toString());
     }
-    /*
-    if (array.length > 0) {
-      return this.parseArray(array);
-    } else {
-      return "";
-    }*/
     return this.parseArray(array);
   };
 
@@ -156,54 +151,17 @@ class CellContents extends React.Component {
 
   /* Special handling for custom column: Other Referenced Product Attributes */
   list_custom1_ToList = obj => {
-    const { resourceLookup } = this.props;
-
-    var list = [];
-
-    for (var i = 0; i < obj.length; i++) {
-      const dict = obj[i];
-      const description = dict["Attribute Description"];
-      const notes = dict["Notes"];
-      const type = dict["Type"];
-      const peer = dict["Peer Reviewed"];
-      const ref = dict["Reference"];
-      const refHref = ref ? resourceLookup(ref, "labAndField") : "N/A";
-      const refSummary = ref + "-summary";
-      const refSummaryHref = ref
-        ? resourceLookup(ref, "labAndFieldSummary")
-        : "N/A";
-      const str =
-        description +
-        ": " +
-        notes +
-        " " +
-        type +
-        " study, " +
-        (peer === "Yes" ? " " : "not ") +
-        "peer-reviewed ";
-      if (!this.doneAppending) {
-        this.appendNoHighlight.push(
-          <React.Fragment>
-            <span>(</span>
-            {this.linkify(ref, refHref)}
-            <span>, </span>
-            {this.linkify(refSummary, refSummaryHref)}
-            <span>).</span>
-          </React.Fragment>
-        );
-      }
-
-      list.push(str);
+    if (!this.doneAppending) {
+      this.appendNoHighlight = getORPARefs(obj, this.linkify);
     }
     this.doneAppending = true;
-    return list;
+    return parseORPAColumn(obj);
   };
 
   render() {
     const {
       className,
       searchText,
-      onSearchTextMatch,
       contents,
       contentsType,
       resourceLookup,
