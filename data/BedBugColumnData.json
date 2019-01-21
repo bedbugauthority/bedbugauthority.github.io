@@ -46,7 +46,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "helpText": "List of all active ingredients listed on the product label.",
+    "helpText": "List of all active ingredients listed on the product label. Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -72,7 +72,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "helpText": "What does this mean?",
+    "helpText": "What does this mean?  Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -85,7 +85,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "helpText": "List of all restrictions listed on the product label.",
+    "helpText": "List of all restrictions listed on the product label. Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -98,7 +98,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "helpText": "List of all label claims made by the product that are registered with the Environmental Protection Agency (EPA).",
+    "helpText": "List of all label claims made by the product that are registered with the Environmental Protection Agency (EPA). Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
@@ -111,7 +111,7 @@
     "sortable": false,
     "filterable": false,
     "visible": true,
-    "helpText": "List of claims and other notable attributes made by the product that are not registered with the Environmental Protection Agency (EPA), but are backed up by research studies.",
+    "helpText": "List of claims and other notable attributes made by the product that are not registered with the Environmental Protection Agency (EPA), but are backed up by research studies.  Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": true,
     "width": 200
@@ -142,7 +142,7 @@
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "helpText": "The personal protective equipment (PPE) as listed on the product label. PPE refers to the protective clothing, helmets, goggles, or other garments or equipment designed to protect the wearer's body from injury or infection.",
+    "helpText": "The personal protective equipment (PPE) as listed on the product label. PPE refers to the protective clothing, helmets, goggles, or other garments or equipment designed to protect the wearer's body from injury or infection.  Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 150
