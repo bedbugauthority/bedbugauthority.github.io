@@ -315,7 +315,11 @@ class BedBugDataTable extends React.Component {
 
       const { sortColumnIndex, sortDirection } = prevState;
       if (sortColumnIndex !== null) {
-        displayData.sort(this.columnSorter(prevState.sortColumnIndex));
+        const columnSorter = this.getColumnSorter(
+          columnData[sortColumnIndex].dataType
+        );
+
+        displayData.sort(columnSorter(prevState.sortColumnIndex + 1)); // +1 because first displaydata row is id (not displayed)
         if (prevState.sortDirection === "asc") {
           displayData.reverse();
         }
@@ -331,14 +335,54 @@ class BedBugDataTable extends React.Component {
     this.forceTableRefresh();
   };
 
-  columnSorter = sortByIndex => {
+  genericSort = (A, B) => {
+    if (A === B) {
+      return 0;
+    } else {
+      return A < B ? -1 : 1;
+    }
+  };
+
+  getColumnSorter = dataType => {
+    if (dataType === "duration") {
+      return this.durationColumnSorter;
+    }
+    return this.standardColumnSorter;
+  };
+
+  standardColumnSorter = sortByIndex => {
     return function(rowA, rowB) {
-      if (rowA[sortByIndex] === rowB[sortByIndex]) {
-        return 0;
-      } else {
-        return rowA[sortByIndex] < rowB[sortByIndex] ? -1 : 1;
+      return this.genericSort(rowA[sortByIndex], rowB[sortByIndex]);
+    }.bind(this);
+  };
+
+  durationColumnSorter = sortByIndex => {
+    return function(rowA, rowB) {
+      const durationMap = {
+        day: 1,
+        days: 1,
+        week: 7,
+        weeks: 7,
+        month: 30,
+        months: 30,
+        year: 365,
+        years: 365
+      };
+      const piecesA = (rowA[sortByIndex] || "").split(" ");
+      const piecesB = (rowB[sortByIndex] || "").split(" ");
+
+      // (e.g. piecesA = ['2', 'weeks'] )
+      // if no data, send to bottom
+      if (piecesA.length !== 2) {
+        return -1;
+      } else if (piecesB.length !== 2) {
+        return 1;
       }
-    };
+      // convert to approximate number of days
+      const daysA = parseInt(piecesA[0]) * durationMap[piecesA[1]];
+      const daysB = parseInt(piecesB[0]) * durationMap[piecesB[1]];
+      return this.genericSort(daysA, daysB);
+    }.bind(this);
   };
 
   meetsFilterCriteria = (cellData, columnType, filters) => {
