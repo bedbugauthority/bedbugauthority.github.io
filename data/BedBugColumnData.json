@@ -39,6 +39,19 @@
     "width": 140
   },
   {
+    "id": "waterOilBased",
+    "type": "string",
+    "disablePadding": true,
+    "textLabel": "Water/Oil-Based",
+    "sortable": true,
+    "filterable": true,
+    "visible": true,
+    "helpText": "What does this mean?",
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
+    "width": 120
+  },
+  {
     "id": "activeIngredients",
     "type": "dictionary",
     "disablePadding": true,
@@ -89,6 +102,20 @@
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
+  },
+  {
+    "id": "residualActivity",
+    "type": "string",
+    "dataType": "duration",
+    "disablePadding": true,
+    "textLabel": "Residual Activity",
+    "sortable": true,
+    "filterable": true,
+    "visible": true,
+    "helpText": "What does this mean?",
+    "canOpenDialog": false,
+    "biggerDialogListSpacing": false,
+    "width": 120
   },
   {
     "id": "epaRegisteredLabelClaims",
