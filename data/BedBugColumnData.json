@@ -94,11 +94,11 @@
     "id": "labelRestrictions",
     "type": "list",
     "disablePadding": true,
-    "textLabel": "Label Restrictions",
+    "textLabel": "Select Label Restrictions",
     "sortable": false,
     "filterable": true,
     "visible": true,
-    "helpText": "List of all restrictions listed on the product label. Click on any data cell in this column to view text that doesn't fit in the display.",
+    "helpText": "List of relevant restrictions listed on the product label. Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
     "width": 200
