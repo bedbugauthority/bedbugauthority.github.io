@@ -1,7 +1,8 @@
 {
   "name": "bedbugauthority.github.io",
   "version": "1.0.0",
-  "license": "",
+  "license": "UNLICENSED",
+  "private": true,
   "description": "Table of bed bug product information.",
   "main": "index.js",
   "scripts": {
