@@ -315,8 +315,9 @@ class BedBugDataTable extends React.Component {
 
       const { sortColumnIndex, sortDirection } = prevState;
       if (sortColumnIndex !== null) {
+        console.log("sortAsType:", columnData[sortColumnIndex].sortAsType);
         const columnSorter = this.getColumnSorter(
-          columnData[sortColumnIndex].dataType
+          columnData[sortColumnIndex].sortAsType
         );
 
         displayData.sort(columnSorter(prevState.sortColumnIndex + 1)); // +1 because first displaydata row is id (not displayed)
@@ -335,16 +336,8 @@ class BedBugDataTable extends React.Component {
     this.forceTableRefresh();
   };
 
-  genericSort = (A, B) => {
-    if (A === B) {
-      return 0;
-    } else {
-      return A < B ? -1 : 1;
-    }
-  };
-
-  getColumnSorter = dataType => {
-    if (dataType === "duration") {
+  getColumnSorter = sortAsType => {
+    if (sortAsType === "duration") {
       return this.durationColumnSorter;
     }
     return this.standardColumnSorter;
@@ -356,33 +349,62 @@ class BedBugDataTable extends React.Component {
     }.bind(this);
   };
 
-  durationColumnSorter = sortByIndex => {
+  // Untested, unused. Change to generic category column sorter?
+  signalWordColumnSorter = sortByIndex => {
     return function(rowA, rowB) {
-      const durationMap = {
-        day: 1,
-        days: 1,
-        week: 7,
-        weeks: 7,
-        month: 30,
-        months: 30,
-        year: 365,
-        years: 365
+      const orderMap = {
+        None: 0,
+        Caution: 1,
+        Warning: 2,
+        Danger: 3
       };
-      const piecesA = (rowA[sortByIndex] || "").split(" ");
-      const piecesB = (rowB[sortByIndex] || "").split(" ");
+      const mappedA =
+        rowA[sortByIndex] in orderMap ? orderMap[rowA[sortByIndex]] : 100;
+      const mappedB =
+        rowB[sortByIndex] in orderMap ? orderMap[rowB[sortByIndex]] : 100;
+      return genericSort(mappedA, mappedB);
+    };
+  };
 
-      // (e.g. piecesA = ['2', 'weeks'] )
-      // if no data, send to bottom
+  durationColumnSorter = sortByIndex => {
+    // find first mention of "XX Days/Weeks/Etc", convert to days, and compare as usual
+
+    return function(rowA, rowB) {
+      const durationToDaysMap = {
+        day: 1,
+        week: 7,
+        month: 30,
+        year: 365,
+        unknown: -1
+      };
+
+      const myRegexp = /(\d+ (?:day|week|month|year))/;
+
+      const regexA = myRegexp.exec(rowA[sortByIndex][0] || "");
+      const regexB = myRegexp.exec(rowB[sortByIndex][0] || "");
+      const piecesA = (regexA ? regexA[0] : "1 unknown").split(" ");
+      const piecesB = (regexB ? regexB[0] : "1 unknown").split(" ");
+      // (e.g. piecesA = ['2', 'weeks'], piecesB = ['1', 'unknown'])
+
+      // if no data, assign lowest duration
       if (piecesA.length !== 2) {
         return -1;
       } else if (piecesB.length !== 2) {
         return 1;
       }
-      // convert to approximate number of days
-      const daysA = parseInt(piecesA[0]) * durationMap[piecesA[1]];
-      const daysB = parseInt(piecesB[0]) * durationMap[piecesB[1]];
+      // approximate number of days
+      const daysA = parseInt(piecesA[0]) * durationToDaysMap[piecesA[1]];
+      const daysB = parseInt(piecesB[0]) * durationToDaysMap[piecesB[1]];
       return this.genericSort(daysA, daysB);
     }.bind(this);
+  };
+
+  genericSort = (A, B) => {
+    if (A === B) {
+      return 0;
+    } else {
+      return A < B ? -1 : 1;
+    }
   };
 
   meetsFilterCriteria = (cellData, columnType, filters) => {

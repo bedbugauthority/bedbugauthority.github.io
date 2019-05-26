@@ -106,6 +106,7 @@
   {
     "id": "residualActivity",
     "type": "string",
+    "sortAsType": "duration",
     "disablePadding": true,
     "textLabel": "Residual Activity (as per label)",
     "sortable": true,
