@@ -96,9 +96,6 @@ const tableStyles = theme => ({
   cellSelected: {
     backgroundColor: theme.palette.grey[100]
   },
-  cellHovered: {
-    backgroundColor: theme.palette.grey[200]
-  },
   dialogCell: {
     border: "0px solid black"
   },
@@ -245,8 +242,6 @@ class BedBugDataTable extends React.Component {
     this.state = {
       // 2D array containing data to display
       displayData: initialDisplayData,
-      // table index of the hovered row
-      hoveredRow: null,
       // table indices of the selected rows
       selectedRows: {
         data: [],
@@ -457,17 +452,15 @@ class BedBugDataTable extends React.Component {
   cellRenderer = ({ rowIndex, columnIndex, key, style, isInDialog }) => {
     const { classes } = this.props;
     const {
-      hoveredRow,
       selectedRows,
       displayData,
       sortColumnIndex,
       sortDirection
     } = this.state;
 
-    if (isInDialog) {
-      if (!rowIndex || !columnIndex) {
-        return false;
-      }
+    /** TODO: what is this for? **/
+    if (isInDialog && (!rowIndex || !columnIndex)) {
+      return false;
     }
 
     const column = columnData[columnIndex];
@@ -476,7 +469,6 @@ class BedBugDataTable extends React.Component {
     const isSortableHeader = isHeader && column.sortable;
     const isStickyColumn = columnIndex === 0;
     const isBodyCell = !isHeader && !isStickyColumn;
-    const isHovered = rowIndex > 0 && rowIndex && !isInDialog === hoveredRow;
     const isSelected = rowIndex in selectedRows.lookup;
     const hasBiggerDialogMargins = column.biggerDialogMargins;
 
@@ -520,7 +512,6 @@ class BedBugDataTable extends React.Component {
       [classes.sortableHeadCell]: isSortableHeader,
       [classes.fixedColumnCell]: isStickyColumn,
       [classes.bodyCell]: isBodyCell,
-      [classes.cellHovered]: isHovered,
       [classes.cellSelected]: isSelected,
       [backgroundClass]: column.backgroundStyleTextMatcher,
       [classes.dialogCell]: isInDialog // last in list to override border assignment
@@ -533,20 +524,13 @@ class BedBugDataTable extends React.Component {
     });
 
     //TODO: add mark to truncated cells (problem: how to detect elipsized cells?)
+
     return (
       <TableCell
         component="div"
         className={cellClassName}
         key={key}
         style={style}
-        onMouseEnter={() => {
-          this.setState({ hoveredRow: rowIndex });
-          this.forceTableRefresh();
-        }}
-        onMouseLeave={() => {
-          this.setState({ hoveredRow: null });
-          this.forceTableRefresh();
-        }}
         onClick={handleCellClick.bind(null, rowIndex, columnIndex)}
       >
         <span className={classes.tableCellContainer}>
@@ -696,7 +680,6 @@ class BedBugDataTable extends React.Component {
       filterList,
       selectedRows,
       searchText,
-      hoveredRow,
       cellDialog
     } = this.state;
 
