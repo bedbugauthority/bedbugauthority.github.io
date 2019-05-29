@@ -2,6 +2,7 @@
   {
     "id": "productName",
     "type": "string",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Product Name",
     "sortable": true,
@@ -15,6 +16,7 @@
   {
     "id": "manufacturer",
     "type": "string",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Manufacturer",
     "sortable": true,
@@ -28,6 +30,7 @@
   {
     "id": "formulation",
     "type": "string",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Formulation",
     "sortable": true,
@@ -41,6 +44,7 @@
   {
     "id": "waterOilBased",
     "type": "string",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Water/Oil-based",
     "sortable": true,
@@ -54,6 +58,7 @@
   {
     "id": "activeIngredients",
     "type": "dictionary",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Active Ingredient(s)",
     "sortable": false,
@@ -67,6 +72,7 @@
   {
     "id": "mattressApplication",
     "type": "string",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Mattress Application",
     "sortable": true,
@@ -80,6 +86,7 @@
   {
     "id": "labelApplications",
     "type": "list",
+    "listy": true,
     "disablePadding": true,
     "textLabel": "Label Applications",
     "sortable": false,
@@ -93,6 +100,7 @@
   {
     "id": "labelRestrictions",
     "type": "list",
+    "listy": true,
     "disablePadding": true,
     "textLabel": "Select Label Restrictions",
     "sortable": false,
@@ -106,13 +114,14 @@
   {
     "id": "residualActivity",
     "type": "string",
+    "listy": false,
     "sortAsType": "duration",
     "disablePadding": true,
-    "textLabel": "Residual Activity (as per label)",
+    "textLabel": "Residual Activity (per label)",
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "helpText": "What does this mean?",
+    "helpText": "**MOVE (per label) TO HERE?? ...what does residual activity mean?",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
     "width": 120
@@ -120,6 +129,7 @@
   {
     "id": "epaRegisteredLabelClaims",
     "type": "list",
+    "listy": true,
     "disablePadding": true,
     "textLabel": "Select EPA Registered Label Claims",
     "sortable": false,
@@ -128,11 +138,12 @@
     "helpText": "List of all label claims made by the product that are registered with the Environmental Protection Agency (EPA). Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": false,
-    "width": 200
+    "width": 220
   },
   {
     "id": "otherReferencedProductAttributes",
     "type": "list_custom1",
+    "listy": true,
     "disablePadding": true,
     "textLabel": "Other Referenced Product Attributes",
     "sortable": false,
@@ -141,11 +152,12 @@
     "helpText": "List of claims and other notable attributes made by the product that are not registered with the Environmental Protection Agency (EPA), but are backed up by research studies.  Click on any data cell in this column to view text that doesn't fit in the display.",
     "canOpenDialog": true,
     "biggerDialogListSpacing": true,
-    "width": 200
+    "width": 220
   },
   {
     "id": "signalWord",
     "type": "string",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Signal Word",
     "sortable": true,
@@ -155,7 +167,14 @@
     "backgroundStyleTextMatcher": {
       "None": "green",
       "Caution": "yellow",
-      "Warning": "orange"
+      "Warning": "orange",
+      "Danger": "red"
+    },
+    "categorySortOrder": {
+      "None": 0,
+      "Caution": 1,
+      "Warning": 2,
+      "Danger": 3
     },
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
@@ -164,6 +183,7 @@
   {
     "id": "ppe",
     "type": "list",
+    "listy": true,
     "disablePadding": true,
     "textLabel": "PPE",
     "sortable": false,
@@ -176,7 +196,8 @@
   },
   {
     "id": "specimenLabel",
-    "type": "link",
+    "type": "list",
+    "listy": true,
     "disablePadding": true,
     "textLabel": "Specimen Label",
     "sortable": true,
@@ -185,24 +206,26 @@
     "helpText": "Click to open the specimen label in PDF format. According to the Environmental Protection Agency (EPA), \"pesticide product labels provide critical information about how to safely and legally handle and use pesticide products.\" It is a violation of Federal law to use a product in a manner inconsistent with its labeling. Always read the label before using a product containing pesticides.",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
-    "width": 100
+    "width": 150
   },
   {
     "id": "safetyDataSheet",
-    "type": "link",
+    "type": "string",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Safety Data Sheet",
     "sortable": true,
     "filterable": true,
     "visible": true,
-    "helpText": "Click to open the safety data sheet (SDS) in PDF format. According to the Environmental Protection Agency (EPA), \"An SDS is an important document that explains the hazards, precautions, and response actions for a particular chemical-containing product. An SDS also explains proper medical or first aid treatment, should overexposure occur.\"",
+    "helpText": "Click to open the safety data sheet (SDS) on the manufacturer's site. According to the Environmental Protection Agency (EPA), \"An SDS explains the hazards, precautions, and response actions for a particular chemical-containing product. An SDS also explains proper medical or first aid treatment, should overexposure occur.\"",
     "canOpenDialog": false,
     "biggerDialogListSpacing": false,
-    "width": 100
+    "width": 150
   },
   {
     "id": "labelDate",
     "type": "date",
+    "listy": false,
     "disablePadding": true,
     "textLabel": "Label Date",
     "sortable": false,
@@ -216,6 +239,7 @@
   {
     "id": "reference",
     "type": "link",
+    "listy": true,
     "disablePadding": true,
     "textLabel": "Other References",
     "sortable": false,

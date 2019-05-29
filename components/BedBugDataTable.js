@@ -189,6 +189,11 @@ class BedBugDataTable extends React.Component {
             if (DEBUG) {
               console.log("WARNING: Unexpected column.type:", column.type);
             }
+            if (!columnResult[productValue]) {
+              columnResult[productValue] = [productId];
+            } else {
+              columnResult[productValue].push(productId);
+            }
             break;
         }
 
@@ -220,6 +225,7 @@ class BedBugDataTable extends React.Component {
           case "string":
           case "link":
           case "date":
+          case "duration":
             if (columnResult.indexOf(productValue) === -1) {
               columnResult.push(productValue);
             }
@@ -435,6 +441,8 @@ class BedBugDataTable extends React.Component {
         }
         break;
       case "string":
+      case "date":
+      case "duration":
         for (const filterIndex in filters) {
           if (cellData == filters[filterIndex]) {
             meetsOneFilter = true;
@@ -517,11 +525,13 @@ class BedBugDataTable extends React.Component {
       [classes.dialogCell]: isInDialog // last in list to override border assignment
     });
 
-    const cellContentsClassName = classNames(classes.cellContents, {
+    const cellContentsClassNames = classNames(classes.cellContents, {
       [classes.headCellContents]: isHeader,
       [classes.bodyCellContents]: isBodyCell,
       [classes.sortableHeadCellContents]: isSortableHeader
     });
+
+    // const cellContents = useMemo(() => {...})
 
     //TODO: add mark to truncated cells (problem: how to detect elipsized cells?)
     return (
@@ -557,9 +567,8 @@ class BedBugDataTable extends React.Component {
             false
           )}
           <CellContents
-            className={cellContentsClassName}
+            classNames={cellContentsClassNames}
             contents={contents}
-            backgroundToolStyles={column.backgroundToolStyles}
             contentsType={isHeader ? "string" : column.type}
             width={isInDialog ? 500 : column.width}
             biggerListSpacing={
@@ -567,15 +576,6 @@ class BedBugDataTable extends React.Component {
             }
             searchText={searchText}
             wrap={isInDialog || isHeader || isStickyColumn}
-            refType={column.id}
-            linkResourceName={
-              column.type === "link"
-                ? this.refLookupByRowIx(rowIndex, column.id)
-                : null
-            }
-            productId={
-              column.type === "link" ? this.productIdLookup(rowIndex) : null
-            }
             resourceLookup={rowIndex > 0 ? resourceLookup : null}
           />
           {false && isHeader && column.helpText ? (
@@ -584,21 +584,6 @@ class BedBugDataTable extends React.Component {
         </span>
       </TableCell>
     );
-  };
-
-  productIdLookup = rowIndex => {
-    if (rowIndex <= 0) {
-      return "";
-    }
-    return this.state.displayData[rowIndex - 1][0]; // first column (not displayed) is product id
-  };
-
-  refLookupByRowIx = (rowIndex, refType) => {
-    if (rowIndex <= 0) {
-      return null;
-    }
-    const productId = this.productIdLookup(rowIndex);
-    return resourceLookup(productId, refType);
   };
 
   handleFilterUpdate = (columnIndex, filterValue, filterType) => {

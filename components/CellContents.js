@@ -2,12 +2,14 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import NewTabLink from "../components/NewTabLink";
-import { getORPARefs, parseORPAColumn } from "../lib/helperFunctions";
+import HighlightAndLinkify from "../components/HighlightAndLinkify";
+import {
+  getORPARefs,
+  parseORPAColumn,
+  hrefMarkup
+} from "../lib/helperFunctions";
 
 const styles = theme => ({
-  highlight: {
-    backgroundColor: "yellow"
-  },
   ul: {
     listStyleType: "none",
     padding: 0,
@@ -28,68 +30,9 @@ const styles = theme => ({
   }
 });
 
-class CellContents extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.appendNoHighlight = [];
-    this.doneAppending = false;
-  }
-
-  escapeRegExp = literal_string => {
-    return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
-  };
-
-  highlighter = (text, textAppendNoHighlight) => {
-    if (this.props.searchText.length === 0) {
-      return (
-        <React.Fragment>
-          <span>{text}</span>
-          {textAppendNoHighlight ? <span>{textAppendNoHighlight}</span> : null}
-        </React.Fragment>
-      );
-    }
-
-    const regex = new RegExp(
-      "(" + this.escapeRegExp(this.props.searchText) + ")",
-      "gim"
-    );
-    const blocks = text.split(regex);
-    const contents = blocks.map((block, index) => {
-      if (block.match(regex)) {
-        return (
-          <span key={index} className={this.props.classes.highlight}>
-            {block}
-          </span>
-        );
-      } else {
-        return <span key={index}>{block}</span>;
-      }
-    });
-
-    const append = textAppendNoHighlight ? (
-      <span>{textAppendNoHighlight}</span>
-    ) : null;
-
-    return (
-      <React.Fragment>
-        {contents}
-        {append ? append : null}
-      </React.Fragment>
-    );
-  };
-
-  linkify = (contents, filename) => {
-    if (filename === null) {
-      return contents;
-    }
-    const href = "/static/" + filename;
-
-    return <NewTabLink href={href}>{contents}</NewTabLink>;
-  };
-
-  parseArray = (array, linkifyRows) => {
-    const { width, wrap, biggerListSpacing, classes } = this.props;
+const CellContents = props => {
+  const parseArray = array => {
+    const { width, wrap, biggerListSpacing, classes } = props;
 
     var lineEllipsized = false;
     if (!wrap && array.length > 5) {
@@ -99,14 +42,9 @@ class CellContents extends React.Component {
       lineEllipsized = true;
     }
 
-    var filename = null;
-
     return (
       <ul className={classes.ul}>
         {array.map((item, index) => {
-          if (linkifyRows) {
-            filename = linkifyRows[index];
-          }
           return (
             <li
               className={biggerListSpacing ? classes.liWithMargin : classes.li}
@@ -117,12 +55,12 @@ class CellContents extends React.Component {
                   [classes.textLineWrap]: !wrap
                 })}
               >
-                {lineEllipsized && index >= 4
-                  ? this.highlighter(item)
-                  : this.linkify(
-                      this.highlighter(item, this.appendNoHighlight[index]),
-                      filename
-                    )}
+                {
+                  <HighlightAndLinkify
+                    contents={item}
+                    searchText={props.searchText}
+                  />
+                }
               </div>
             </li>
           );
@@ -136,102 +74,53 @@ class CellContents extends React.Component {
     );
   };
 
-  parseDict = dict => {
+  const dictToList = dict => {
     var array = [];
     for (const [key, value] of Object.entries(dict)) {
       array.push(key.toString() + ": " + value.toString());
     }
-    return this.parseArray(array);
+    return array;
   };
 
-  /* Special handling for custom column: Other References */
-  ref_lookup_ToList = prodId => {
-    return prodId;
-  };
+  const parseItem = item => {
+    var array;
 
-  /* Special handling for custom column: Other Referenced Product Attributes */
-  list_custom1_ToList = obj => {
-    if (!this.doneAppending) {
-      this.appendNoHighlight = getORPARefs(obj, this.linkify);
-    }
-    this.doneAppending = true;
-    return parseORPAColumn(obj);
-  };
-
-  render() {
-    const {
-      className,
-      searchText,
-      contents,
-      contentsType,
-      resourceLookup,
-      refType,
-      linkResourceName,
-      classes
-    } = this.props;
-    var parsedContents;
-
-    switch (contentsType) {
+    /** Convert everything into a list. One item per line in a cell. **/
+    switch (props.contentsType) {
       case "list":
-        parsedContents = this.parseArray(contents);
+        array = item;
         break;
-      case "list_custom1":
-        const contentsToList = this.list_custom1_ToList(contents);
-        parsedContents = this.parseArray(contentsToList);
+      case "list_custom1": // i.e. Other Referenced Product Attributes
+        array = parseORPAColumn(item, hrefMarkup);
         break;
       case "dictionary":
-        parsedContents = this.parseDict(contents);
+        array = dictToList(item);
         break;
-      case "link":
-        if (refType === "reference") {
-          // i.e. Other References column
-          const resources = resourceLookup(contents, "allOtherLinks");
-          var array = [contents];
-          var links = [null];
-          if (resources) {
-            for (var i = 0; i < resources.length; i++) {
-              array.push(resources[i][0]);
-              links.push(resources[i][1]);
-            }
+      case "link": // i.e. 'Other References' column
+        array = [item]; // TODO: remove this line before publishing
+
+        const resources = props.resourceLookup(item, "allOtherLinks");
+        if (resources) {
+          for (var i = 0; i < resources.length; i++) {
+            array.push(
+              hrefMarkup(resources[i][0], "/static/" + resources[i][1])
+            );
           }
-          parsedContents = (
-            <div className={classes.textLine}>
-              {this.linkify(
-                this.highlighter(contents.toString()),
-                linkResourceName
-              )}
-            </div>
-          );
-          parsedContents = this.parseArray(array, links);
-          break;
-        } else {
-          parsedContents = (
-            <div className={classes.textLine}>
-              {this.linkify(
-                this.highlighter(contents.toString()),
-                linkResourceName
-              )}
-            </div>
-          );
         }
         break;
+      case "string":
+      case "date":
+      case "numeric":
       default:
         // i.e. case: string, date, numeric
-        parsedContents = (
-          <div className={classes.textLine}>
-            {this.highlighter(contents.toString())}
-          </div>
-        );
+        array = [item.toString()];
         break;
     }
 
-    return <div className={className}>{parsedContents}</div>;
-  }
-}
+    return parseArray(array);
+  };
 
-CellContents.propTypes = {
-  searchText: PropTypes.string.isRequired,
-  classes: PropTypes.object.isRequired
+  return <div className={props.classNames}>{parseItem(props.contents)}</div>;
 };
 
 export default withStyles(styles)(CellContents);
