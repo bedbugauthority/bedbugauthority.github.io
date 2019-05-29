@@ -184,14 +184,6 @@ class BedBugDataTable extends React.Component {
             }
             break;
           default:
-            if (DEBUG) {
-              console.log("WARNING: Unexpected column.type:", column.type);
-            }
-            if (!columnResult[productValue]) {
-              columnResult[productValue] = [productId];
-            } else {
-              columnResult[productValue].push(productId);
-            }
             break;
         }
 
@@ -229,9 +221,6 @@ class BedBugDataTable extends React.Component {
             }
             break;
           default:
-            if (DEBUG) {
-              console.log("WARNING: Unexpected column.type:", column.type);
-            }
             break;
         }
 
@@ -268,10 +257,6 @@ class BedBugDataTable extends React.Component {
       // true on first render, false otherwise
       initialUpdate: true
     };
-    if (DEBUG) {
-      console.log("columnData: ", columnData);
-      console.log("productData: ", productData);
-    }
   }
 
   /* Call this when table data is updated, but number of rows stays the same. */
@@ -317,7 +302,6 @@ class BedBugDataTable extends React.Component {
 
       const { sortColumnIndex, sortDirection } = prevState;
       if (sortColumnIndex !== null) {
-        console.log("sortAsType:", columnData[sortColumnIndex].sortAsType);
         const columnSorter = this.getColumnSorter(
           columnData[sortColumnIndex].sortAsType
         );
@@ -477,16 +461,8 @@ class BedBugDataTable extends React.Component {
       ? column.textLabel
       : displayData[rowIndex - 1][columnIndex + 1]; // first row is header, first column is product id (not actually displayed)
 
+    // If data is undefined or null, fill cell with row and column index for easier troubleshooting
     if (!contents && contents !== "") {
-      if (DEBUG) {
-        console.log(
-          "ERROR: no contents for ( rowIndex , columnIndex ) --> (",
-          rowIndex,
-          ",",
-          columnIndex,
-          ")"
-        );
-      }
       contents = rowIndex - 1 + ", " + columnIndex;
     }
 
@@ -524,7 +500,6 @@ class BedBugDataTable extends React.Component {
     });
 
     //TODO: add mark to truncated cells (problem: how to detect elipsized cells?)
-
     return (
       <TableCell
         component="div"
@@ -667,10 +642,6 @@ class BedBugDataTable extends React.Component {
     if (!productData || !productData.length) {
       console.log("Warning: product data not found.");
       return false;
-    }
-
-    if (DEBUG) {
-      console.log("State on BedBugDataTable render: ", this.state);
     }
     const { classes } = this.props;
 
