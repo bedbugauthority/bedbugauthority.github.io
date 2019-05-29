@@ -1,3 +1,4 @@
+import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -530,8 +531,6 @@ class BedBugDataTable extends React.Component {
       [classes.bodyCellContents]: isBodyCell,
       [classes.sortableHeadCellContents]: isSortableHeader
     });
-
-    // const cellContents = useMemo(() => {...})
 
     //TODO: add mark to truncated cells (problem: how to detect elipsized cells?)
     return (
