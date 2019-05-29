@@ -1,6 +1,7 @@
 import Document, { Head, Main, NextScript } from "next/document";
 import JssProvider from "react-jss/lib/JssProvider";
 import getContext from "../lib/context";
+import "babel-polyfill";
 
 class MyDocument extends Document {
   render() {
