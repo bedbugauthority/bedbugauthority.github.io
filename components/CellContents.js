@@ -1,13 +1,10 @@
+import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import NewTabLink from "../components/NewTabLink";
 import HighlightAndLinkify from "../components/HighlightAndLinkify";
-import {
-  getORPARefs,
-  parseORPAColumn,
-  hrefMarkup
-} from "../lib/helperFunctions";
+import { parseORPAColumn, hrefMarkup } from "../lib/helperFunctions";
 
 const styles = theme => ({
   ul: {
@@ -30,7 +27,8 @@ const styles = theme => ({
   }
 });
 
-const CellContents = props => {
+const CellContents = React.memo(props => {
+  //console.log("props:", props);
   const parseArray = array => {
     const { width, wrap, biggerListSpacing, classes } = props;
 
@@ -74,7 +72,7 @@ const CellContents = props => {
     );
   };
 
-  const dictToList = dict => {
+  const parseDict = dict => {
     var array = [];
     for (const [key, value] of Object.entries(dict)) {
       array.push(key.toString() + ": " + value.toString());
@@ -82,10 +80,21 @@ const CellContents = props => {
     return array;
   };
 
+  const parseLinks = item => {
+    const resources = props.resourceLookup(item, "allOtherLinks");
+    var array = [];
+    if (resources) {
+      for (var i = 0; i < resources.length; i++) {
+        array.push(hrefMarkup(resources[i][0], "/static/" + resources[i][1]));
+      }
+    }
+    return array;
+  };
+
   const parseItem = item => {
     var array;
 
-    /** Convert everything into a list. One item per line in a cell. **/
+    /** Convert everything into an array. One item per line in a cell. **/
     switch (props.contentsType) {
       case "list":
         array = item;
@@ -94,19 +103,11 @@ const CellContents = props => {
         array = parseORPAColumn(item, hrefMarkup);
         break;
       case "dictionary":
-        array = dictToList(item);
+        array = parseDict(item);
         break;
       case "link": // i.e. 'Other References' column
-        array = [item]; // TODO: remove this line before publishing
-
-        const resources = props.resourceLookup(item, "allOtherLinks");
-        if (resources) {
-          for (var i = 0; i < resources.length; i++) {
-            array.push(
-              hrefMarkup(resources[i][0], "/static/" + resources[i][1])
-            );
-          }
-        }
+        // TODO: remove 'item' before publishing
+        array = [item, ...parseLinks(item)];
         break;
       case "string":
       case "date":
@@ -121,6 +122,6 @@ const CellContents = props => {
   };
 
   return <div className={props.classNames}>{parseItem(props.contents)}</div>;
-};
+});
 
 export default withStyles(styles)(CellContents);
