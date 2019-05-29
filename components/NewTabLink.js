@@ -5,10 +5,26 @@ const styles = theme => ({
   icon: { width: theme.spacing.unit * 1.5, height: theme.spacing.unit * 1.5 }
 });
 
+const NewTabLink = props => {
+  const { children, href, classes } = props;
+
+  const handleClick = e => {
+    e.preventDefault();
+    window.open(href, "_blank");
+  };
+
+  return (
+    <a href={href} onClick={handleClick}>
+      {children}
+      <OpenInNew className={classes.icon} />
+    </a>
+  );
+};
+
+export default withStyles(styles)(NewTabLink);
+
+/*
 class NewTabLink extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   handleClick = e => {
     e.preventDefault();
@@ -25,5 +41,4 @@ class NewTabLink extends React.Component {
     );
   }
 }
-
-export default withStyles(styles)(NewTabLink);
+*/

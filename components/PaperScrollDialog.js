@@ -11,6 +11,33 @@ const styles = theme => ({
   root: { paddingBottom: 0 }
 });
 
+const PaperScrollDialog = props => {
+  const { open, handleClickOpen, handleClose, children, classes } = props;
+
+  return (
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="scroll-dialog-title"
+      >
+        <DialogContent className={classes.root}>
+          {/*<DialogContentText></DialogContentText>*/}
+          {children}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+};
+
+export default withStyles(styles)(PaperScrollDialog);
+
+/*
 class PaperScrollDialog extends React.Component {
   render() {
     const {
@@ -28,7 +55,6 @@ class PaperScrollDialog extends React.Component {
           aria-labelledby="scroll-dialog-title"
         >
           <DialogContent className={classes.root}>
-            {/*<DialogContentText></DialogContentText>*/}
             {children}
           </DialogContent>
           <DialogActions>
@@ -41,5 +67,4 @@ class PaperScrollDialog extends React.Component {
     );
   }
 }
-
-export default withStyles(styles)(PaperScrollDialog);
+*/

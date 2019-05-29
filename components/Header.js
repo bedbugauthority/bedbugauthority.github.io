@@ -1,86 +1,88 @@
-import Link from "next/link"
-import Toolbar from "@material-ui/core/Toolbar"
-import Grid from "@material-ui/core/Grid"
+import { withStyles } from "@material-ui/core/styles";
+import Link from "next/link";
+import Toolbar from "@material-ui/core/Toolbar";
+import Grid from "@material-ui/core/Grid";
 
-const headerStyle = {
-  display: "block",
-  top: 0,
-  width: "100%",
-  minWidth: 512,
-  background: "#FFF",
-  WebkitAlignSelf: "stretch",
-  alignSelf: "stretch",
-}
+const styles = theme => ({
+  header: {
+    display: "block",
+    top: 0,
+    width: "100%",
+    minWidth: 512,
+    background: "#FFF",
+    WebkitAlignSelf: "stretch",
+    alignSelf: "stretch"
+  },
+  headerInner: {
+    display: "-webkit-flex",
+    display: "flex",
+    WebkitFlex: "1 0 auto",
+    flex: "1 0 auto",
+    WebkitJustifyContent: "space-between",
+    justifyContent: "space-between",
+    padding: 8,
+    position: "relative",
+    width: "100%"
+  },
+  floatLeft: {
+    display: "-webkit-flex",
+    display: "flex",
+    WebkitFlex: "1 1 auto",
+    flex: "1 1 auto",
+    WebkitAlignSelf: "center",
+    alignSelf: "center",
+    WebkitAlignItems: "center",
+    alignItems: "center",
+    verticalAlign: "middle",
+    height: 48,
+    paddingRight: 32
+  },
+  floatRight: {
+    display: "-webkit-flex",
+    display: "flex",
+    WebkitFlex: "0 0 auto",
+    flex: "0 0 auto",
+    WebkitAlignSelf: "center",
+    alignSelf: "center",
+    WebkitJustifyContent: "flex-end",
+    justifyContent: "flex-end",
+    verticalAlign: "middle",
+    height: 48,
+    paddingLeft: 32,
+    paddingRight: 4
+  },
+  image: {
+    height: 48,
+    width: 48,
+    marginRight: 8
+  },
+  link: {
+    margin: "auto",
+    marginRight: 15
+  }
+});
 
-const headerInnerStyle = {
-  display: "-webkit-flex",
-  display: "flex",
-  WebkitFlex: "1 0 auto",
-  flex: "1 0 auto",
-  WebkitJustifyContent: "space-between",
-  justifyContent: "space-between",
-  padding: 8,
-  position: "relative",
-  width: "100%",
-}
+const Header = props => {
+  const { classes } = props;
 
-const floatLeftStyle = {
-  display: "-webkit-flex",
-  display: "flex",
-  WebkitFlex: "1 1 auto",
-  flex: "1 1 auto",
-  WebkitAlignSelf: "center",
-  alignSelf: "center",
-  WebkitAlignItems: "center",
-  alignItems: "center",
-  verticalAlign: "middle",
-  height: 48,
-  paddingRight: 32,
-}
-
-const floatRightStyle = {
-  display: "-webkit-flex",
-  display: "flex",
-  WebkitFlex: "0 0 auto",
-  flex: "0 0 auto",
-  WebkitAlignSelf: "center",
-  alignSelf: "center",
-  WebkitJustifyContent: "flex-end",
-  justifyContent: "flex-end",
-  verticalAlign: "middle",
-  height: 48,
-  paddingLeft: 32,
-  paddingRight: 4,
-}
-
-const imageStyle = {
-  height: 48,
-  width: 48,
-  marginRight: 8,
-}
-
-const linkStyle = {
-  margin: "auto",
-  marginRight: 15,
-}
-
-const Header = () => (
-  <header style={headerStyle}>
-    <div style={headerInnerStyle}>
-      <div style={floatLeftStyle}>
-        <img
-          src="../static/cartoon-bedbug-image-placeholder.jpg"
-          style={imageStyle}
-        />
-        <h1>Bed Bug Authority</h1>
+  return (
+    <header className={classes.header}>
+      <div className={classes.headerInner}>
+        <div className={floatLeft}>
+          <img
+            src="../static/cartoon-bedbug-image-placeholder.jpg"
+            className={classes.image}
+          />
+          <h1>Bed Bug Authority</h1>
+        </div>
+        <div className={classes.floatRight}>
+          <Link prefetch href="/link1">
+            <a className={classes.link}>Link1</a>
+          </Link>
+        </div>
       </div>
-      <div style={floatRightStyle}>
-        <Link prefetch href="/link1">
-          <a style={linkStyle}>Link1</a>
-        </Link>
-      </div>
-    </div>
-  </header>
-)
+    </header>
+  );
+};
 
-export default Header
+export default withStyles(styles)(Header);

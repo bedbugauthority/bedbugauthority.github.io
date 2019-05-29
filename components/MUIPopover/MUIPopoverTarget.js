@@ -1,20 +1,13 @@
-import React from "react"
+import React from "react";
 
-class MUIPopoverTarget extends React.Component {
-  render() {
-    const targetContent = React.Children.map(
-      this.props.children,
-      (child, index) => {
-        return React.cloneElement(child, {
-          key: index,
-          ref: this.props.targetRef,
-          onClick: this.props.onClick,
-        })
-      },
-    )
+const MUIPopoverTarget = props => {
+  return React.Children.map(props.children, (child, index) => {
+    return React.cloneElement(child, {
+      key: index,
+      ref: props.targetRef,
+      onClick: props.onClick
+    });
+  });
+};
 
-    return targetContent
-  }
-}
-
-export default MUIPopoverTarget
+export default MUIPopoverTarget;

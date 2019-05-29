@@ -15,7 +15,8 @@ const styles = theme => ({
   }
 });
 
-class MoreInfoIcon extends React.Component {
+const MoreInfoIcon = props => {
+  /*
   state = {
     open: false
   };
@@ -26,18 +27,15 @@ class MoreInfoIcon extends React.Component {
 
   handleTooltipClose = () => {
     this.setState({ open: false });
-  };
-
-  render() {
-    const { hoverText, classes } = this.props;
-    return (
-      <span className={classes.root}>
-        <Tooltip disableFocusListener disableTouchListener title={hoverText}>
-          <HelpOutlineIcon className={classes.icon} />
-        </Tooltip>
-      </span>
-    );
-  }
-}
+  };*/
+  const { hoverText, classes } = props;
+  return (
+    <span className={classes.root}>
+      <Tooltip disableFocusListener disableTouchListener title={hoverText}>
+        <HelpOutlineIcon className={classes.icon} />
+      </Tooltip>
+    </span>
+  );
+};
 
 export default withStyles(styles)(MoreInfoIcon);
