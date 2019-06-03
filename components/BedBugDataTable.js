@@ -18,14 +18,13 @@ import MUIDataTableToolbarSelect from "./MUIDataTableToolbarSelect";
 import MUIDataTableFilterList from "./MUIDataTableFilterList";
 import CellContents from "../components/CellContents";
 import PaperScrollDialog from "../components/PaperScrollDialog";
+import PrefaceDialog from "../components/PrefaceDialog";
 
 import columnData from "../data/BedBugColumnData";
 import productData from "../data/BedBugProductData";
 import textLabels from "../data/textLabels";
 import resource_list from "../data/resource_list.json";
 import { resourceLookup, parseORPAColumn } from "../lib/helperFunctions";
-
-const DEBUG = false;
 
 const tableStyles = theme => ({
   root: {
@@ -248,6 +247,8 @@ class BedBugDataTable extends React.Component {
       sortColumnIndex: null,
       // sortDirection: "asc" or "desc"
       sortDirection: "asc",
+      //
+      prefaceDialogOpen: true,
       // used by popover dialog component
       cellDialog: {
         open: false,
@@ -629,6 +630,10 @@ class BedBugDataTable extends React.Component {
     });
   };
 
+  handleClosePreface = () => {
+    this.setState({ prefaceDialogOpen: false });
+  };
+
   getColumnWidth = index => {
     return columnData[index].width;
   };
@@ -651,7 +656,8 @@ class BedBugDataTable extends React.Component {
       filterList,
       selectedRows,
       searchText,
-      cellDialog
+      cellDialog,
+      prefaceDialogOpen
     } = this.state;
 
     const dataTableToolbar = (
@@ -732,7 +738,6 @@ class BedBugDataTable extends React.Component {
           <ul>
             <li>add column tooltips to explain terms (?)</li>
             <li>add filters for otherReferencedProductAttributes column</li>
-            <li>add reference links/downloads</li>
           </ul>
           <p>Made with: Next.js, Material-UI, react-virtualized</p>
           <p>
@@ -749,7 +754,11 @@ class BedBugDataTable extends React.Component {
         {dataTableToolbar}
         {dataTable}
         {paperScrollDialog}
-        {false ? footer : false}
+        <PrefaceDialog
+          open={prefaceDialogOpen}
+          handleClose={this.handleClosePreface}
+        />
+        {false ? footer : null}
       </div>
     );
   }
