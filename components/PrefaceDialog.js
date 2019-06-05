@@ -35,7 +35,7 @@ const PrefaceDialog = props => {
         onClose={handleClose}
         fullScreen={fullScreen}
         scroll="body"
-        aria-labelledby="scroll-dialog-title"
+        aria-labelledby="preface-dialog-title"
         className={classes.root}
       >
         <DialogTitle id="preface-dialog-title">Why This Site?</DialogTitle>
@@ -49,7 +49,7 @@ const PrefaceDialog = props => {
             </Typography>
           </DialogContentText>
         </DialogContent>
-        <DialogTitle id="preface-dialog-title">Quick Tips:</DialogTitle>
+        <DialogTitle>Quick Tips:</DialogTitle>
         <DialogContent className={classes.content}>
           <DialogContentText className={classes.tipsTextArea}>
             <div className={classes.tipsList}>
@@ -85,9 +85,7 @@ const PrefaceDialog = props => {
             </div>
           </DialogContentText>
         </DialogContent>
-        <DialogTitle id="preface-dialog-title">
-          Terms of Use and Disclaimer:
-        </DialogTitle>
+        <DialogTitle>Terms of Use and Disclaimer:</DialogTitle>
         <DialogContent className={classes.content}>
           <DialogContentText className={classes.disclaimerTextArea}>
             <Typography>
