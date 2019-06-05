@@ -27,6 +27,7 @@
     "@material-ui/core": "^1.4.3",
     "@material-ui/icons": "^1.1.0",
     "classnames": "^2.2.5",
+    "lodash": "^4.17.11",
     "lodash.clonedeep": "^4.5.0",
     "lodash.merge": "^4.6.1",
     "next": "^8.1.0",
