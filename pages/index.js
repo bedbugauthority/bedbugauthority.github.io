@@ -1,7 +1,6 @@
 import Head from "next/head";
 import BedBugDataTable from "../components/BedBugDataTable";
 import textLabels from "../data/textLabels";
-import withLayout from "../lib/withLayout";
 import "babel-polyfill";
 
 const Index = () => {
@@ -19,4 +18,4 @@ const Index = () => {
   ];
 };
 
-export default withLayout(Index);
+export default Index;
