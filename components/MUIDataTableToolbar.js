@@ -13,7 +13,7 @@ import DownloadIcon from "@material-ui/icons/CloudDownload";
 import PrintIcon from "@material-ui/icons/Print";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FilterIcon from "@material-ui/icons/FilterList";
-import merge from "lodash.merge";
+import { merge } from "lodash";
 import ReactToPrint from "react-to-print";
 import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
