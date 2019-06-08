@@ -1,4 +1,4 @@
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 
@@ -9,8 +9,8 @@ const styles = theme => ({
     justifyContent: "center"
   },
   icon: {
-    width: theme.spacing.unit * 2,
-    height: theme.spacing.unit * 2
+    width: theme.spacing(2),
+    height: theme.spacing(2)
     //marginLeft: -theme.spacing.unit
   }
 });

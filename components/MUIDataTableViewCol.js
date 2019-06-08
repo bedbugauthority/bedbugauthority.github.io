@@ -1,10 +1,9 @@
-import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
 export const viewColStyles = {
@@ -90,14 +89,6 @@ export default withStyles(viewColStyles)(MUIDataTableViewCol);
 
 /*
 class MUIDataTableViewCol extends React.Component {
-  static propTypes = {
-    // Columns used to describe table
-    columns: PropTypes.array.isRequired,
-    // Callback to trigger View column update
-    onColumnUpdate: PropTypes.func,
-    // Extend the style applied to components
-    classes: PropTypes.object
-  };
 
   handleColChange = index => {
     this.props.onColumnUpdate(index);

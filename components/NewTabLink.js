@@ -1,8 +1,8 @@
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import OpenInNew from "@material-ui/icons/OpenInNew";
 
 const styles = theme => ({
-  icon: { width: theme.spacing.unit * 1.5, height: theme.spacing.unit * 1.5 }
+  icon: { width: theme.spacing(1.5), height: theme.spacing(1.5) }
 });
 
 const NewTabLink = props => {

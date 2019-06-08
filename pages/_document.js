@@ -1,5 +1,7 @@
-import PropTypes from "prop-types";
 import Document, { Head, Main, NextScript } from "next/document";
+import { ServerStyleSheets } from "@material-ui/styles";
+import flush from "styled-jsx/server";
+import theme from "../lib/theme";
 
 class MyDocument extends Document {
   render() {
@@ -45,7 +47,7 @@ class MyDocument extends Document {
   }
 }
 
-MyDocument.getInitialProps = ctx => {
+MyDocument.getInitialProps = async ctx => {
   // Resolution order
   //
   // On the server:
@@ -67,33 +69,26 @@ MyDocument.getInitialProps = ctx => {
   // 2. page.getInitialProps
   // 3. app.render
   // 4. page.render
-  let pageContext;
-  const page = ctx.renderPage(Component => props => {
-    const WrappedComponent = props => {
-      pageContext = props.pageContext;
-      return <Component {...props} />;
-    };
 
-    return WrappedComponent;
-  });
+  // Render app and page and get the context of the page with collected side effects.
+  const sheets = new ServerStyleSheets();
+  const originalRenderPage = ctx.renderPage;
 
-  let css;
-  // pageContext might be undefined, e.g. after an error.
-  if (pageContext) {
-    css = pageContext.sheetsRegistry.toString();
-  }
+  ctx.renderPage = () =>
+    originalRenderPage({
+      enhanceApp: App => props => sheets.collect(<App {...props} />)
+    });
+
+  const initialProps = await Document.getInitialProps(ctx);
 
   return {
-    ...page,
-    pageContext,
+    ...initialProps,
+    // Styles fragment is rendered after the app and page rendering finish.
     styles: (
-      <style
-        id="jss-server-side"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: css
-        }}
-      />
+      <React.Fragment>
+        {sheets.getStyleElement()}
+        {flush() || null}
+      </React.Fragment>
     )
   };
 };

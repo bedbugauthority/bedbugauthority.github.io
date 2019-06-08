@@ -1,10 +1,9 @@
-import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
 const styles = {
@@ -61,14 +60,6 @@ export default withStyles(styles)(MUIDataTableToolbarSelect);
 
 /*
 class MUIDataTableToolbarSelect extends React.Component {
-  static propTypes = {
-    // Current row selected or not
-    rowSelected: PropTypes.bool,
-    // Callback to trigger selected rows delete
-    onRowsDelete: PropTypes.func,
-    // Extend the style applied to components
-    classes: PropTypes.object
-  };
 
   render() {
     const { classes, onRowsDelete, selectedRows } = this.props;

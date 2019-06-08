@@ -15,7 +15,7 @@ import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FilterIcon from "@material-ui/icons/FilterList";
 import merge from "lodash.merge";
 import ReactToPrint from "react-to-print";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
 const toolbarStyles = {
@@ -188,10 +188,10 @@ const MUIDataTableToolbar = props => {
       ) : (
         <div className={classes.left}>
           <div className={classes.titleRoot} aria-hidden={"true"}>
-            <Typography variant="title" className={classes.titleText}>
+            <Typography variant="h5" className={classes.titleText}>
               {textLabels.title}
             </Typography>
-            <Typography variant="subheading" className={classes.subheadingText}>
+            <Typography variant="subtitle2" className={classes.subheadingText}>
               {textLabels.subheadingText}
             </Typography>
           </div>

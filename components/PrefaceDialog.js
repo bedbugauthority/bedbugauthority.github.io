@@ -1,5 +1,4 @@
-import { withStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -17,7 +16,7 @@ const styles = theme => ({
   root: { margin: 0 },
   content: { paddingBottom: 0 },
   tipsTextArea: { display: "flex", flexDirection: "column" },
-  tipsList: { marginLeft: theme.spacing.unit * 2 },
+  tipsList: { marginLeft: theme.spacing(2) },
   tipsItem: {
     display: "flex",
     flexDirection: "row"
@@ -27,7 +26,6 @@ const styles = theme => ({
 
 const PrefaceDialog = props => {
   const { open, fullScreen, handleClose, classes } = props;
-  console.log(window.outerWidth, fullScreen);
   return (
     <div>
       <Dialog
@@ -41,85 +39,71 @@ const PrefaceDialog = props => {
         <DialogTitle id="preface-dialog-title">Why This Site?</DialogTitle>
         <DialogContent className={classes.content}>
           <DialogContentText>
-            <Typography>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
-            </Typography>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book.
           </DialogContentText>
         </DialogContent>
         <DialogTitle>Quick Tips:</DialogTitle>
         <DialogContent className={classes.content}>
           <DialogContentText className={classes.tipsTextArea}>
-            <div className={classes.tipsList}>
-              <div className={classes.tipsItem}>
-                <Typography>• </Typography>
-                <SearchIcon />
-                <Typography>
-                  - Click on this search icon (top-right corner) to find a
-                  keyword/phrase (e.g. "mattress").
-                </Typography>
-              </div>
-              <div className={classes.tipsItem}>
-                <Typography>• </Typography>
-                <FilterIcon />
-                <Typography>
-                  - Click on this filter icon (top-right corner) to filter
-                  results by column (e.g. Formulation = "").
-                </Typography>
-              </div>
-              <div className={classes.tipsItem}>
-                <Typography>
-                  • Expand Cell - click on any table cell with an elipsis (…) to
-                  view the full contents of the cell.
-                </Typography>
-              </div>
-              <div className={classes.tipsItem}>
-                <Typography>
-                  • Sort - click on a column header to sort by that column.
-                  Click again to reverse the sort direction. (Note: not all
-                  columns are sortable).
-                </Typography>
-              </div>
-            </div>
+            <span className={classes.tipsList}>
+              <span className={classes.tipsItem}>
+                {"• "}
+                <SearchIcon />- Click on this search icon (top-right corner) to
+                find a keyword/phrase (e.g. "mattress").
+              </span>
+              <span className={classes.tipsItem}>
+                {"• "}
+                <FilterIcon />- Click on this filter icon (top-right corner) to
+                filter results by column (e.g. Formulation = "").
+              </span>
+              <span className={classes.tipsItem}>
+                • Expand Cell - click on any table cell with an elipsis (…) to
+                view the full contents of the cell.
+              </span>
+              <span className={classes.tipsItem}>
+                • Sort - click on a column header to sort by that column. Click
+                again to reverse the sort direction. (Note: not all columns are
+                sortable).
+              </span>
+            </span>
           </DialogContentText>
         </DialogContent>
         <DialogTitle>Terms of Use and Disclaimer:</DialogTitle>
         <DialogContent className={classes.content}>
           <DialogContentText className={classes.disclaimerTextArea}>
-            <Typography>
-              Your use of this site constitutes an agreement to the following
-              terms.
-              <br />
-              <br />
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
-              <br />
-              <br />
-              It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem Ipsum.
-              <br />
-              <br />
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
-              <br />
-              <br />
-              It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem Ipsum.
-            </Typography>
+            Your use of this site constitutes an agreement to the following
+            terms.
+            <br />
+            <br />
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book.
+            <br />
+            <br />
+            It has survived not only five centuries, but also the leap into
+            electronic typesetting, remaining essentially unchanged. It was
+            popularised in the 1960s with the release of Letraset sheets
+            containing Lorem Ipsum passages, and more recently with desktop
+            publishing software like Aldus PageMaker including versions of Lorem
+            Ipsum.
+            <br />
+            <br />
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book.
+            <br />
+            <br />
+            It has survived not only five centuries, but also the leap into
+            electronic typesetting, remaining essentially unchanged. It was
+            popularised in the 1960s with the release of Letraset sheets
+            containing Lorem Ipsum passages, and more recently with desktop
+            publishing software like Aldus PageMaker including versions of Lorem
+            Ipsum.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -1,6 +1,5 @@
-import PropTypes from "prop-types";
 import Chip from "@material-ui/core/Chip";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 
 const filterListStyles = {
   root: {
@@ -38,14 +37,6 @@ const MUIDataTableFilterList = props => {
 export default withStyles(filterListStyles)(MUIDataTableFilterList);
 /*
 class MUIDataTableFilterList extends React.Component {
-  static propTypes = {
-    // Data used to filter table against
-    filterList: PropTypes.array.isRequired,
-    // Callback to trigger filter update
-    onFilterUpdate: PropTypes.func,
-    // Extend the style applied to components
-    classes: PropTypes.object,
-  }
 
   render() {
     const { classes, columns, filterList, onFilterUpdate } = this.props

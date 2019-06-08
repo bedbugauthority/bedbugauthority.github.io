@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import classNames from "classnames";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
@@ -10,7 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
 const filterStyles = {
@@ -107,22 +106,6 @@ const filterStyles = {
 };
 
 class MUIDataTableFilter extends React.Component {
-  static propTypes = {
-    /** String used to determine which type of filter to use */
-    /**  choose from: "checkbox", "dropdown", "multiselect" */
-    filterType: PropTypes.string,
-    /** Data used to populate filter dropdown/checkbox */
-    filterData: PropTypes.array.isRequired,
-    /** Data selected to be filtered against dropdown/checkbox */
-    filterList: PropTypes.array.isRequired,
-    /** Callback to trigger filter update */
-    onFilterUpdate: PropTypes.func,
-    /** Callback to trigger filter reset */
-    onFilterRest: PropTypes.func,
-    /** Extend the style applied to components */
-    classes: PropTypes.object
-  };
-
   handleCheckboxChange = (index, column) => {
     this.props.onFilterUpdate(index, column, "checkbox");
   };

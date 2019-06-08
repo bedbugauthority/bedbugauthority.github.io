@@ -1,7 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import NewTabLink from "../components/NewTabLink";
 import HighlightAndLinkify from "../components/HighlightAndLinkify";
 import { parseORPAColumn, hrefMarkup } from "../lib/helperFunctions";
@@ -13,8 +12,8 @@ const styles = theme => ({
     margin: 0
   },
   textLine: {
-    paddingRight: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1)
   },
   li: {},
   liWithMargin: {
