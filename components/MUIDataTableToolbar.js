@@ -107,7 +107,6 @@ const MUIDataTableToolbar = props => {
   };
 
   const setActiveIcon = iconName => {
-    console.log("setting active icon to:", iconName);
     setIconActive(iconName);
     setOpenSearch(iconName === "search" ? true : false);
   };

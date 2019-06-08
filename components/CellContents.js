@@ -27,7 +27,6 @@ const useStyles = makeStyles(theme => ({
 
 const CellContents = React.memo(props => {
   const classes = useStyles();
-  //console.log("props:", props);
   const parseArray = array => {
     const { width, wrap, biggerListSpacing } = props;
 

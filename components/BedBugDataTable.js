@@ -643,10 +643,6 @@ class BedBugDataTable extends React.Component {
   };
 
   render() {
-    if (!productData || !productData.length) {
-      console.log("Warning: product data not found.");
-      return false;
-    }
     const { classes } = this.props;
 
     const {

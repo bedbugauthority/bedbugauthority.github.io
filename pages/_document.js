@@ -16,7 +16,7 @@ class MyDocument extends Document {
             content="minimum-scale=1, initial-scale=1.0, width=device-width"
           />
           {/* PWA manifest */}
-          <link rel="manifest" href="/static/manifest.webmanifest" />
+          {/* <link rel="manifest" href="/static/manifest.webmanifest" /> */}
           {/* PWA primary color - i.e. color of browser on mobile devices */}
           <meta
             name="theme-color"
