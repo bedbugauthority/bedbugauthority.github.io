@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { makeStyles } from "@material-ui/styles";
+import { useState } from "react";
 
 import Typography from "@material-ui/core/Typography";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,10 +16,9 @@ import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import FilterIcon from "@material-ui/icons/FilterList";
 import { merge } from "lodash";
 import ReactToPrint from "react-to-print";
-import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
-const toolbarStyles = {
+const useStyles = makeStyles(theme => ({
   root: {
     width: "100%",
     display: "flex",
@@ -56,9 +56,10 @@ const toolbarStyles = {
     marginTop: "10px",
     marginRight: "8px"
   }
-};
+}));
 
 const MUIDataTableToolbar = props => {
+  const classes = useStyles();
   const {
     data,
     columns,
@@ -70,17 +71,11 @@ const MUIDataTableToolbar = props => {
     onSearchTextChange,
     onToggleViewColumn,
     title,
-    tableRef,
-    classes
+    tableRef
   } = props;
 
   const [iconActive, setIconActive] = useState(null);
   const [openSearch, setOpenSearch] = useState(false);
-  /*class MUIDataTableToolbar extends React.Component {
-  state = {
-    iconActive: null,
-    openSearch: false
-  };*/
   const handleCSVDownload = () => {
     //const { data, columns } = this.props;
 
@@ -115,11 +110,6 @@ const MUIDataTableToolbar = props => {
     console.log("setting active icon to:", iconName);
     setIconActive(iconName);
     setOpenSearch(iconName === "search" ? true : false);
-    /*
-    this.setState(() => ({
-      iconActive: iconName,
-      openSearch: iconName === "search" ? true : false
-    }));*/
   };
 
   const getActiveIcon = (styles, iconName) => {
@@ -130,29 +120,7 @@ const MUIDataTableToolbar = props => {
     onSearchTextChange("");
     setIconActive(null);
     setOpenSearch(false);
-    /*
-    this.setState(() => ({
-      iconActive: null,
-      openSearch: false
-    }));*/
   };
-
-  //render() {
-  /*
-    const {
-      data,
-      columns,
-      filterData,
-      filterList,
-      onFilterUpdate,
-      onResetFilters,
-      searchText,
-      onSearchTextChange,
-      onToggleViewColumn,
-      title,
-      tableRef,
-      classes
-    } = this.props;*/
 
   const {
     search,
@@ -161,8 +129,6 @@ const MUIDataTableToolbar = props => {
     viewColumns,
     filterTable
   } = textLabels.toolbar;
-
-  //const { openSearch } = this.state;
 
   const showSearch = true;
   const showDownloadCsv = false;
@@ -309,4 +275,4 @@ const MUIDataTableToolbar = props => {
   //  }
 };
 
-export default withStyles(toolbarStyles)(MUIDataTableToolbar);
+export default MUIDataTableToolbar;

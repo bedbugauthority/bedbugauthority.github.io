@@ -1,13 +1,13 @@
+import { makeStyles } from "@material-ui/styles";
 import React, { useEffect } from "react";
 import Grow from "@material-ui/core/Grow";
 import TextField from "@material-ui/core/TextField";
 import SearchIcon from "@material-ui/icons/Search";
 import IconButton from "@material-ui/core/IconButton";
 import ClearIcon from "@material-ui/icons/Clear";
-import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
-const searchStyles = {
+const useStyles = makeStyles(theme => ({
   main: {
     display: "flex",
     flex: "1 0 auto"
@@ -25,10 +25,11 @@ const searchStyles = {
       color: "#FF0000"
     }
   }
-};
+}));
 
 const MUIDataTableSearch = props => {
-  const { searchText, onSearchTextChange, onHide, classes } = props;
+  const classes = useStyles();
+  const { searchText, onSearchTextChange, onHide } = props;
 
   const onKeyDown = event => {
     if (event.keyCode === 27) {
@@ -70,47 +71,4 @@ const MUIDataTableSearch = props => {
   );
 };
 
-export default withStyles(searchStyles)(MUIDataTableSearch);
-/*
-class MUIDataTableSearch extends React.Component {
-  handleSearchTextChange = event =>
-    this.props.onSearchTextChange(event.target.value);
-
-  componentDidMount = () =>
-    document.addEventListener("keydown", this.onKeyDown, false);
-
-  componentWillUnmount = () =>
-    document.removeEventListener("keydown", this.onKeyDown, false);
-
-  onKeyDown = event => {
-    if (event.keyCode === 27) {
-      this.props.onHide();
-    }
-  };
-
-  render() {
-    const { searchText, onHide, classes } = this.props;
-
-    return (
-      <Grow appear in={true} timeout={300}>
-        <div className={classes.main} ref={el => (this.rootRef = el)}>
-          <SearchIcon className={classes.searchIcon} />
-          <TextField
-            className={classes.searchText}
-            value={searchText}
-            onChange={this.handleSearchTextChange}
-            autoFocus={true}
-            InputProps={{
-              "aria-label": textLabels.toolbar.search
-            }}
-            fullWidth={true}
-          />
-          <IconButton className={classes.clearIcon} onClick={onHide}>
-            <ClearIcon />
-          </IconButton>
-        </div>
-      </Grow>
-    );
-  }
-}
-*/
+export default MUIDataTableSearch;

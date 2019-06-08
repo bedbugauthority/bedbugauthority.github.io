@@ -1,7 +1,7 @@
+import { makeStyles } from "@material-ui/styles";
 import Chip from "@material-ui/core/Chip";
-import { withStyles } from "@material-ui/styles";
 
-const filterListStyles = {
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     justifyContent: "left",
@@ -11,10 +11,11 @@ const filterListStyles = {
   chip: {
     margin: "8px 8px 0px 0px"
   }
-};
+}));
 
 const MUIDataTableFilterList = props => {
-  const { classes, columns, filterList, onFilterUpdate } = props;
+  const classes = useStyles();
+  const { columns, filterList, onFilterUpdate } = props;
 
   return (
     <div className={classes.root}>
@@ -34,29 +35,4 @@ const MUIDataTableFilterList = props => {
   );
 };
 
-export default withStyles(filterListStyles)(MUIDataTableFilterList);
-/*
-class MUIDataTableFilterList extends React.Component {
-
-  render() {
-    const { classes, columns, filterList, onFilterUpdate } = this.props
-    return (
-      <div className={classes.root}>
-        {filterList.map(
-          (item, index) =>
-            item.length === 0 ? (
-              false
-            ) : (
-              <Chip
-                className={classes.chip}
-                label={columns[index].textLabel + ": " + item.toString()}
-                key={index}
-                onDelete={onFilterUpdate.bind(null, index, "", "multiselect")}
-              />
-            ),
-        )}
-      </div>
-    )
-  }
-}
-*/
+export default MUIDataTableFilterList;

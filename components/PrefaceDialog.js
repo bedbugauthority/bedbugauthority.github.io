@@ -1,4 +1,4 @@
-import { withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import withMobileDialog from "@material-ui/core/withMobileDialog";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: { margin: 0 },
   content: { paddingBottom: 0 },
   tipsTextArea: { display: "flex", flexDirection: "column" },
@@ -22,10 +22,13 @@ const styles = theme => ({
     flexDirection: "row"
   },
   disclaimerTextArea: { maxHeight: "135px" }
-});
+}));
 
 const PrefaceDialog = props => {
-  const { open, fullScreen, handleClose, classes } = props;
+  const classes = useStyles();
+
+  const { open, fullScreen, handleClose } = props;
+
   return (
     <div>
       <Dialog
@@ -116,6 +119,4 @@ const PrefaceDialog = props => {
   );
 };
 
-export default withStyles(styles)(
-  withMobileDialog({ breakpoint: "xs" })(PrefaceDialog)
-);
+export default withMobileDialog({ breakpoint: "xs" })(PrefaceDialog);

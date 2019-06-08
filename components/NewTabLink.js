@@ -1,12 +1,13 @@
-import { withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import OpenInNew from "@material-ui/icons/OpenInNew";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   icon: { width: theme.spacing(1.5), height: theme.spacing(1.5) }
-});
+}));
 
 const NewTabLink = props => {
-  const { children, href, classes } = props;
+  const classes = useStyles();
+  const { children, href } = props;
 
   const handleClick = e => {
     e.preventDefault();
@@ -21,24 +22,4 @@ const NewTabLink = props => {
   );
 };
 
-export default withStyles(styles)(NewTabLink);
-
-/*
-class NewTabLink extends React.Component {
-
-  handleClick = e => {
-    e.preventDefault();
-    window.open(this.props.href, "_blank");
-  };
-
-  render() {
-    const { children, href, classes } = this.props;
-    return (
-      <a href={href} onClick={this.handleClick}>
-        {children}
-        <OpenInNew className={classes.icon} />
-      </a>
-    );
-  }
-}
-*/
+export default NewTabLink;

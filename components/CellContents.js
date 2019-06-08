@@ -1,11 +1,10 @@
-import React from "react";
+import { makeStyles } from "@material-ui/styles";
 import classNames from "classnames";
-import { withStyles } from "@material-ui/styles";
 import NewTabLink from "../components/NewTabLink";
 import HighlightAndLinkify from "../components/HighlightAndLinkify";
 import { parseORPAColumn, hrefMarkup } from "../lib/helperFunctions";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   ul: {
     listStyleType: "none",
     padding: 0,
@@ -24,12 +23,13 @@ const styles = theme => ({
     overflow: "hidden",
     textOverflow: "ellipsis"
   }
-});
+}));
 
 const CellContents = React.memo(props => {
+  const classes = useStyles();
   //console.log("props:", props);
   const parseArray = array => {
-    const { width, wrap, biggerListSpacing, classes } = props;
+    const { width, wrap, biggerListSpacing } = props;
 
     var lineEllipsized = false;
     if (!wrap && array.length > 5) {
@@ -123,4 +123,4 @@ const CellContents = React.memo(props => {
   return <div className={props.classNames}>{parseItem(props.contents)}</div>;
 });
 
-export default withStyles(styles)(CellContents);
+export default CellContents;

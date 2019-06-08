@@ -1,3 +1,4 @@
+import { makeStyles } from "@material-ui/styles";
 import classNames from "classnames";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
@@ -9,10 +10,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
-import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
-const filterStyles = {
+const useStyles = makeStyles(theme => ({
   root: {
     padding: "16px 24px 16px 24px",
     fontFamily: "Roboto"
@@ -103,26 +103,26 @@ const filterStyles = {
     marginRight: "24px",
     marginBottom: "24px"
   }
-};
+}));
 
-class MUIDataTableFilter extends React.Component {
-  handleCheckboxChange = (index, column) => {
-    this.props.onFilterUpdate(index, column, "checkbox");
+const MUIDataTableFilter = props => {
+  const classes = useStyles();
+
+  const handleCheckboxChange = (index, column) => {
+    props.onFilterUpdate(index, column, "checkbox");
   };
 
-  handleDropdownChange = (event, index) => {
+  const handleDropdownChange = (event, index) => {
     const value = event.target.value === "All" ? "" : event.target.value;
-    this.props.onFilterUpdate(index, value, "dropdown");
+    props.onFilterUpdate(index, value, "dropdown");
   };
 
-  handleMultiselectChange = (index, column) => {
-    this.props.onFilterUpdate(index, column, "multiselect");
+  const handleMultiselectChange = (index, column) => {
+    props.onFilterUpdate(index, column, "multiselect");
   };
 
-  renderCheckbox() {
-    const { classes, columns, filterData, filterList } = this.props;
-
-    console.log("renderCheckbox - columns: ", columns);
+  const renderCheckbox = () => {
+    const { columns, filterData, filterList } = props;
 
     return columns.map((column, index) =>
       column.filterable ? (
@@ -141,7 +141,7 @@ class MUIDataTableFilter extends React.Component {
                 control={
                   <Checkbox
                     className={classes.checkboxIcon}
-                    onChange={this.handleCheckboxChange.bind(
+                    onChange={handleCheckboxChange.bind(
                       null,
                       index,
                       filterColumn
@@ -167,10 +167,10 @@ class MUIDataTableFilter extends React.Component {
         false
       )
     );
-  }
+  };
 
-  renderSelect() {
-    const { classes, columns, filterData, filterList } = this.props;
+  const renderSelect = () => {
+    const { columns, filterData, filterList } = props;
 
     return (
       <div className={classes.selectRoot}>
@@ -183,7 +183,7 @@ class MUIDataTableFilter extends React.Component {
               <Select
                 value={filterList[index].toString() || textLabels.filter.all}
                 name={column.textLabel}
-                onChange={event => this.handleDropdownChange(event, index)}
+                onChange={event => handleDropdownChange(event, index)}
                 input={<Input name={column.textLabel} id={column.id} />}
               >
                 <MenuItem value={textLabels.filter.all} key={0}>
@@ -202,10 +202,10 @@ class MUIDataTableFilter extends React.Component {
         )}
       </div>
     );
-  }
+  };
 
-  renderMultiselect() {
-    const { classes, columns, filterData, filterList } = this.props;
+  const renderMultiselect = () => {
+    const { columns, filterData, filterList } = props;
 
     return (
       <div className={classes.selectRoot}>
@@ -221,7 +221,7 @@ class MUIDataTableFilter extends React.Component {
                 renderValue={selected => selected.join(", ")}
                 name={column.textLabel}
                 onChange={event =>
-                  this.handleMultiselectChange(index, event.target.value)
+                  handleMultiselectChange(index, event.target.value)
                 }
                 input={<Input name={column.textLabel} id={column.id} />}
               >
@@ -251,44 +251,41 @@ class MUIDataTableFilter extends React.Component {
         )}
       </div>
     );
-  }
+  };
 
-  render() {
-    const { classes, onFilterReset } = this.props;
-    const filterType = "multiselect";
-
-    return (
-      <div className={classes.root}>
-        <div className={classes.header}>
-          <div className={classes.reset}>
-            <Typography
-              variant="caption"
-              className={classNames({
-                [classes.title]: true,
-                [classes.noMargin]: filterType !== "checkbox" ? true : false
-              })}
-            >
-              {textLabels.filter.title}
-            </Typography>
-            <button
-              className={classes.resetLink}
-              tabIndex={0}
-              aria-label={textLabels.filter.reset}
-              onClick={onFilterReset}
-            >
-              {textLabels.filter.reset}
-            </button>
-          </div>
-          <div className={classes.filtersSelected} />
+  const { onFilterReset } = props;
+  const filterType = "multiselect";
+  return (
+    <div className={classes.root}>
+      <div className={classes.header}>
+        <div className={classes.reset}>
+          <Typography
+            variant="caption"
+            className={classNames({
+              [classes.title]: true,
+              [classes.noMargin]: filterType !== "checkbox" ? true : false
+            })}
+          >
+            {textLabels.filter.title}
+          </Typography>
+          <button
+            className={classes.resetLink}
+            tabIndex={0}
+            aria-label={textLabels.filter.reset}
+            onClick={onFilterReset}
+          >
+            {textLabels.filter.reset}
+          </button>
         </div>
-        {filterType === "checkbox"
-          ? this.renderCheckbox()
-          : filterType === "multiselect"
-          ? this.renderMultiselect()
-          : this.renderSelect()}
+        <div className={classes.filtersSelected} />
       </div>
-    );
-  }
-}
+      {filterType === "checkbox"
+        ? renderCheckbox()
+        : filterType === "multiselect"
+        ? renderMultiselect()
+        : renderSelect()}
+    </div>
+  );
+};
 
-export default withStyles(filterStyles)(MUIDataTableFilter);
+export default MUIDataTableFilter;

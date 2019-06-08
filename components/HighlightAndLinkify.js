@@ -1,14 +1,16 @@
-import { withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import classNames from "classnames";
 import NewTabLink from "../components/NewTabLink";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   highlight: {
     backgroundColor: "yellow"
   }
-});
+}));
 
 const HighlightAndLinkify = props => {
+  const classes = useStyles();
+
   const escapeRegExp = literal_string => {
     return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
   };
@@ -70,7 +72,7 @@ const HighlightAndLinkify = props => {
     if (linkStart || linkEnd) {
       if ((prevHighlighting || hiEnd) && tempString.length > 0) {
         tempResult.push(
-          <span key={key} className={props.classes.highlight}>
+          <span key={key} className={classes.highlight}>
             {tempString}
           </span>
         );
@@ -94,7 +96,7 @@ const HighlightAndLinkify = props => {
 
     if (hiEnd && tempString.length > 0) {
       tempResult.push(
-        <span key={key} className={props.classes.highlight}>
+        <span key={key} className={classes.highlight}>
           {tempString}
         </span>
       );
@@ -116,7 +118,7 @@ const HighlightAndLinkify = props => {
   linkEnd = hrefEnds.indexOf(i) >= 0;
   if (hiEnd && tempString.length > 0) {
     tempResult.push(
-      <span key={key} className={props.classes.highlight}>
+      <span key={key} className={classes.highlight}>
         {tempString}
       </span>
     );
@@ -136,4 +138,4 @@ const HighlightAndLinkify = props => {
   return finalResult;
 };
 
-export default withStyles(styles)(HighlightAndLinkify);
+export default HighlightAndLinkify;

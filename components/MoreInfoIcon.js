@@ -1,8 +1,8 @@
-import { withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -13,7 +13,7 @@ const styles = theme => ({
     height: theme.spacing(2)
     //marginLeft: -theme.spacing.unit
   }
-});
+}));
 
 const MoreInfoIcon = props => {
   /*
@@ -28,7 +28,8 @@ const MoreInfoIcon = props => {
   handleTooltipClose = () => {
     this.setState({ open: false });
   };*/
-  const { hoverText, classes } = props;
+  const classes = useStyles();
+  const { hoverText } = props;
   return (
     <span className={classes.root}>
       <Tooltip disableFocusListener disableTouchListener title={hoverText}>
@@ -38,4 +39,4 @@ const MoreInfoIcon = props => {
   );
 };
 
-export default withStyles(styles)(MoreInfoIcon);
+export default MoreInfoIcon;

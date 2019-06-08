@@ -1,9 +1,9 @@
-import { withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import Link from "next/link";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   header: {
     display: "block",
     top: 0,
@@ -60,10 +60,10 @@ const styles = theme => ({
     margin: "auto",
     marginRight: 15
   }
-});
+}));
 
 const Header = props => {
-  const { classes } = props;
+  const classes = useStyles();
 
   return (
     <header className={classes.header}>

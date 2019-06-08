@@ -1,12 +1,12 @@
+import { makeStyles } from "@material-ui/styles";
 import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { withStyles } from "@material-ui/styles";
 import textLabels from "../data/textLabels";
 
-export const viewColStyles = {
+const useStyles = makeStyles(theme => ({
   root: {
     padding: "16px 24px 16px 24px",
     fontFamily: "Roboto"
@@ -37,13 +37,14 @@ export const viewColStyles = {
     marginLeft: "8px",
     color: "#4a4a4a"
   }
-};
+}));
 
 const MUIDataTableViewCol = props => {
-  const { classes, columns } = props;
+  const classes = useStyles();
+  const { columns } = props;
 
-  handleColChange = index => {
-    this.props.onColumnUpdate(index);
+  const handleColChange = index => {
+    props.onColumnUpdate(index);
   };
 
   return (
@@ -71,7 +72,7 @@ const MUIDataTableViewCol = props => {
                     root: classes.checkboxRoot,
                     checked: classes.checked
                   }}
-                  onChange={this.handleColChange.bind(null, index)}
+                  onChange={handleColChange.bind(null, index)}
                   checked={column.display}
                   value={column.name}
                 />
@@ -85,56 +86,4 @@ const MUIDataTableViewCol = props => {
   );
 };
 
-export default withStyles(viewColStyles)(MUIDataTableViewCol);
-
-/*
-class MUIDataTableViewCol extends React.Component {
-
-  handleColChange = index => {
-    this.props.onColumnUpdate(index);
-  };
-
-  render() {
-    const { classes, columns } = this.props;
-    console.log(columns);
-
-    return (
-      <FormControl
-        component={"fieldset"}
-        className={classes.root}
-        aria-label={textLabels.viewColumns.titleAria}
-      >
-        <Typography variant="caption" className={classes.title}>
-          {textLabels.viewColumns.title}
-        </Typography>
-        <FormGroup className={classes.formGroup}>
-          {columns.map((column, index) => {
-            return (
-              <FormControlLabel
-                key={index}
-                classes={{
-                  root: classes.formControl,
-                  label: classes.label
-                }}
-                control={
-                  <Checkbox
-                    className={classes.checkbox}
-                    classes={{
-                      root: classes.checkboxRoot,
-                      checked: classes.checked
-                    }}
-                    onChange={this.handleColChange.bind(null, index)}
-                    checked={column.display}
-                    value={column.name}
-                  />
-                }
-                label={column.name ? column.name : column}
-              />
-            );
-          })}
-        </FormGroup>
-      </FormControl>
-    );
-  }
-}
-*/
+export default MUIDataTableViewCol;
